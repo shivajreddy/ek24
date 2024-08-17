@@ -1,0 +1,129 @@
+{
+  "Brands": [
+    {
+      "BrandName": "Aristokraft",
+      "Shapes": [
+        {
+          "ShapeName": "One Door",
+          "Types": [
+            "B18",
+            "B27"
+          ]
+        },
+        {
+          "ShapeName": "Two Doors",
+          "Types": [
+            "B30",
+            "B36"
+          ]
+        },
+        {
+          "ShapeName": "Drawer Base",
+          "Types": [
+            "DB15",
+            "DB21"
+          ]
+        }
+      ]
+    },
+    {
+      "BrandName": "Eclipse",
+      "Shapes": [
+        {
+          "ShapeName": "One Door",
+          "Types": [
+            "O18",
+            "O27"
+          ]
+        },
+        {
+          "ShapeName": "Two Doors",
+          "Types": [
+            "O30",
+            "O36"
+          ]
+        },
+        {
+          "ShapeName": "Corner Base",
+          "Types": [
+            "OCB33",
+            "OCB36"
+          ]
+        },
+        {
+          "ShapeName": "Pantry",
+          "Types": [
+            "OP84",
+            "OP96"
+          ]
+        }
+      ]
+    },
+    {
+      "BrandName": "Yorktowne Historic",
+      "Shapes": [
+        {
+          "ShapeName": "One Door",
+          "Types": [
+            "KM18",
+            "KM27"
+          ]
+        },
+        {
+          "ShapeName": "Two Doors",
+          "Types": [
+            "KM30",
+            "KM36"
+          ]
+        },
+        {
+          "ShapeName": "Drawer Base",
+          "Types": [
+            "KMDB15",
+            "KMDB21"
+          ]
+        },
+        {
+          "ShapeName": "L-Shaped",
+          "Types": [
+            "KMLB24",
+            "KMLB27"
+          ]
+        }
+      ]
+    },
+    {
+      "BrandName": "Yorktowne Classic",
+      "Shapes": [
+        {
+          "ShapeName": "One Door",
+          "Types": [
+            "T18",
+            "T27"
+          ]
+        },
+        {
+          "ShapeName": "Two Doors",
+          "Types": [
+            "T30",
+            "T36"
+          ]
+        },
+        {
+          "ShapeName": "Drawer Base",
+          "Types": [
+            "TDB15",
+            "TDB21"
+          ]
+        },
+        {
+          "ShapeName": "Tall Cabinet",
+          "Types": [
+            "TTC84",
+            "TTC96"
+          ]
+        }
+      ]
+    }
+  ]
+}

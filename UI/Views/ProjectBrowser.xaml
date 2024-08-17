@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="ek24.UI.Views.ProjectBrowser"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+
+             xmlns:local="clr-namespace:ek24.UI.Views" 
+
+             xmlns:viewmodels="clr-namespace:ek24.UI.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:ProjectBrowserViewModel}"
+
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/ProjectBrowserResources.xaml" />
+                <!--<ResourceDictionary Source="/UI/Resources/ProjectBrowserResources.xaml"/>-->
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+
+    <!-- MAIN TAB 1: Project Browser: Sheets & 3D views -->
+    <Grid Margin="10 5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="140"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 5">
+            <StackPanel Margin="10">
+                <TextBlock Text="VIEWS" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
+
+                <StackPanel Name="ListOfEK24Views" Margin="40 0">
+                    <Button Style="{StaticResource GoToViewButtonStyle}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 10">
+            <StackPanel Margin="10" >
+                <TextBlock Text="SHEETS" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
+                <StackPanel Name="ListOfEK24Sheets" Margin="40 0">
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"  >
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="15 0" >
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 4">
+                        <TextBlock Text="ⓘ" FontWeight="Bold" Margin="0 0 4px 0"/>
+                        <TextBlock Text="Cabinet selection controls"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <StackPanel Margin="0px" Orientation="Horizontal" CanVerticallyScroll="True">
+                            <Button Content="All: LOWERS" Margin="5px" Padding="5 0"/>
+                            <Button Content="All: LOWERS" Margin="5px" Padding="5 0" Click="Button_Click"/>
+                            <Button Content="All: LOWERS" Margin="5px" Padding="5 0" Command="{Binding SelectAllLowerCabinetsCommand}"/>
+                            <!--<Button Content="All: UPPERS" Margin="5px" Padding="5 0" Click="ClickSelectionAllUppers"/>
+                            <Button Content="All: CABINETS" Margin="5px" Padding="5 0" Click="ClickSelectionAllCabinets"/>-->
+                            <!--<StackPanel Margin="0px" Orientation="Horizontal" CanVerticallyScroll="True">
+                                <Button Content="All: 1 Door" Margin="5px" Padding="5 0" Click="ClickSelectionAll1Door"/>
+                                <Button Content="Only: 1 Door" Margin="5px" Padding="5 0" Click="ClickSelectionOnly1Door"/>
+                                <Button Content="Only: 1 Door + Drawer" Margin="5px" Padding="5 0"  Click="ClickSelectionOnly1Door1Drawer"/>
+                            </StackPanel>
+                            <StackPanel Margin="0px" Orientation="Horizontal" CanVerticallyScroll="True">
+                                <Button Content="All: 2 Doors" Margin="5px" Padding="5 0" Click="ClickSelectionAll2Doors"/>
+                                <Button Content="Only: 2 Doors" Margin="5px" Padding="5 0" Click="ClickSelectionOnly2Doors"/>
+                                <Button Content="Only: 2 Doors + 1 Drawer" Margin="5px" Padding="5 0" Click="ClickSelectionOnly2Doors1Drawer"/>
+                                <Button Content="Only: 2 Doors + 2 Drawer" Margin="5px" Padding="5 0" Click="ClickSelectionOnly2Doors2Drawers"/>
+                            </StackPanel>-->
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+
+</UserControl>
