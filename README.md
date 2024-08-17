@@ -123,7 +123,7 @@ For any questions or inquiries, feel free to contact the project maintainer:
 - **Name**: Shiva Reddy
 - **Email**: shivajreddy@outlook.com
 - **GitHub**: [shivajreddy](https://github.com/shivajreddy)
-- **LinkedIn**: [Shiva Reddy](https://www.linkedin.com/in/shivajreddy/)
+- **LinkedIn**: [Shiva Reddy](https://www.linkedin.com/in/kshivareddy/)
 
 ---
 
