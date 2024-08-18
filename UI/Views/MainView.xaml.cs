@@ -16,6 +16,7 @@ public partial class MainView : IDockablePaneProvider
         DataContext = new MainViewModel();
     }
 
+    // Required to be implemented by the IDockablePaneProvider
     public void SetupDockablePane(DockablePaneProviderData data)
     {
         data.FrameworkElement = this;

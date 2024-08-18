@@ -9,6 +9,49 @@
              xmlns:viewmodels="clr-namespace:ek24.UI.ViewModels.ProjectBrowser"
 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <!-- Modern Button Style -->
+            <Style x:Key="ModernButton" TargetType="Button">
+                <Setter Property="Background" Value="#f3f4f7"/>
+                <Setter Property="Foreground" Value="#191724"/>
+                <Setter Property="Height" Value="35"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Padding" Value="15,8"/>
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                    CornerRadius="4" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#191724"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <!--<Setter Property="Background" Value="#9ccfd8"/>-->
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#191724"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <!--<Setter Property="Background" Value="#9ccfd8"/>-->
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
         <Border Grid.Row="2" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"  >
@@ -19,9 +62,21 @@
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center">
                         <StackPanel Margin="0 5" Orientation="Horizontal" CanVerticallyScroll="True">
-                            <Button Content="LOWERS" Width="100" Margin="20 0" Padding="5 0" Command="{Binding SelectAllLowerCabinetsCommand}"/>
-                            <Button Content="UPPERS" Width="100" Margin="20 0" Padding="5 0" Command="{Binding SelectAllUpperCabinetsCommand}"/>
-                            <Button Content="All"  Width="100" Margin="20 0" Padding="5 0" Command="{Binding SelectAllCabinetsCommand}"/>
+                            <Button Content="LOWERS" 
+                                    Width="100" Margin="5 0" Padding="5 0" 
+                                    Command="{Binding SelectAllLowerCabinetsCommand}"
+                                    Style="{StaticResource ModernButton}"
+                                    />
+                            <Button Content="UPPERS" 
+                                    Width="100" Margin="5 0" Padding="5 0" 
+                                    Command="{Binding SelectAllUpperCabinetsCommand}"
+                                    Style="{StaticResource ModernButton}"
+                                    />
+                            <Button Content="ALL" 
+                                    Width="100" Margin="5 0" Padding="5 0" 
+                                    Command="{Binding SelectAllCabinetsCommand}"
+                                    Style="{StaticResource ModernButton}"
+                                    />
                         </StackPanel>
                         <!--<StackPanel Margin="0px" Orientation="Horizontal" CanVerticallyScroll="True">
                                 <Button Content="All: 1 Door" Margin="5px" Padding="5 0" Click="ClickSelectionAll1Door"/>

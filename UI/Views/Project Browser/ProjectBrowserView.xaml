@@ -1,55 +1,107 @@
-﻿<!--d:DataContext="{d:DesignInstance Type=viewmodels:ProjectBrowserViewModel}"-->
-<!--d:DesignHeight="450" d:DesignWidth="800"-->
-<UserControl x:Class="ek24.UI.Views.ProjectBrowser.ProjectBrowserView"
+﻿<UserControl x:Class="ek24.UI.Views.ProjectBrowser.ProjectBrowserView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-
-             xmlns:local="clr-namespace:ek24.UI.Views.ProjectBrowser">
-
-
+             xmlns:views="clr-namespace:ek24.UI.Views.ProjectBrowser"
+             xmlns:view_models="clr-namespace:ek24.UI.ViewModels.ProjectBrowser">
+    <UserControl.DataContext>
+        <view_models:ProjectBrowserViewModel/>
+    </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/ProjectBrowserResources.xaml" />
-                <!--<ResourceDictionary Source="/UI/Resources/ProjectBrowserResources.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
+            <views:EmptyListToVisibilityConverter x:Key="EmptyListToVisibilityConverter"/>
+
+            <!-- Modern Button Style -->
+            <Style x:Key="ModernButton" TargetType="Button">
+                <Setter Property="Background" Value="#f3f4f7"/>
+                <Setter Property="Foreground" Value="#191724"/>
+                <Setter Property="Height" Value="35"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Padding" Value="15,8"/>
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                    CornerRadius="4" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#191724"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <!--<Setter Property="Background" Value="#9ccfd8"/>-->
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#191724"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <!--<Setter Property="Background" Value="#9ccfd8"/>-->
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         </ResourceDictionary>
-
     </UserControl.Resources>
-
-    <!-- MAIN TAB 1: Project Browser: Sheets & 3D views -->
     <Grid Margin="10 5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
-
         <Border Grid.Row="0" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 5">
-            <StackPanel Margin="10">
-                <TextBlock Text="VIEWS" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
-
-                <StackPanel Name="ListOfEK24Views" Margin="40 0">
-                    <Button Style="{StaticResource GoToViewButtonStyle}" />
+            <StackPanel VerticalAlignment="Stretch">
+                <TextBlock Text="Views" Margin="0 10" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
+                <StackPanel Name="ListOfEK24Views" Margin="40 0" VerticalAlignment="Center">
+                    <ItemsControl ItemsSource="{Binding Source={x:Static view_models:ProjectBrowserViewModel.ChosenViews}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Name}" 
+                                    Command="{Binding DataContext.ViewSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    Style="{StaticResource ModernButton}"
+                                    Margin="0,2"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <!--<TextBlock Text="no views" 
+                           Visibility="{Binding Source={x:Static view_models:ProjectBrowserViewModel.ChosenViews}, Path=Count, Converter={StaticResource EmptyListToVisibilityConverter}}" />-->
                 </StackPanel>
             </StackPanel>
         </Border>
-
-        <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 10">
-            <StackPanel Margin="10" >
-                <TextBlock Text="SHEETS" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
-                <StackPanel Name="ListOfEK24Sheets" Margin="40 0">
+        <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 5">
+            <StackPanel VerticalAlignment="Stretch">
+                <TextBlock Text="SHEETS" Margin="0 10" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
+                <StackPanel Name="ListOfEK24Sheets" Margin="40 0" VerticalAlignment="Center">
+                    <ItemsControl ItemsSource="{Binding Source={x:Static view_models:ProjectBrowserViewModel.ChosenViewSheets}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Name}" 
+                                    Command="{Binding DataContext.SheetSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    Style="{StaticResource ModernButton}"
+                                    Margin="0,2"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <!--<TextBlock Text="no sheets" 
+                           Visibility="{Binding Source={x:Static view_models:ProjectBrowserViewModel.ChosenViewSheets}, Path=Count, Converter={StaticResource EmptyListToVisibilityConverter}}" />-->
                 </StackPanel>
             </StackPanel>
         </Border>
-
         <Border Grid.Row="2" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 10">
-            <local:SelectCaseWorkView/>
+            <views:SelectCaseWorkView/>
         </Border>
-
-
     </Grid>
-
 </UserControl>
+

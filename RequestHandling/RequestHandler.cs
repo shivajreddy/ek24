@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.UI;
 
 using ek24.Commands;
+using ek24.UI.ViewModels.ProjectBrowser;
 
 
 namespace ek24.RequestHandling;
@@ -74,7 +75,7 @@ public class RequestHandler : IExternalEventHandler
         switch (RequestType)
         {
             case RequestType.RevitUI_UpdateActiveView:
-                UiUpdates.SetView(app, "<sheet_name_that is a stati ppty of some viewmodle");
+                UiUpdates.SetView(app, ProjectBrowserViewModel.GoToViewName);
                 break;
             case RequestType.RevitUI_SelectCaseWork:
                 SelectionUpdates.SelectCaseWorkElements(app);

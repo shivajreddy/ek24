@@ -17,9 +17,4 @@ public partial class ProjectBrowserView : UserControl
         DataContext = new ProjectBrowserViewModel();
     }
 
-    private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
-    {
-
-        Debug.WriteLine("button clicked");
-    }
 }

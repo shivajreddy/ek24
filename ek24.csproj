@@ -82,6 +82,7 @@
     <Compile Include="UI\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Views\Project Browser\EmptyListToVisibilityConverter.cs" />
     <Compile Include="UI\Views\Project Browser\SelectCaseWorkView.xaml.cs">
       <DependentUpon>SelectCaseWorkView.xaml</DependentUpon>
     </Compile>
