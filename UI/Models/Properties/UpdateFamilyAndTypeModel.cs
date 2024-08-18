@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 namespace ek24.UI.Models.Properties;
 
 
-public class PropertiesModel
+public class UpdateFamilyAndTypeModel
 {
-    public PropertiesModel()
-    { }
+    public UpdateFamilyAndTypeModel()
+    {
 
+    }
 }

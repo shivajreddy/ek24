@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="ek24.UI.Views.Properties.UpdateFamilyAndType"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+
+             xmlns:local="clr-namespace:ek24.UI.Views.Properties" 
+             xmlns:properties="clr-namespace:ek24.UI.ViewModels.Properties"
+
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- This is Row 1: instance properties panel -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <StackPanel Margin="10 0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Total Active Selections: " FontSize="16"/>
+                    <TextBlock x:Name="TotalSelections" FontWeight="Bold" Text="{Binding TotalSelections}" FontSize="16"/>
+                </StackPanel>
+
+                <StackPanel Margin="10 10">
+
+                    <StackPanel>
+                        <!--<TextBlock Text="Update Family &amp; Type" FontSize="16" TextAlignment="Center" />-->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <StackPanel>
+                                <StackPanel Width="220" >
+                                    <TextBlock Text="Brand" TextAlignment="Center"/>
+                                    <ComboBox Margin="10 0"/>
+                                </StackPanel>
+                                <StackPanel Width="220" >
+                                    <TextBlock Text="Family Group" TextAlignment="Center"/>
+                                    <ComboBox Margin="10 0"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel>
+                                <StackPanel Width="220" >
+                                    <TextBlock Text="Family" TextAlignment="Center"/>
+                                    <ComboBox Margin="10 0"/>
+                                </StackPanel>
+                                <StackPanel Width="220" >
+                                    <TextBlock Text="Type" TextAlignment="Center"/>
+                                    <ComboBox Margin="10 0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                        <Button Content="Update Family-Type" Margin="30 15 30 5"/>
+                        <!--<ComboBox Visibility="{Binding IsFamilyTypeVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
+                    </StackPanel>
+
+                    <Border Height="1" Background="Gray" Margin="0 10" />
+
+                    <StackPanel Margin="0 10" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <!--<TextBlock Text="Update Type" FontSize="16" />-->
+                        <ComboBox x:Name="TypeOptions" 
+                            Width="240" Margin="20 0"
+                            ItemsSource="{Binding }"
+                            Visibility="{Binding IsFamilyTypeVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <Button Width="150" x:Name="FamilyTypeSettingsUpdate" Content="Update Type"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+
+
+
+</UserControl>

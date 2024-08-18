@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,15 +14,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ek24.UI.Views;
+using ek24.UI.ViewModels.Properties;
 
-/// <summary>
-/// Interaction logic for ProjectBrowserxaml.xaml
-/// </summary>
-public partial class Properties : UserControl
+
+namespace ek24.UI.Views.Properties;
+
+
+public partial class CreateFamilyType : UserControl
 {
-    public Properties()
+    public CreateFamilyType()
     {
         InitializeComponent();
+        DataContext = new CreateInstanceViewModel();
     }
+
+    //private void Button_Click(object sender, RoutedEventArgs e)
+    //{
+    //    Debug.WriteLine("hi");
+
+    //}
 }

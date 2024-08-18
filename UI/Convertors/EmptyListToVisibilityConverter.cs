@@ -3,7 +3,9 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace ek24.UI.Views.ProjectBrowser;
+
+namespace ek24.UI.Convertors;
+
 
 public class EmptyListToVisibilityConverter : IValueConverter
 {

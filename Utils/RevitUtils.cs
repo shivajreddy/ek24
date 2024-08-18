@@ -81,7 +81,7 @@ public static class RevitUtils
             FamilyGroup familyGroup = new FamilyGroup
             {
                 GroupName = Path.GetFileNameWithoutExtension(csvFile), // Set GroupName based on file name
-                Families = new List<Family>()
+                Familys = new List<Family>()
             };
 
             // Read all lines of the current CSV file
@@ -115,7 +115,7 @@ public static class RevitUtils
                     }
                 }
 
-                familyGroup.Families.Add(family);
+                familyGroup.Familys.Add(family);
             }
 
             familyGroups.Add(familyGroup);

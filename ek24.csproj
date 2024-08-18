@@ -62,6 +62,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Create.cs" />
     <Compile Include="Commands\SelectionUpdates.cs" />
     <Compile Include="Commands\UiUpdates.cs" />
     <Compile Include="Commands\ShowDockCommand.cs" />
@@ -71,8 +72,11 @@
     <Compile Include="APP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Commands\RelayCommand.cs" />
+    <Compile Include="UI\Convertors\NullToBooleanConvertor.cs" />
     <Compile Include="UI\CurrentUiState.cs" />
+    <Compile Include="UI\Models\Properties\CreateInstanceModel.cs" />
     <Compile Include="UI\Models\Properties\PropertiesModel.cs" />
+    <Compile Include="UI\Models\Properties\UpdateFamilyAndTypeModel.cs" />
     <Compile Include="UI\Models\Revit\Inventory.cs" />
     <Compile Include="UI\Models\MainModel.cs" />
     <Compile Include="UI\Models\ProjectBrowser\ProjectBrowserModel.cs" />
@@ -81,23 +85,35 @@
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\ProjectBrowserViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\SelectCaseWorkViewModel.cs" />
+    <Compile Include="UI\ViewModels\Properties\CreateInstanceViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\PropertiesViewModel.cs" />
+    <Compile Include="UI\ViewModels\Properties\UpdateFamilyAndTypeViewModel.cs" />
     <Compile Include="UI\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\Project Browser\EmptyListToVisibilityConverter.cs" />
+    <Compile Include="UI\Convertors\EmptyListToVisibilityConverter.cs" />
     <Compile Include="UI\Views\Project Browser\SelectCaseWorkView.xaml.cs">
       <DependentUpon>SelectCaseWorkView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\Properties\PropertiesView.xaml.cs">
-      <DependentUpon>PropertiesView.xaml</DependentUpon>
+    <Compile Include="UI\Views\Properties\CreateFamilyType.xaml.cs">
+      <DependentUpon>CreateFamilyType.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\Properties\PropertiesPanel.xaml.cs">
+      <DependentUpon>PropertiesPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Views\Project Browser\ProjectBrowserView.xaml.cs">
       <DependentUpon>ProjectBrowserView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Views\Properties\UpdateInstanceParams.xaml.cs">
+      <DependentUpon>UpdateInstanceParams.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\Properties\UpdateFamilyAndType.xaml.cs">
+      <DependentUpon>UpdateFamilyAndType.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\ImageUtils.cs" />
     <Compile Include="Utils\PluginUtils.cs" />
     <Compile Include="RequestHandling\RequestHandler.cs" />
+    <Compile Include="Utils\Press.cs" />
     <Compile Include="Utils\RevitUtils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -334,6 +350,14 @@
     <Content Include="Resources\images\styles\ek_styles\yth-langdon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="UI\Resources\ComboStyles2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Page Include="UI\Resources\ComboStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\Resources\ProjectBrowserResources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -350,11 +374,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Views\Properties\PropertiesView.xaml">
+    <Page Include="UI\Views\Properties\CreateFamilyType.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\Properties\PropertiesPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\Views\Project Browser\ProjectBrowserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\Properties\UpdateInstanceParams.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\Properties\UpdateFamilyAndType.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

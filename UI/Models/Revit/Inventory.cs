@@ -22,7 +22,7 @@ public static class RevitFamilyGroups
 public class FamilyGroup
 {
     public string GroupName { get; set; }
-    public List<Family> Families { get; set; }
+    public List<Family> Familys { get; set; }
 
 }
 
@@ -35,6 +35,6 @@ public class Family
 
 public class FamilyType
 {
-    public string TypeName;
+    public string TypeName { get; set; }
 }
 

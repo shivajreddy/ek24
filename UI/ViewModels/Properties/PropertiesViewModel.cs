@@ -4,7 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using ek24.UI.Models.Properties;
+
+
 namespace ek24.UI.ViewModels.Properties;
-class PropertiesViewModel
+
+
+public class PropertiesViewModel
 {
+
+    public PropertiesModel PropertiesModel { get; set; }
+    public PropertiesViewModel()
+    {
+    }
 }

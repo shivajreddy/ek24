@@ -3,6 +3,7 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using ek24.UI.ViewModels.Properties;
 using SelectionChangedEventArgs = Autodesk.Revit.UI.Events.SelectionChangedEventArgs;
 
 
@@ -27,6 +28,7 @@ public class SelectionChangedEvent
     /// This event is added as revit api's 'SelectionChanged' event, and performs
     /// logic when ever 'SelectionChanged' event on Revit triggers
     /// </summary>
+
     public static void HandleSelectionChangedEvent(object sender, SelectionChangedEventArgs e)
     {
 
@@ -35,32 +37,12 @@ public class SelectionChangedEvent
         Document doc = app.ActiveUIDocument.Document;
 
         Selection currentSelection = uiDoc.Selection;
-        Debug.WriteLine($"current selection {currentSelection.ToString()}");
 
-        UpdateDynamicUi(currentSelection, doc);
-    }
+        // Update the ViewModel with the new selection
+        UpdateFamilyAndTypeViewModel.CurrentSelection = currentSelection;
 
-    // Helpler method for `OnSelectionChange` event
-    private static void UpdateDynamicUi(Selection currentSelection, Document doc)
-    {
-        /* TODO: uncomment this function and fix the inside using new UI i.e., Views
-            // :: Enable the UI ::
-            // Enable the dropdown boxes
-            UpdateFamilyTypeDropDownUi(currentSelection, doc);
-            UpdateTypeDropDownUi(currentSelection, doc);
+        UpdateFamilyAndTypeViewModel.UpdateSelectionProperties(doc);
 
-            //Enable the Common Settings
-            UpdateCommonSettingsUi(currentSelection, doc);
-
-            // TODO: below two functions to be implemented
-            // Enable the Single Door Settings
-            UpdateSingleDoorSettingsUi(currentSelection, doc);
-            // Enable the Upper Cabinet Settings
-            UpdateUpperDoorSettingsUi(currentSelection, doc);
-
-            // Enable the Style tab, Finish tab, Handles tab under 'Selections' tab
-            UpdateStyleFinishHandlesUi(currentSelection, doc);
-        */
     }
 
 
