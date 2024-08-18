@@ -1,15 +1,15 @@
 ﻿using System.Diagnostics;
 using System.Windows.Controls;
 
-using ek24.UI.ViewModels;
+using ek24.UI.ViewModels.ProjectBrowser;
 
 
-namespace ek24.UI.Views;
+namespace ek24.UI.Views.ProjectBrowser;
 
 
-public partial class ProjectBrowser : UserControl
+public partial class ProjectBrowserView : UserControl
 {
-    public ProjectBrowser()
+    public ProjectBrowserView()
     {
         InitializeComponent();
 

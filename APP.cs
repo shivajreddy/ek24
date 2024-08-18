@@ -50,6 +50,9 @@ public class APP : IExternalApplication
         RequestHandler = new RequestHandler();
         ExternalEvent = ExternalEvent.Create(RequestHandler);
 
+        // Setup the Revit Data
+        RevitUtils.SetUpRevitData();
+
         // Register Docks, Add PushButtons to Panels
         PluginUtils.RegisterDockablePanel(application);
         PluginUtils.CreatePushButtonAndAddToPanel(_ribbonPanel);

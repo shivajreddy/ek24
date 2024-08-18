@@ -1,15 +1,12 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
 
-using ek24.UI.Models;
+using ek24.UI.Models.ProjectBrowser;
 using ek24.UI.Commands;
-using System.Diagnostics;
-using System;
-
 using ek24.RequestHandling;
 
 
-namespace ek24.UI.ViewModels;
+namespace ek24.UI.ViewModels.ProjectBrowser;
 
 
 public class ProjectBrowserViewModel : INotifyPropertyChanged
@@ -31,14 +28,16 @@ public class ProjectBrowserViewModel : INotifyPropertyChanged
     public ProjectBrowserModel ProjectBrowserModel
     {
         get => _projectBrowserModel;
-        set => _projectBrowserModel = value;
+        set
+        {
+            _projectBrowserModel = value;
+        }
     }
 
     /// <summary>
     /// List of all Command functions and their implementations
     /// These commands can be then Bounded to Command ppty of Buttons
     /// </summary>
-    public ICommand SelectAllLowerCabinetsCommand { get; }
 
     /// <summary>
     /// Constructor of ViewModel
@@ -46,28 +45,10 @@ public class ProjectBrowserViewModel : INotifyPropertyChanged
     public ProjectBrowserViewModel()
     {
         _projectBrowserModel = new ProjectBrowserModel();
-        SelectAllLowerCabinetsCommand = new RelayCommand(SelectAllLowerCabinets);
-
-    }
-
-    private void SelectAllLowerCabinets()
-    {
-        // 1. Set the request type on APP's request handler
-        APP.RequestHandler.RequestType = RequestType.RevitUI_SelectCabinets;
-
-        // 3. Raise the Event
-        APP.ExternalEvent.Raise();
 
     }
 
 
-
-    private void ClickSelectionAllLowers(object sender, RoutedEventArgs e)
-    {
-        Main.AppsRequestHandler.RequestType = RequestType.MakeSelections;
-        EagleKitchenViewModel.ChosenCabinetConfiguration = CabinetConfiguration.AllLowers;
-        Main.MyExternalEvent.Raise();
-    }
 
 }
 

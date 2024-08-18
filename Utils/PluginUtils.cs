@@ -17,7 +17,10 @@ public static class PluginUtils
 
     public static MainView MainView;
 
-
+    /// <summary>
+    /// Register the DockablePane with a Static instance of the MainView
+    /// </summary>
+    /// <param name="uiControlledApplication"></param>
     public static void RegisterDockablePanel(UIControlledApplication uiControlledApplication)
     {
         MainView = new MainView();
@@ -25,15 +28,10 @@ public static class PluginUtils
         uiControlledApplication.RegisterDockablePane(DockId, DockName, MainView);
     }
 
-    public static void ShowDockablePanel(UIApplication app)
-    {
-        DockablePane dock = app.GetDockablePane(DockId);
-        // Don't show if already is showing
-        if (dock == null || dock.IsShown()) return;
-        dock.Show();
-    }
-
-
+    /// <summary>
+    /// Create the push button with icon and set the class name path
+    /// </summary>
+    /// <param name="ribbonPanel"></param>
     public static void CreatePushButtonAndAddToPanel(RibbonPanel ribbonPanel)
     {
         var declaringType = MethodBase.GetCurrentMethod()?.DeclaringType;
@@ -61,5 +59,15 @@ public static class PluginUtils
             ToolTipImage = ImageUtilities.LoadImage(assembly, iconName)
         };
         ribbonPanel.AddItem(pushButtonData);
+    }
+
+    /// <summary>
+    /// Show the Dockable pane UI, only show if not current shown
+    /// </summary>
+    public static void ShowDockablePanel(UIApplication app)
+    {
+        DockablePane dock = app.GetDockablePane(DockId);
+        if (dock == null || dock.IsShown()) return;
+        dock.Show();
     }
 }

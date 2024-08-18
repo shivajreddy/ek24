@@ -16,7 +16,7 @@
           ],
           "SpeciesVariants": [
             {
-              "SpeciesName": "birch",
+              "Species": "birch",
               "Finishes": [
                 "Arid",
                 "Flagstone",
@@ -41,7 +41,7 @@
           ],
           "SpeciesVariants": [
             {
-              "SpeciesName": "birch",
+              "Species": "birch",
               "Finishes": [
                 "Arid",
                 "Flagstone",
@@ -66,7 +66,7 @@
           ],
           "SpeciesVariants": [
             {
-              "SpeciesName": "Purestyle",
+              "Species": "Purestyle",
               "Finishes": [ "Colada", "Frost", "Stone Gray", "White" ]
             }
           ]
@@ -84,7 +84,7 @@
           ],
           "SpeciesVariants": [
             {
-              "SpeciesName": "birch",
+              "Species": "birch",
               "Finishes": [
                 "Arid",
                 "Flagstone",
@@ -95,7 +95,7 @@
               ]
             },
             {
-              "SpeciesName": "neutral paint",
+              "Species": "neutral paint",
               "Finishes": [ "Colada", "Frost", "Stone Gray", "White" ]
             }
           ]
@@ -118,7 +118,7 @@
           ],
           "SpeciesVariants": [
             {
-              "SpeciesName": "maple",
+              "Species": "maple",
               "Finishes": [
                 "Amaretto",
                 "Biscotti",
@@ -156,7 +156,7 @@
           ],
           "SpeciesVariants": [
             {
-              "SpeciesName": "maple",
+              "Species": "maple",
               "Finishes": [
                 "Amaretto",
                 "Biscotti",
@@ -194,7 +194,7 @@
           ],
           "SpeciesVariants": [
             {
-              "SpeciesName": "maple",
+              "Species": "maple",
               "Finishes": [
                 "Biscotti",
                 "Eagle Rock",
@@ -228,11 +228,11 @@
           "Properties": [],
           "SpeciesVariants": [
             {
-              "SpeciesName": "high gloss acrylic",
+              "Species": "high gloss acrylic",
               "Finishes": [ "Bianco", "Bigio", "Cubanite", "Gabbiano" ]
             },
             {
-              "SpeciesName": "matte acrylic",
+              "Species": "matte acrylic",
               "Finishes": [
                 "Ash Velvet",
                 "Carbon Velvet",
@@ -241,7 +241,7 @@
               ]
             },
             {
-              "SpeciesName": "thermally fused laminates",
+              "Species": "thermally fused laminates",
               "Finishes": [
                 "Kirsche",
                 "Morning Fog",
@@ -271,7 +271,7 @@
           ],
           "SpeciesVariants": [
             {
-              "SpeciesName": "maple",
+              "Species": "maple",
               "Finishes": [
                 "Amaretto",
                 "Biscotti",
@@ -282,7 +282,7 @@
               ]
             },
             {
-              "SpeciesName": "neutral paint",
+              "Species": "neutral paint",
               "Finishes": [
                 "Chai Latte",
                 "Irish Crème",
@@ -292,7 +292,7 @@
               ]
             },
             {
-              "SpeciesName": "rich paint",
+              "Species": "rich paint",
               "Finishes": [
                 "Bay Leaf",
                 "Carriage Black",
@@ -322,7 +322,7 @@
           ],
           "SpeciesVariants": [
             {
-              "SpeciesName": "maple",
+              "Species": "maple",
               "Finishes": [
                 "Amaretto",
                 "Biscotti",
@@ -333,7 +333,7 @@
               ]
             },
             {
-              "SpeciesName": "neutral paint",
+              "Species": "neutral paint",
               "Finishes": [
                 "Chai Latte",
                 "Irish Crème",
@@ -343,7 +343,7 @@
               ]
             },
             {
-              "SpeciesName": "rich paint",
+              "Species": "rich paint",
               "Finishes": [
                 "Bay Leaf",
                 "Carriage Black",
@@ -362,4 +362,3 @@
     }
   ]
 }
-

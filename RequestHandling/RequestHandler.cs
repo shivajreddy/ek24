@@ -1,6 +1,5 @@
 ﻿using Autodesk.Revit.UI;
 
-using ek24.UI;
 using ek24.Commands;
 
 
@@ -40,8 +39,8 @@ namespace ek24.RequestHandling;
 public enum RequestType
 {
     // 'Project Browser' related Requests
-    RevitUI_UpdateView,
-    RevitUI_SelectCabinets,
+    RevitUI_UpdateActiveView,
+    RevitUI_SelectCaseWork,
 
     // 'Properties' related Requests
     RevitUI_UpdateCabinetFamilyAndType,
@@ -74,52 +73,12 @@ public class RequestHandler : IExternalEventHandler
         // Execute the fn based on the type of request
         switch (RequestType)
         {
-            case RequestType.RevitUI_SelectCabinets:
-                UiUpdates.SetView(app, CurrentUiState.GoToViewName);
+            case RequestType.RevitUI_UpdateActiveView:
+                UiUpdates.SetView(app, "<sheet_name_that is a stati ppty of some viewmodle");
                 break;
-
-                /* TODO: uncomment and implement all these events
-            // Configuration settings
-            case RequestType.UpdateCabinetFamilyAndType:
-                EagleKitchenViewModel.UpdateCabinetFamilyAndType(app);
+            case RequestType.RevitUI_SelectCaseWork:
+                SelectionUpdates.SelectCaseWorkElements(app);
                 break;
-            case RequestType.UpdateCabinetType:
-                EagleKitchenViewModel.UpdateCabinetType(app);
-                break;
-
-            // Common settings
-            case RequestType.UpdateHasLeftFillerStrip:
-                EagleKitchenViewModel.UpdateHasLeftFillerStrip(app);
-                break;
-            case RequestType.UpdateHasRightFillerStrip:
-                EagleKitchenViewModel.UpdateHasRightFillerStrip(app);
-                break;
-            case RequestType.UpdateLeftFillerStripValue:
-                EagleKitchenViewModel.UpdateLeftFillerStripValue(app);
-                break;
-            case RequestType.UpdateRightFillerStripValue:
-                EagleKitchenViewModel.UpdateRightFillerStripValue(app);
-                break;
-
-            case RequestType.MakeSelections:
-                EagleKitchenViewModel.SelectElements(app);
-                break;
-            case RequestType.MakeCustomizations:
-                EagleKitchenViewModel.SetStyle(app);
-                break;
-
-            // Export data
-            case RequestType.PrintDrawings:
-                EagleKitchenViewModel.PrintDocument(app);
-                break;
-            case RequestType.ExportQuantitiesToExcel:
-                EagleKitchenViewModel.ExportQuantitiesToExcel(app);
-                break;
-
-            case RequestType.DevTest:
-                EagleKitchenViewModel.DevTest(app);
-                break;
-                */
         }
     }
 

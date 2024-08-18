@@ -24,4 +24,5 @@ namespace ek24.UI;
 static class CurrentUiState
 {
     public static string GoToViewName { get; set; }
+
 }

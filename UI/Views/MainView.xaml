@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
 
              xmlns:views="clr-namespace:ek24.UI.Views"
+             xmlns:views_projectbrowser="clr-namespace:ek24.UI.Views.ProjectBrowser"
 
              d:DesignHeight="450" d:DesignWidth="800">
     <Page.Resources>
@@ -23,7 +24,7 @@
 
         <TabControl>
             <TabItem Header="Project Browser" FontSize="14">
-                <views:ProjectBrowser/>
+                <views_projectbrowser:ProjectBrowserView/>
             </TabItem>
             <TabItem Header="Properties" FontSize="14">
                 <views:Properties/>

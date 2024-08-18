@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI">
@@ -42,7 +45,12 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -63,28 +71,46 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Commands\RelayCommand.cs" />
     <Compile Include="UI\CurrentUiState.cs" />
+    <Compile Include="UI\Models\Revit\Inventory.cs" />
     <Compile Include="UI\Models\MainModel.cs" />
-    <Compile Include="UI\Models\ProjectBrowserModel.cs" />
+    <Compile Include="UI\Models\ProjectBrowser\ProjectBrowserModel.cs" />
+    <Compile Include="UI\Models\ProjectBrowser\SelectCaseWorkModel.cs" />
+    <Compile Include="UI\Models\Revit\Brand.cs" />
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
-    <Compile Include="UI\ViewModels\ProjectBrowserViewModel.cs" />
+    <Compile Include="UI\ViewModels\ProjectBrowser\ProjectBrowserViewModel.cs" />
+    <Compile Include="UI\ViewModels\ProjectBrowser\SelectCaseWorkViewModel.cs" />
     <Compile Include="UI\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\Properties.xaml.cs">
+    <Compile Include="UI\Views\Project Browser\SelectCaseWorkView.xaml.cs">
+      <DependentUpon>SelectCaseWorkView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\Properties\Properties.xaml.cs">
       <DependentUpon>Properties.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\ProjectBrowser.xaml.cs">
-      <DependentUpon>ProjectBrowser.xaml</DependentUpon>
+    <Compile Include="UI\Views\Project Browser\ProjectBrowserView.xaml.cs">
+      <DependentUpon>ProjectBrowserView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\ImageUtils.cs" />
     <Compile Include="Utils\PluginUtils.cs" />
     <Compile Include="RequestHandling\RequestHandler.cs" />
+    <Compile Include="Utils\RevitUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="Out\ek24.addin" />
-    <None Include="Resources\JSON\ek24_brands_shapes_types.json" />
+    <None Include="packages.config" />
+    <None Include="Resources\CSV\Aristokraft-Base.csv" />
+    <None Include="Resources\CSV\Aristokraft-Wall.csv" />
+    <None Include="Resources\CSV\Eclipse-Base.csv" />
+    <None Include="Resources\CSV\Eclipse-Wall.csv" />
+    <None Include="Resources\CSV\YorktowneClassic-Base.csv" />
+    <None Include="Resources\CSV\YorktowneClassic-Wall.csv" />
+    <None Include="Resources\CSV\YorktowneHistoric-Base.csv" />
+    <None Include="Resources\CSV\YorktowneHistoric-Wall.csv" />
     <None Include="Resources\JSON\ek24_brands_styles.json" />
+    <None Include="Resources\Revit\Eagle Kitchen Inventory.xlsx" />
+    <None Include="Resources\JSON\ek24_brands_styles_old.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\images\ek24_icon.png" />
@@ -316,11 +342,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Views\Properties.xaml">
+    <Page Include="UI\Views\Project Browser\SelectCaseWorkView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\Properties\Properties.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\Views\ProjectBrowser.xaml">
+    <Page Include="UI\Views\Project Browser\ProjectBrowserView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
