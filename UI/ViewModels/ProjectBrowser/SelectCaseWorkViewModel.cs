@@ -44,7 +44,7 @@ public class SelectCaseWorkViewModel : INotifyPropertyChanged
     /// <summary>
     /// Constructor of ViewModel
     /// </summary>
-    SelectCaseWorkViewModel()
+    public SelectCaseWorkViewModel()
     {
         _selectCaseWorkModel = new SelectCaseWorkModel();
         SelectAllLowerCabinetsCommand = new RelayCommand(SelectAllLowerCabinets);
@@ -75,7 +75,7 @@ public class SelectCaseWorkViewModel : INotifyPropertyChanged
         // 1. Set the request type on APP's request handler
         APP.RequestHandler.RequestType = RequestType.RevitUI_SelectCaseWork;
         // 2. Update static property of ViewModel
-        CurrentCaseWorkGroup = CaseWorkGroup.AllUppers;
+        CurrentCaseWorkGroup = CaseWorkGroup.AllCabinets;
         // 3. Raise the Event
         APP.ExternalEvent.Raise();
     }

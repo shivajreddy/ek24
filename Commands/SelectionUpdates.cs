@@ -35,14 +35,25 @@ public class SelectionUpdates
         {
             case CaseWorkGroup.AllLowers:
                 filteredElementIds = familyInstances
-                    .Where(x => (x as FamilyInstance)?.Symbol.Family.Name.Contains("Base_Cabinet") ?? false)
+                    .Where(x => (x as FamilyInstance)?.Symbol.Family.Name.Contains("-B-") ?? false)
                     .Select(x => x.Id)
                     .ToList();
                 uiDoc.Selection.SetElementIds(filteredElementIds);
                 break;
             case CaseWorkGroup.AllUppers:
+                filteredElementIds = familyInstances
+                    .Where(x => (x as FamilyInstance)?.Symbol.Family.Name.Contains("-W-") ?? false)
+                    .Select(x => x.Id)
+                    .ToList();
+                uiDoc.Selection.SetElementIds(filteredElementIds);
                 break;
             case CaseWorkGroup.AllCabinets:
+                // Select all casework instances
+                filteredElementIds = familyInstances
+                    .Where(x => (x as FamilyInstance)?.Symbol.Family.FamilyCategory.Name == "Casework")
+                    .Select(x => x.Id)
+                    .ToList();
+                uiDoc.Selection.SetElementIds(filteredElementIds);
                 break;
         }
 

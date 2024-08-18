@@ -5,9 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:ek24.UI.Views.ProjectBrowser"
              xmlns:view_models="clr-namespace:ek24.UI.ViewModels.ProjectBrowser">
-    <UserControl.DataContext>
-        <view_models:ProjectBrowserViewModel/>
-    </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -38,12 +35,10 @@
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="#191724"/>
                                     <Setter Property="Foreground" Value="White"/>
-                                    <!--<Setter Property="Background" Value="#9ccfd8"/>-->
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
                                     <Setter Property="Background" Value="#191724"/>
                                     <Setter Property="Foreground" Value="White"/>
-                                    <!--<Setter Property="Background" Value="#9ccfd8"/>-->
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -63,7 +58,7 @@
             <StackPanel VerticalAlignment="Stretch">
                 <TextBlock Text="Views" Margin="0 10" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
                 <StackPanel Name="ListOfEK24Views" Margin="40 0" VerticalAlignment="Center">
-                    <ItemsControl ItemsSource="{Binding Source={x:Static view_models:ProjectBrowserViewModel.ChosenViews}}">
+                    <ItemsControl ItemsSource="{Binding ChosenViews}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Button Content="{Binding Name}" 
@@ -83,7 +78,7 @@
             <StackPanel VerticalAlignment="Stretch">
                 <TextBlock Text="SHEETS" Margin="0 10" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
                 <StackPanel Name="ListOfEK24Sheets" Margin="40 0" VerticalAlignment="Center">
-                    <ItemsControl ItemsSource="{Binding Source={x:Static view_models:ProjectBrowserViewModel.ChosenViewSheets}}">
+                    <ItemsControl ItemsSource="{Binding ChosenViewSheets}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Button Content="{Binding Name}" 

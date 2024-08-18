@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -71,6 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Commands\RelayCommand.cs" />
     <Compile Include="UI\CurrentUiState.cs" />
+    <Compile Include="UI\Models\Properties\PropertiesModel.cs" />
     <Compile Include="UI\Models\Revit\Inventory.cs" />
     <Compile Include="UI\Models\MainModel.cs" />
     <Compile Include="UI\Models\ProjectBrowser\ProjectBrowserModel.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\ProjectBrowserViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\SelectCaseWorkViewModel.cs" />
+    <Compile Include="UI\ViewModels\Properties\PropertiesViewModel.cs" />
     <Compile Include="UI\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -86,8 +89,8 @@
     <Compile Include="UI\Views\Project Browser\SelectCaseWorkView.xaml.cs">
       <DependentUpon>SelectCaseWorkView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\Properties\Properties.xaml.cs">
-      <DependentUpon>Properties.xaml</DependentUpon>
+    <Compile Include="UI\Views\Properties\PropertiesView.xaml.cs">
+      <DependentUpon>PropertiesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Views\Project Browser\ProjectBrowserView.xaml.cs">
       <DependentUpon>ProjectBrowserView.xaml</DependentUpon>
@@ -347,7 +350,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Views\Properties\Properties.xaml">
+    <Page Include="UI\Views\Properties\PropertiesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
