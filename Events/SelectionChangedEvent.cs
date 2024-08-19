@@ -39,9 +39,9 @@ public class SelectionChangedEvent
         Selection currentSelection = uiDoc.Selection;
 
         // Update the ViewModel with the new selection
-        UpdateFamilyAndTypeViewModel.CurrentSelection = currentSelection;
 
-        UpdateFamilyAndTypeViewModel.UpdateSelectionProperties(doc);
+
+        CurrentSelectionViewModel.SyncViewModelWithRevit(currentSelection, doc);
 
     }
 

@@ -83,6 +83,9 @@ public class RequestHandler : IExternalEventHandler
             case RequestType.RevitNew_FamilyAndType:
                 Create.CreateNewInstance(app);
                 break;
+            case RequestType.RevitNew_UpdateCabinetType:
+                ChangeType.UpdateCabinetTypeForSelectedInstance(app);
+                break;
 
         }
     }

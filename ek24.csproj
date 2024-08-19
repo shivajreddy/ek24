@@ -62,6 +62,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ChangeType.cs" />
     <Compile Include="Commands\Create.cs" />
     <Compile Include="Commands\SelectionUpdates.cs" />
     <Compile Include="Commands\UiUpdates.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="UI\CurrentUiState.cs" />
     <Compile Include="UI\Models\Properties\CreateInstanceModel.cs" />
     <Compile Include="UI\Models\Properties\PropertiesModel.cs" />
-    <Compile Include="UI\Models\Properties\UpdateFamilyAndTypeModel.cs" />
+    <Compile Include="UI\Models\Properties\CurrentSelectionModel.cs" />
     <Compile Include="UI\Models\Revit\Inventory.cs" />
     <Compile Include="UI\Models\MainModel.cs" />
     <Compile Include="UI\Models\ProjectBrowser\ProjectBrowserModel.cs" />
@@ -88,7 +89,7 @@
     <Compile Include="UI\ViewModels\Properties\CreateBrandTypeViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\CreateFamilyTypeViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\PropertiesViewModel.cs" />
-    <Compile Include="UI\ViewModels\Properties\UpdateFamilyAndTypeViewModel.cs" />
+    <Compile Include="UI\ViewModels\Properties\CurrentSelectionViewModel.cs" />
     <Compile Include="UI\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -111,8 +112,8 @@
     <Compile Include="UI\Views\Properties\UpdateInstanceParams.xaml.cs">
       <DependentUpon>UpdateInstanceParams.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\Properties\UpdateFamilyAndType.xaml.cs">
-      <DependentUpon>UpdateFamilyAndType.xaml</DependentUpon>
+    <Compile Include="UI\Views\Properties\CurrentSelectionView.xaml.cs">
+      <DependentUpon>CurrentSelectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\ImageUtils.cs" />
     <Compile Include="Utils\PluginUtils.cs" />
@@ -398,7 +399,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Views\Properties\UpdateFamilyAndType.xaml">
+    <Page Include="UI\Views\Properties\CurrentSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

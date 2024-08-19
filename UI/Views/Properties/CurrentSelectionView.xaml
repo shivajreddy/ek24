@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ek24.UI.Views.Properties.UpdateFamilyAndType"
+﻿<UserControl x:Class="ek24.UI.Views.Properties.CurrentSelectionView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,11 +6,19 @@
 
              xmlns:local="clr-namespace:ek24.UI.Views.Properties" 
              xmlns:properties="clr-namespace:ek24.UI.ViewModels.Properties"
+             xmlns:convertors="clr-namespace:ek24.UI.Convertors"
 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <ResourceDictionary>
+            <convertors:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
+            <convertors:EmptyListToVisibilityConverter x:Key="EmptyListToVisibilityConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/ComboStyles2.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/MainViewResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
@@ -24,8 +32,8 @@
 
                 <StackPanel Margin="10 10">
 
-                    <StackPanel>
-                        <!--<TextBlock Text="Update Family &amp; Type" FontSize="16" TextAlignment="Center" />-->
+
+                    <!--<StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <StackPanel>
                                 <StackPanel Width="220" >
@@ -49,25 +57,47 @@
                             </StackPanel>
                         </StackPanel>
                         <Button Content="Update Family-Type" Margin="30 15 30 5"/>
-                        <!--<ComboBox Visibility="{Binding IsFamilyTypeVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
-                    </StackPanel>
+                    </StackPanel>-->
+
+                    <!--<TextBlock Text="single or multiple items?"/>
+
+
+                    
+                    <TextBlock Text="familyname"/>
+                    <TextBlock Text="typename"/>
+
+                    <TextBlock Text="casework family?"/>
+                    <TextBlock Text="same family?"/>
+                    <TextBlock Text="same type?"/>-->
+
+                    
+
 
                     <Border Height="1" Background="Gray" Margin="0 10" />
 
-                    <StackPanel Margin="0 10" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <!--<TextBlock Text="Update Type" FontSize="16" />-->
-                        <ComboBox x:Name="TypeOptions" 
-                            Width="240" Margin="20 0"
-                            ItemsSource="{Binding }"
-                            Visibility="{Binding IsFamilyTypeVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                        <Button Width="150" x:Name="FamilyTypeSettingsUpdate" Content="Update Type"/>
+                    <StackPanel Margin="0 10"  HorizontalAlignment="Center">
+
+                        <ComboBox x:Name="TypeOptions" Width="400" Margin="0 10"
+                            ItemsSource="{Binding AvailableCabinetTypes }"
+                            SelectedItem="{Binding ChosenCabinetType}"
+                            IsEnabled="{Binding AvailableCabinetTypes, Converter={StaticResource EmptyListToVisibilityConverter}}"
+                                  />
+
+                        <Button x:Name="FamilyTypeSettingsUpdate" Content="Update Type" Width="100" Height="25"
+                            Style="{StaticResource ModernButton}"
+                            Command="{Binding UpdateTypeCommand}"
+                            IsEnabled="{Binding ChosenCabinetType, Converter={StaticResource NullToBooleanConverter}}"
+                            />
                     </StackPanel>
 
+                    <Button Content="debug" Width="100" Click="Button_Click"/>
+
                 </StackPanel>
+
+
             </StackPanel>
         </ScrollViewer>
     </Grid>
-
 
 
 </UserControl>

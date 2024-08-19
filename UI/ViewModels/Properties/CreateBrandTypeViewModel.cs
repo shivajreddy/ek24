@@ -79,8 +79,6 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
 
         BrandFamilyTypes.Clear();
 
-        return;
-
         //FamilyTypes = SelectedBrandCatalogue.FamilyTypes;
 
         // Get the brand name
@@ -109,12 +107,12 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
     {
         SelectedBrandCatalogue = null;
         SelectedBrandFamilyType = null;
-        //BrandFamilyTypes = new List<FamilyType>();
+        BrandFamilyTypes = new List<FamilyType>();
 
-        BrandFamilyTypes = RevitBrandData.BrandCatalogues[0].FamilyTypes;
-        BrandFamilyTypes.AddRange(RevitBrandData.BrandCatalogues[1].FamilyTypes);
-        BrandFamilyTypes.AddRange(RevitBrandData.BrandCatalogues[2].FamilyTypes);
-        BrandFamilyTypes.AddRange(RevitBrandData.BrandCatalogues[3].FamilyTypes);
+        //BrandFamilyTypes = RevitBrandData.BrandCatalogues[0].FamilyTypes;
+        //BrandFamilyTypes.AddRange(RevitBrandData.BrandCatalogues[1].FamilyTypes);
+        //BrandFamilyTypes.AddRange(RevitBrandData.BrandCatalogues[2].FamilyTypes);
+        //BrandFamilyTypes.AddRange(RevitBrandData.BrandCatalogues[3].FamilyTypes);
 
         CreateNewFamilyCommand = new RelayCommand(OnCreateNewFamily);
     }

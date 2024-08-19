@@ -19,16 +19,21 @@ using ek24.UI.ViewModels.Properties;
 namespace ek24.UI.Views.Properties;
 
 
-public partial class UpdateFamilyAndType : UserControl
+public partial class CurrentSelectionView : UserControl
 {
-    public UpdateFamilyAndType()
+    public CurrentSelectionView()
     {
         InitializeComponent();
 
         //UpdateFamilyAndTypeViewModel updateFamilyAndTypeViewModel = new UpdateFamilyAndTypeViewModel();
         //DataContext = updateFamilyAndTypeViewModel;
 
-        DataContext = new UpdateFamilyAndTypeViewModel();
+        DataContext = new CurrentSelectionViewModel();
+
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
 
     }
 }
