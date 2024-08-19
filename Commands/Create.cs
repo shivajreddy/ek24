@@ -15,8 +15,8 @@ public static class Create
     public static void CreateNewInstance(UIApplication app)
     {
         // chosen Family, Type
-        var family_name = CreateInstanceViewModel.SelectedFamily.FamilyName;
-        var type_name = CreateInstanceViewModel.SelectedFamilyType.TypeName;
+        var family_name = CreateFamilyTypeViewModel.SelectedFamily.FamilyName;
+        var type_name = CreateFamilyTypeViewModel.SelectedFamilyType.TypeName;
 
         // Active Document
         UIDocument uiDoc = app.ActiveUIDocument;

@@ -29,7 +29,7 @@
             </TabItem>
 
             <TabItem Header="Properties" FontSize="14">
-                <views_properties:PropertiesPanel/>
+                <views_properties:PropertiesView/>
             </TabItem>
             <TabItem Header="Manage" FontSize="14">
                 <StackPanel>

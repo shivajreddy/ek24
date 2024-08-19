@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,11 +20,16 @@ using ek24.UI.ViewModels.Properties;
 namespace ek24.UI.Views.Properties;
 
 
-public partial class PropertiesView : UserControl
+public partial class CreateBrandTypeView : UserControl
 {
-    public PropertiesView()
+    public CreateBrandTypeView()
     {
         InitializeComponent();
-        DataContext = new PropertiesViewModel();
+        DataContext = new CreateBrandTypeViewModel();
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        Debug.WriteLine('h');
     }
 }

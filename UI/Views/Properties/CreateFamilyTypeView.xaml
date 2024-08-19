@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="ek24.UI.Views.Properties.CreateFamilyTypeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             
+             xmlns:local="clr-namespace:ek24.UI.Views.Properties"
+             xmlns:convertors="clr-namespace:ek24.UI.Convertors"
+
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <convertors:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/ComboStyles2.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/MainViewResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid>
+
+        <!-- Row 1: Create new item panel -->
+        <TextBlock TextAlignment="Center">Create New Item</TextBlock>
+
+        <StackPanel>
+            <!--Createtion Panel: First way-->
+            <StackPanel Margin="0 10" Orientation="Horizontal"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                <StackPanel>
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Family Group" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="FamilyGroups" Width="180"
+                              Style="{StaticResource ModernComboBox2}"
+                              ItemsSource="{Binding FamilyGroups}"
+                              DisplayMemberPath="GroupName"
+                              SelectedItem="{Binding SelectedFamilyGroup, Mode=TwoWay}"
+                              />
+                    </StackPanel>
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Type" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="Types" Width="180"
+                              Style="{StaticResource ModernComboBox2}"
+                              ItemsSource="{Binding FamilyTypes}"
+                              DisplayMemberPath="TypeName"
+                              SelectedItem="{Binding SelectedFamilyType, Mode=TwoWay}"
+                              IsEnabled="{Binding SelectedFamily, Converter={StaticResource NullToBooleanConverter}}"
+                              />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel>
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Family" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="Familys" Width="180"
+                              Style="{StaticResource ModernComboBox2}"
+                              ItemsSource="{Binding Familys}"
+                              DisplayMemberPath="FamilyName"
+                              SelectedItem="{Binding SelectedFamily, Mode=TwoWay}"
+                              IsEnabled="{Binding SelectedFamilyGroup, Converter={StaticResource NullToBooleanConverter}}"
+                              />
+                    </StackPanel>
+                    <Button Content="Create" Height="35" Margin="10 24 0 0" 
+                        IsEnabled="{Binding SelectedFamilyType, Converter={StaticResource NullToBooleanConverter}}"
+                        Style="{StaticResource ModernButton}"
+                        Command="{Binding CreateNewFamilyCommand}"/>
+                </StackPanel>
+
+            </StackPanel>
+
+        </StackPanel>
+
+    </Grid>
+</UserControl>

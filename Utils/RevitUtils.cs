@@ -37,6 +37,11 @@ public static class RevitUtils
             /// EXCEL DATA
             List<FamilyGroup> familyGroups = InitializeRevitInventory();
             RevitFamilyGroups.FamilyGroups = familyGroups;
+
+            /// Brands with all Types
+            List<BrandCatalogue> brandCatalogues = CreateBrandCatalogues();
+            RevitBrandData.BrandCatalogues = brandCatalogues;
+
         }
         catch (Exception ex)
         {
@@ -122,6 +127,58 @@ public static class RevitUtils
         }
 
         return familyGroups;
+    }
+
+
+    private static List<BrandCatalogue> CreateBrandCatalogues()
+    {
+        List<BrandCatalogue> brandCatalogues = new List<BrandCatalogue>();
+
+        // Define a dictionary to map brand names to their respective family group prefixes
+        Dictionary<string, string[]> brandPrefixes = new Dictionary<string, string[]>
+    {
+        { "Yorktowne Classic", new[] { "YorktowneClassic" } },
+        { "Yorktowne Historic", new[] { "YorktowneHistoric" } },
+        { "Eclipse by Shiloh", new[] { "Eclipse" } },
+        { "Aristokraft", new[] { "Aristokraft" } }
+    };
+
+        // Iterate through each brand in RevitBrandData.Brands
+        foreach (var brand in RevitBrandData.Brands)
+        {
+            // Initialize a new BrandCatalogue for the current brand
+            BrandCatalogue brandCatalogue = new BrandCatalogue
+            {
+                BrandName = brand.BrandName,
+                FamilyTypes = new List<FamilyType>()
+            };
+
+            // Find the prefixes for this brand
+            if (brandPrefixes.TryGetValue(brand.BrandName, out string[] prefixes))
+            {
+                // Iterate through each FamilyGroup in RevitFamilyGroups.FamilyGroups
+                foreach (var familyGroup in RevitFamilyGroups.FamilyGroups)
+                {
+                    // Check if the FamilyGroup's name starts with any of the prefixes for this brand
+                    if (prefixes.Any(prefix => familyGroup.GroupName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        // Add all FamilyTypes from this FamilyGroup to the brand's catalogue
+                        foreach (var family in familyGroup.Familys)
+                        {
+                            brandCatalogue.FamilyTypes.AddRange(family.FamilyTypes);
+                        }
+                    }
+                }
+
+                // If this brand has associated FamilyTypes, add it to the list of BrandCatalogues
+                if (brandCatalogue.FamilyTypes.Any())
+                {
+                    brandCatalogues.Add(brandCatalogue);
+                }
+            }
+        }
+
+        return brandCatalogues;
     }
 
 

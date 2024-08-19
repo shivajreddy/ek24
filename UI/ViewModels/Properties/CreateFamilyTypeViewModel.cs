@@ -17,7 +17,7 @@ using ek24.UI.Models.Revit;
 namespace ek24.UI.ViewModels.Properties;
 
 
-public class CreateInstanceViewModel : INotifyPropertyChanged
+public class CreateFamilyTypeViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName)
@@ -130,7 +130,6 @@ public class CreateInstanceViewModel : INotifyPropertyChanged
         {
             FamilyTypes = new List<FamilyType>();
         }
-
     }
 
 
@@ -142,7 +141,7 @@ public class CreateInstanceViewModel : INotifyPropertyChanged
         APP.ExternalEvent?.Raise();
     }
 
-    public CreateInstanceViewModel()
+    public CreateFamilyTypeViewModel()
     {
         SelectedFamilyGroup = null;
         SelectedFamily = null;

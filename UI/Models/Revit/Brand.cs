@@ -16,6 +16,9 @@ namespace ek24.UI.Models.Revit;
 public static class RevitBrandData
 {
     public static List<Brand> Brands { get; set; }
+
+    /// Brands with all FamilyTypes
+    public static List<BrandCatalogue> BrandCatalogues { get; set; }
 }
 
 /// <summary>
@@ -43,5 +46,13 @@ public class SpeciesVariant
 {
     public string SpeciesName { get; set; }
     public List<string> Finishes { get; set; }
+}
+
+
+/// Other Models needed
+public class BrandCatalogue
+{
+    public string BrandName { get; set; }
+    public List<FamilyType> FamilyTypes { get; set; }
 }
 

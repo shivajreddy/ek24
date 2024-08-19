@@ -85,7 +85,8 @@
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\ProjectBrowserViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\SelectCaseWorkViewModel.cs" />
-    <Compile Include="UI\ViewModels\Properties\CreateInstanceViewModel.cs" />
+    <Compile Include="UI\ViewModels\Properties\CreateBrandTypeViewModel.cs" />
+    <Compile Include="UI\ViewModels\Properties\CreateFamilyTypeViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\PropertiesViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\UpdateFamilyAndTypeViewModel.cs" />
     <Compile Include="UI\Views\MainView.xaml.cs">
@@ -95,8 +96,11 @@
     <Compile Include="UI\Views\Project Browser\SelectCaseWorkView.xaml.cs">
       <DependentUpon>SelectCaseWorkView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\Properties\CreateFamilyType.xaml.cs">
-      <DependentUpon>CreateFamilyType.xaml</DependentUpon>
+    <Compile Include="UI\Views\Properties\CreateBrandTypeView.xaml.cs">
+      <DependentUpon>CreateBrandTypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\Properties\CreateFamilyTypeView.xaml.cs">
+      <DependentUpon>CreateFamilyTypeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Views\Properties\PropertiesPanel.xaml.cs">
       <DependentUpon>PropertiesPanel.xaml</DependentUpon>
@@ -374,7 +378,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Views\Properties\CreateFamilyType.xaml">
+    <Page Include="UI\Views\Properties\CreateBrandTypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\Properties\CreateFamilyTypeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

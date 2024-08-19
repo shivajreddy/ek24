@@ -20,12 +20,12 @@ using ek24.UI.ViewModels.Properties;
 namespace ek24.UI.Views.Properties;
 
 
-public partial class CreateFamilyType : UserControl
+public partial class CreateFamilyTypeView : UserControl
 {
-    public CreateFamilyType()
+    public CreateFamilyTypeView()
     {
         InitializeComponent();
-        DataContext = new CreateInstanceViewModel();
+        DataContext = new CreateFamilyTypeViewModel();
     }
 
     //private void Button_Click(object sender, RoutedEventArgs e)
