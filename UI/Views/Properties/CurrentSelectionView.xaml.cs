@@ -34,6 +34,5 @@ public partial class CurrentSelectionView : UserControl
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-
     }
 }

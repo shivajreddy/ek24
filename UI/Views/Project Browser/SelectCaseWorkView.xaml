@@ -57,8 +57,8 @@
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"  >
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="15 0" >
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 0 4">
-                        <TextBlock Text="ⓘ" FontWeight="Bold" Margin="0 0 4px 0"/>
-                        <TextBlock Text="Select CaseWork Group"/>
+                        <!--<TextBlock Text="ⓘ" FontWeight="Bold" Margin="0 0 4px 0"/>
+                        <TextBlock Text="Select CaseWork Group"/>-->
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center">
                         <StackPanel Margin="0 5" Orientation="Horizontal" CanVerticallyScroll="True">

@@ -13,14 +13,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using ek24.UI.ViewModels.Properties;
+
+
 namespace ek24.UI.Views.Properties;
-/// <summary>
-/// Interaction logic for UpdateInstanceParams.xaml
-/// </summary>
-public partial class UpdateInstanceParams : UserControl
+
+
+public partial class PropertiesViewView : UserControl
 {
-    public UpdateInstanceParams()
+    public PropertiesViewView()
     {
         InitializeComponent();
+        DataContext = new PropertiesPanelViewModel();
     }
 }

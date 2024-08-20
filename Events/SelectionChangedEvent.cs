@@ -3,6 +3,7 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using ek24.UI.Services;
 using ek24.UI.ViewModels.Properties;
 using SelectionChangedEventArgs = Autodesk.Revit.UI.Events.SelectionChangedEventArgs;
 
@@ -41,8 +42,11 @@ public class SelectionChangedEvent
         // Update the ViewModel with the new selection
 
 
-        CurrentSelectionViewModel.SyncViewModelWithRevit(currentSelection, doc);
+        // moving this to SelectionService
+        //SelectionService.SyncSelectionWithRevit(currentSelection, doc);
 
+        CurrentSelectionViewModel.SyncViewModelWithRevit(currentSelection, doc);
+        InstanceParamsViewModel.SyncViewModelWithRevit(currentSelection, doc);
     }
 
 

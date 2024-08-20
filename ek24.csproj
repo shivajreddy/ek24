@@ -73,9 +73,10 @@
     <Compile Include="APP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Commands\RelayCommand.cs" />
+    <Compile Include="UI\Convertors\BoolToVisibilityConvertor.cs" />
     <Compile Include="UI\Convertors\NullToBooleanConvertor.cs" />
-    <Compile Include="UI\CurrentUiState.cs" />
     <Compile Include="UI\Models\Properties\CreateInstanceModel.cs" />
+    <Compile Include="UI\Models\Properties\InstanceParamsModel.cs" />
     <Compile Include="UI\Models\Properties\PropertiesModel.cs" />
     <Compile Include="UI\Models\Properties\CurrentSelectionModel.cs" />
     <Compile Include="UI\Models\Revit\Inventory.cs" />
@@ -83,12 +84,14 @@
     <Compile Include="UI\Models\ProjectBrowser\ProjectBrowserModel.cs" />
     <Compile Include="UI\Models\ProjectBrowser\SelectCaseWorkModel.cs" />
     <Compile Include="UI\Models\Revit\Brand.cs" />
+    <Compile Include="UI\Services\SelectionService.cs" />
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\ProjectBrowserViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\SelectCaseWorkViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\CreateBrandTypeViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\CreateFamilyTypeViewModel.cs" />
-    <Compile Include="UI\ViewModels\Properties\PropertiesViewModel.cs" />
+    <Compile Include="UI\ViewModels\Properties\InstanceParamsViewModel.cs" />
+    <Compile Include="UI\ViewModels\Properties\PropertiesPanelViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\CurrentSelectionViewModel.cs" />
     <Compile Include="UI\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -103,14 +106,14 @@
     <Compile Include="UI\Views\Properties\CreateFamilyTypeView.xaml.cs">
       <DependentUpon>CreateFamilyTypeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\Properties\PropertiesPanel.xaml.cs">
-      <DependentUpon>PropertiesPanel.xaml</DependentUpon>
+    <Compile Include="UI\Views\Properties\PropertiesPanelView.xaml.cs">
+      <DependentUpon>PropertiesPanelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Views\Project Browser\ProjectBrowserView.xaml.cs">
       <DependentUpon>ProjectBrowserView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\Properties\UpdateInstanceParams.xaml.cs">
-      <DependentUpon>UpdateInstanceParams.xaml</DependentUpon>
+    <Compile Include="UI\Views\Properties\InstanceParamsView.xaml.cs">
+      <DependentUpon>InstanceParamsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Views\Properties\CurrentSelectionView.xaml.cs">
       <DependentUpon>CurrentSelectionView.xaml</DependentUpon>
@@ -387,7 +390,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Views\Properties\PropertiesPanel.xaml">
+    <Page Include="UI\Views\Properties\PropertiesPanelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -395,7 +398,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Views\Properties\UpdateInstanceParams.xaml">
+    <Page Include="UI\Views\Properties\InstanceParamsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

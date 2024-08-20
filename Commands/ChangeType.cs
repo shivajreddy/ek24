@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using Autodesk.Revit.DB;
 using ek24.UI.ViewModels.Properties;
+using ek24.UI.Services;
 
 namespace ek24.Commands;
 
@@ -18,8 +19,14 @@ public class ChangeType
         Document doc = uiDoc.Document;
 
         // Assume that you have already selected a FamilyInstance and have the new type name
+
+        // moving this logic into SelectinService
+        //FamilyInstance selectedInstance = SelectionService.SelectedFamilyInstance;
+
         FamilyInstance selectedInstance = CurrentSelectionViewModel.SelectedFamilyInstance;
+
         string newTypeName = CurrentSelectionViewModel.ChosenCabinetType.Item1;
+
 
         // Call the function to change the type
         ChangeFamilyInstanceType(selectedInstance, newTypeName, doc);

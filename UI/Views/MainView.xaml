@@ -15,8 +15,8 @@
         <!-- Merge the MainViewResources.xaml into this page's resources -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/ComboStyles2.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/MainViewResources.xaml" />
-                <!--<ResourceDictionary Source="/UI/Resources/MainViewResources.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -29,12 +29,24 @@
             </TabItem>
 
             <TabItem Header="Properties" FontSize="14">
-                <views_properties:PropertiesView/>
+                <views_properties:PropertiesViewView/>
             </TabItem>
             <TabItem Header="Manage" FontSize="14">
-                <StackPanel>
-                    <TextBlock Text="third?"/>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button x:Name="PrintToPdf" Content="Print To PDf" 
+                        Width="200" Height="40" Margin="20"
+                        Style="{StaticResource ModernButton}"
+                    />
+                    <Button x:Name="ExportToExcel" Content="Export To Excel" 
+                        Width="200" Height="40" Margin="20"
+                        Style="{StaticResource ModernButton}"
+                    />
+
+                    <TextBlock Text="Other Manage features" TextAlignment="Center" Margin="10"/>
+
                 </StackPanel>
+
+
             </TabItem>
 
         </TabControl>

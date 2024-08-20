@@ -1,23 +1,22 @@
-﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI.Selection;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
-
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI.Selection;
 using ek24.RequestHandling;
 using ek24.UI.Commands;
-using ek24.UI.Services;
+using ek24.UI.Models.Properties;
+using ek24.UI.Models.Revit;
 
 
 namespace ek24.UI.ViewModels.Properties;
 
-public class CurrentSelectionViewModel : INotifyPropertyChanged
+
+public class InstanceParamsViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName)
@@ -29,7 +28,6 @@ public class CurrentSelectionViewModel : INotifyPropertyChanged
     {
         StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
     }
-
 
     private static bool _selectionIsCaseWorkOnly { get; set; }
     public static bool SelectionIsCaseWorkOnly
@@ -56,6 +54,7 @@ public class CurrentSelectionViewModel : INotifyPropertyChanged
             {
                 _selectionIsOneInstance = value;
                 OnStaticPropertyChanged(nameof(SelectionIsOneInstance));
+                UpdateAvailableVendorStyles();
             }
         }
     }
@@ -90,29 +89,29 @@ public class CurrentSelectionViewModel : INotifyPropertyChanged
         }
     }
 
-    public static List<(string, string)> _availableCabinetTypes { get; set; }
-    public static List<(string, string)> AvailableCabinetTypes
+    private static List<string> _availableVendorStyles;
+    public static List<string> AvailableVendorStyles
     {
-        get => _availableCabinetTypes;
+        get => _availableVendorStyles;
         set
         {
-            if (_availableCabinetTypes != value)
+            if (_availableVendorStyles != value)
             {
-                _availableCabinetTypes = value;
-                OnStaticPropertyChanged(nameof(AvailableCabinetTypes));
+                _availableVendorStyles = value;
+                OnStaticPropertyChanged(nameof(AvailableVendorStyles));
             }
         }
     }
-    public static (string, string) _chosenCabinetType { get; set; }
-    public static (string, string) ChosenCabinetType
+    public static (string, string) _chosenVendorStyleInstance { get; set; }
+    public static (string, string) ChosenVendorStyleInstance
     {
-        get => _chosenCabinetType;
+        get => _chosenVendorStyleInstance;
         set
         {
-            if (_chosenCabinetType != value)
+            if (_chosenVendorStyleInstance != value)
             {
-                _chosenCabinetType = value;
-                OnStaticPropertyChanged(nameof(ChosenCabinetType));
+                _chosenVendorStyleInstance = value;
+                OnStaticPropertyChanged(nameof(ChosenVendorStyleInstance));
             }
         }
     }
@@ -165,23 +164,66 @@ public class CurrentSelectionViewModel : INotifyPropertyChanged
                 // Add the associated FamilyTypes to the FamilyTypes collection
                 CurrentSelectionFamilySymbols.Add(symbol);
 
-                // Update AvailableCabinetTypes with the names of the available FamilySymbols and their Vendor_Notes values
-                AvailableCabinetTypes = symbol.Family
-                    .GetFamilySymbolIds()
-                    .Select(id => doc.GetElement(id) as FamilySymbol)
-                    .Where(familySymbol => familySymbol != null)
-                    .Select(familySymbol => (
-                        familySymbol.Name,
-                        GetParameterValue(familySymbol, "Vendor_Notes") ?? string.Empty))
-                    .ToList();
+
+                // get the brand name
+                Parameter vendorNameParam = familyInstance.Symbol.LookupParameter("Vendor_Name");
+                string vendorName = vendorNameParam.AsValueString();
+
+                // get the list of style names availabe for this vendor-name
+                List<string> availableStyleNames = new List<string>();
+
+
+                // The 4 possible values that i get for the Vendor_Name parameter value
+                //"YORKTOWNE-HISTORIC"
+                //"Yorktowne_Classic"
+                //"Aristokraft" 
+                // "Eclipse"
+
+                // the BrandName ppy on the 4 RevitBrandData.Brands items
+                // "Yorktowne Historic"
+                // "Yorktowne Classic"
+                // "Aristokraft"
+                // "Eclipse by Shiloh"
+                // The mapping of Vendor_Name parameter values to BrandName
+                var vendorNameToBrandNameMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "YORKTOWNE-HISTORIC", "Yorktowne Historic" },
+                        { "Yorktowne_Classic", "Yorktowne Classic" },
+                        { "Aristokraft", "Aristokraft" },
+                        { "Eclipse", "Eclipse by Shiloh" }
+                    };
+
+                // Check if the vendorName is in the map
+                if (!string.IsNullOrEmpty(vendorName) && vendorNameToBrandNameMap.ContainsKey(vendorName))
+                {
+                    // Get the corresponding BrandName
+                    string brandName = vendorNameToBrandNameMap[vendorName];
+
+                    // Find the brand with the matching BrandName
+                    var matchingBrand = RevitBrandData.Brands.FirstOrDefault(b => b.BrandName.Equals(brandName, StringComparison.OrdinalIgnoreCase));
+
+                    if (matchingBrand != null)
+                    {
+                        // Extract the style names
+                        availableStyleNames = matchingBrand.Styles.Select(s => s.StyleName).ToList();
+                    }
+                }
+
+                // Assign to AvailableVendorStyles or handle as needed
+                AvailableVendorStyles = availableStyleNames;
             }
         }
         else
         {
-            // If not casework or not a single instance, clear the AvailableCabinetTypes
-            AvailableCabinetTypes = new List<(string, string)>();
+            AvailableVendorStyles = new List<string>();
         }
     }
+
+    private static void UpdateAvailableVendorStyles()
+    {
+    }
+
+
     private static string GetParameterValue(Element element, string parameterName)
     {
         // Find the parameter by name
@@ -208,7 +250,7 @@ public class CurrentSelectionViewModel : INotifyPropertyChanged
 
     public ICommand UpdateTypeCommand { get; }
 
-    public CurrentSelectionViewModel()
+    public InstanceParamsViewModel()
     {
         CurrentSelectionFamilySymbols = new List<FamilySymbol>();
 
@@ -222,112 +264,3 @@ public class CurrentSelectionViewModel : INotifyPropertyChanged
     }
 
 }
-
-
-/*
-public class CurrentSelectionViewModel : INotifyPropertyChanged
-{
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-    public static event PropertyChangedEventHandler StaticPropertyChanged;
-    private static void OnStaticPropertyChanged(string propertyName)
-    {
-        StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
-    }
-
-    // Replace redundant properties with service property accessors
-    public bool SelectionIsCaseWorkOnly => SelectionService.SelectionIsCaseWorkOnly;
-    public bool SelectionIsOneInstance => SelectionService.SelectionIsOneInstance;
-    public FamilyInstance SelectedFamilyInstance => SelectionService.SelectedFamilyInstance;
-    public static List<FamilySymbol> CurrentSelectionFamilySymbols => SelectionService.CurrentSelectionFamilySymbols;
-
-    public static List<(string, string)> AvailableCabinetTypes => SelectionService.AvailableCabinetTypes;
-    //public static List<(string, string)> _availableCabinetTypes { get; set; }
-    //public static List<(string, string)> AvailableCabinetTypes
-    //{
-    //    get => SelectionService.AvailableCabinetTypes;
-    //    set
-    //    {
-    //        if (_availableCabinetTypes != value)
-    //        {
-    //            _availableCabinetTypes = value;
-    //            OnStaticPropertyChanged(nameof(AvailableCabinetTypes));
-    //        }
-    //    }
-    //}
-
-    private static (string, string) _chosenCabinetType;
-    public static (string, string) ChosenCabinetType
-    {
-        get => _chosenCabinetType;
-        set
-        {
-            if (_chosenCabinetType != value)
-            {
-                _chosenCabinetType = value;
-                OnStaticPropertyChanged(nameof(ChosenCabinetType));
-            }
-        }
-    }
-
-    private string _chosenFamilySymbol;
-    public string ChosenFamilySymbol
-    {
-        get => _chosenFamilySymbol;
-        set
-        {
-            if (_chosenFamilySymbol != value)
-            {
-                _chosenFamilySymbol = value;
-                OnPropertyChanged(nameof(ChosenFamilySymbol));
-            }
-        }
-    }
-
-    private void OnStaticPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        // Raise property changed for relevant properties when SelectionService changes
-        if (e.PropertyName == nameof(SelectionService.SelectionIsCaseWorkOnly))
-        {
-            OnPropertyChanged(nameof(SelectionIsCaseWorkOnly));
-        }
-        else if (e.PropertyName == nameof(SelectionService.SelectionIsOneInstance))
-        {
-            OnPropertyChanged(nameof(SelectionIsOneInstance));
-        }
-        else if (e.PropertyName == nameof(SelectionService.SelectedFamilyInstance))
-        {
-            OnPropertyChanged(nameof(SelectedFamilyInstance));
-        }
-        else if (e.PropertyName == nameof(SelectionService.CurrentSelectionFamilySymbols))
-        {
-            OnPropertyChanged(nameof(CurrentSelectionFamilySymbols));
-        }
-        else if (e.PropertyName == nameof(SelectionService.AvailableCabinetTypes))
-        {
-            OnPropertyChanged(nameof(AvailableCabinetTypes));
-        }
-    }
-
-    public ICommand UpdateTypeCommand { get; }
-
-    public CurrentSelectionViewModel()
-    {
-
-        UpdateTypeCommand = new RelayCommand(HandleUpdateType);
-
-        // Subscribe to the static property changed event from SelectionService
-        SelectionService.StaticPropertyChanged += OnStaticPropertyChanged;
-    }
-
-    private void HandleUpdateType()
-    {
-        APP.RequestHandler.RequestType = RequestType.RevitNew_UpdateCabinetType;
-        APP.ExternalEvent?.Raise();
-    }
-}
-
-*/

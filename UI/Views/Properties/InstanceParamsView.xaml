@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="ek24.UI.Views.Properties.InstanceParamsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+
+             xmlns:local="clr-namespace:ek24.UI.Views.Properties"
+             xmlns:convertors="clr-namespace:ek24.UI.Convertors" 
+
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <convertors:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/ComboStyles2.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/MainViewResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <!--Row 2: Instance properties: Style/Material/Handles-->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10"
+                                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+
+        <StackPanel>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
+
+                <StackPanel Margin="5 0" Width="150" HorizontalAlignment="Center">
+                    <TextBlock Text="Set Vendor Style" TextAlignment="Center"/>
+                    <ComboBox x:Name="VendorStyleOptions" Margin="10 2"
+                            ItemsSource="{Binding AvailableVendorStyles }"
+                            SelectedItem="{Binding ChosenVendorStyleInstance}"
+                    />
+                </StackPanel>
+
+                <StackPanel Margin="5 0" Width="200" HorizontalAlignment="Center">
+                    <TextBlock Text="Set Material Style" TextAlignment="Center"/>
+                    <ComboBox x:Name="VendorMaterialOptions" Margin="10 2"
+                    ItemsSource="{Binding AvailableVendorStyles }"
+                    IsEnabled="{Binding ChosenVendorStyleInstance, Converter={StaticResource BoolToVisibilityConverter}}"
+                    SelectedItem="{Binding ChosenCabinetType}"
+                    />
+                </StackPanel>
+
+                <Button x:Name="FamilyTypeSettingsUpdate" Content="Update Type" 
+                        Width="100" Height="25" Margin="20 0 0 0"
+                        Style="{StaticResource ModernButton}"
+                        Command="{Binding UpdateTypeCommand}"
+                />
+
+
+
+            </StackPanel>
+
+            <TextBlock Text="Other instance properties go here" TextAlignment="Center" Margin="0 50"/>
+
+            <!--<Button Content="Debug" Click="Button_Click"/>-->
+        </StackPanel>
+
+    </ScrollViewer>
+
+
+
+</UserControl>
+
+<!--IsEnabled="{Binding ChosenCabinetType, Converter={StaticResource NullToBooleanConverter}}"-->

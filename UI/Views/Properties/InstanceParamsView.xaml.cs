@@ -19,11 +19,17 @@ using ek24.UI.ViewModels.Properties;
 namespace ek24.UI.Views.Properties;
 
 
-public partial class PropertiesView : UserControl
+
+public partial class InstanceParamsView : UserControl
 {
-    public PropertiesView()
+    public InstanceParamsView()
     {
         InitializeComponent();
-        DataContext = new PropertiesViewModel();
+        DataContext = new InstanceParamsViewModel();
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+
     }
 }
