@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:ek24.UI.Views.ProjectBrowser"
-             xmlns:view_models="clr-namespace:ek24.UI.ViewModels.ProjectBrowser">
+             xmlns:view_models="clr-namespace:ek24.UI.ViewModels.ProjectBrowser"
+             >
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

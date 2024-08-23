@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="ek24.UI.Views.Manage.ManageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+
+             d:DesignHeight="450" d:DesignWidth="800"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/ProjectBrowserResources.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/MainViewResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <!--<views:EmptyListToVisibilityConverter x:Key="EmptyListToVisibilityConverter"/>-->
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel Width="400"
+            VerticalAlignment="Center" HorizontalAlignment="Center">
+
+            <!-- TODO: these bindings are not working for some reason -->
+            <!--<TextBlock Text="{Binding PrintSettingName}"/>
+            <TextBlock Text="{Binding ViewSheetSetName}"/>-->
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+                <TextBlock Text="Print Settings Name: " IsEnabled="False" />
+                <TextBlock Text="CABINETRY DRAWINGS" IsEnabled="False"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+                <TextBlock Text="View Sheet Set Name: " IsEnabled="False"/>
+                <TextBlock Text="EAGLE CABINETRY - LOT SPEC" IsEnabled="False"/>
+            </StackPanel>
+
+            <Button x:Name="PrintToPdf" Content="Print To PDf" 
+                        Width="200" Height="40" Margin="20"
+                        Command="{Binding PrintToPdfCommand}"
+                        Style="{StaticResource ModernButton}"
+                    />
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+                <TextBlock Text="For better experience close Excel application before using this feature" IsEnabled="False"/>
+            </StackPanel>
+            <Button x:Name="ExportToExcel" Content="Export To Excel" 
+                        Width="200" Height="40" Margin="20"
+                        Command="{Binding ExportToExcelCommand}"
+                        Style="{StaticResource ModernButton}"
+                    />
+
+            <TextBlock Text="Other Manage features" TextAlignment="Center" Margin="10"/>
+
+            <Button Click="Button_Click" Height="50" Content="debug"/>
+
+        </StackPanel>
+
+    </Grid>
+</UserControl>
+<!--<TextBlock Text="{Binding PrintSettingName}"/>
+            <TextBlock Text="{Binding ViewSheetSetName}"/>-->

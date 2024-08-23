@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Office.Interop.Excel.15.0.4795.1001\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -64,6 +68,8 @@
   <ItemGroup>
     <Compile Include="Commands\ChangeType.cs" />
     <Compile Include="Commands\Create.cs" />
+    <Compile Include="Commands\ExportToExcel.cs" />
+    <Compile Include="Commands\PrintToPdf.cs" />
     <Compile Include="Commands\SelectionUpdates.cs" />
     <Compile Include="Commands\UiUpdates.cs" />
     <Compile Include="Commands\ShowDockCommand.cs" />
@@ -86,6 +92,7 @@
     <Compile Include="UI\Models\Revit\Brand.cs" />
     <Compile Include="UI\Services\SelectionService.cs" />
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
+    <Compile Include="UI\ViewModels\Manage\ManageViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\ProjectBrowserViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\SelectCaseWorkViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\CreateBrandTypeViewModel.cs" />
@@ -97,6 +104,9 @@
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Convertors\EmptyListToVisibilityConverter.cs" />
+    <Compile Include="UI\Views\Manage\ManageView.xaml.cs">
+      <DependentUpon>ManageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Views\Project Browser\SelectCaseWorkView.xaml.cs">
       <DependentUpon>SelectCaseWorkView.xaml</DependentUpon>
     </Compile>
@@ -118,6 +128,7 @@
     <Compile Include="UI\Views\Properties\CurrentSelectionView.xaml.cs">
       <DependentUpon>CurrentSelectionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ExcelExporter.cs" />
     <Compile Include="Utils\ImageUtils.cs" />
     <Compile Include="Utils\PluginUtils.cs" />
     <Compile Include="RequestHandling\RequestHandler.cs" />
@@ -375,6 +386,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Views\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\Manage\ManageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

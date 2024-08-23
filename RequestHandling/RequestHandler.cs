@@ -44,13 +44,13 @@ public enum RequestType
     RevitUI_SelectCaseWork,
 
     // 'Properties' related Requests
-    RevitNew_FamilyAndType,
-    RevitNew_UpdateCabinetType,
-    RevitNew_MakeCustomizations,
+    Properties_FamilyAndType,
+    Properties_UpdateCabinetType,
+    Properties_MakeCustomizations,
 
     // 'Manage' related Requests
-    RevitUI_PrintDrawings,
-    RevitUI_ExportQuantitiesToExcel,
+    Manage_PrintDrawings,
+    Manage_ExportQuantitiesToExcel,
 
     // Misc Requests
     DevTest,
@@ -80,13 +80,23 @@ public class RequestHandler : IExternalEventHandler
             case RequestType.RevitUI_SelectCaseWork:
                 SelectionUpdates.SelectCaseWorkElements(app);
                 break;
-            case RequestType.RevitNew_FamilyAndType:
+            case RequestType.Properties_FamilyAndType:
                 Create.CreateNewInstance(app);
                 break;
-            case RequestType.RevitNew_UpdateCabinetType:
+            case RequestType.Properties_UpdateCabinetType:
                 ChangeType.UpdateCabinetTypeForSelectedInstance(app);
                 break;
 
+            // 'Manage' related
+            case RequestType.Manage_PrintDrawings:
+                PrintToPdf.PrintDocument(app);
+                break;
+            case RequestType.Manage_ExportQuantitiesToExcel:
+                ExportToExcel.ExportQuantitiesToExcel(app);
+                break;
+
+            default:
+                break;
         }
     }
 

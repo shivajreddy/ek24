@@ -217,7 +217,7 @@ public class CurrentSelectionViewModel : INotifyPropertyChanged
     private void HandleUpdateType()
     {
         //GoToViewName = view.Name;
-        APP.RequestHandler.RequestType = RequestType.RevitNew_UpdateCabinetType;
+        APP.RequestHandler.RequestType = RequestType.Properties_UpdateCabinetType;
         APP.ExternalEvent?.Raise();
     }
 

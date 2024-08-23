@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
+
 using ek24.RequestHandling;
 using ek24.UI.Commands;
-using ek24.UI.Models.Properties;
 using ek24.UI.Models.Revit;
 
 
@@ -259,7 +257,7 @@ public class InstanceParamsViewModel : INotifyPropertyChanged
     private void HandleUpdateType()
     {
         //GoToViewName = view.Name;
-        APP.RequestHandler.RequestType = RequestType.RevitNew_UpdateCabinetType;
+        APP.RequestHandler.RequestType = RequestType.Properties_UpdateCabinetType;
         APP.ExternalEvent?.Raise();
     }
 

@@ -137,7 +137,7 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
     private void OnCreateNewFamily()
     {
         //GoToViewName = view.Name;
-        APP.RequestHandler.RequestType = RequestType.RevitNew_FamilyAndType;
+        APP.RequestHandler.RequestType = RequestType.Properties_FamilyAndType;
         APP.ExternalEvent?.Raise();
     }
 
