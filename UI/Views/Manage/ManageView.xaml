@@ -25,33 +25,38 @@
             <!--<TextBlock Text="{Binding PrintSettingName}"/>
             <TextBlock Text="{Binding ViewSheetSetName}"/>-->
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+            <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2">
                 <TextBlock Text="Print Settings Name: " IsEnabled="False" />
                 <TextBlock Text="CABINETRY DRAWINGS" IsEnabled="False"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2">
                 <TextBlock Text="View Sheet Set Name: " IsEnabled="False"/>
                 <TextBlock Text="EAGLE CABINETRY - LOT SPEC" IsEnabled="False"/>
             </StackPanel>
 
             <Button x:Name="PrintToPdf" Content="Print To PDf" 
-                        Width="200" Height="40" Margin="20"
+                        Width="200" Height="40" Margin="20 5"
                         Command="{Binding PrintToPdfCommand}"
                         Style="{StaticResource ModernButton}"
                     />
+            </StackPanel>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
-                <TextBlock Text="For better experience close Excel application before using this feature" IsEnabled="False"/>
+            <StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="Note: For better experience close Excel"/>
+                <TextBlock Text="application before using this feature" IsEnabled="False"/>
             </StackPanel>
             <Button x:Name="ExportToExcel" Content="Export To Excel" 
-                        Width="200" Height="40" Margin="20"
+                        Width="200" Height="40" Margin="20 5"
                         Command="{Binding ExportToExcelCommand}"
                         Style="{StaticResource ModernButton}"
                     />
+            </StackPanel>
 
-            <TextBlock Text="Other Manage features" TextAlignment="Center" Margin="10"/>
+            <!--<TextBlock Text="Other Manage features" TextAlignment="Center" Margin="10"/>-->
 
-            <Button Click="Button_Click" Height="50" Content="debug"/>
+            <!--<Button Click="Button_Click" Height="50" Content="debug"/>-->
 
         </StackPanel>
 
