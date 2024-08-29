@@ -29,4 +29,3 @@ public class BoolToVisibilityConverter : IValueConverter
         return false;
     }
 }
-

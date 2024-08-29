@@ -99,7 +99,7 @@
     <Compile Include="UI\ViewModels\Properties\CreateFamilyTypeViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\InstanceParamsViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\PropertiesPanelViewModel.cs" />
-    <Compile Include="UI\ViewModels\Properties\CurrentSelectionViewModel.cs" />
+    <Compile Include="UI\ViewModels\Properties\TypeParamsViewModel.cs" />
     <Compile Include="UI\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -125,9 +125,10 @@
     <Compile Include="UI\Views\Properties\InstanceParamsView.xaml.cs">
       <DependentUpon>InstanceParamsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\Properties\CurrentSelectionView.xaml.cs">
-      <DependentUpon>CurrentSelectionView.xaml</DependentUpon>
+    <Compile Include="UI\Views\Properties\TypeParamsView.xaml.cs">
+      <DependentUpon>TypeParamsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Models\Revit\CabinetsExportDataModel.cs" />
     <Compile Include="Utils\ExcelExporter.cs" />
     <Compile Include="Utils\ImageUtils.cs" />
     <Compile Include="Utils\PluginUtils.cs" />
@@ -417,7 +418,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Views\Properties\CurrentSelectionView.xaml">
+    <Page Include="UI\Views\Properties\TypeParamsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

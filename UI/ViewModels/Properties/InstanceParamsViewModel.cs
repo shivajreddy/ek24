@@ -72,17 +72,17 @@ public class InstanceParamsViewModel : INotifyPropertyChanged
         }
     }
 
-    // Add a property to hold the currently selected FamilyInstance
-    private static FamilyInstance _selectedFamilyInstance;
-    public static FamilyInstance SelectedFamilyInstance
+    // Add a property to hold the currently selected Cabinet FamilyInstance
+    private static FamilyInstance _selectedCabinetFamilyInstance;
+    public static FamilyInstance SelectedCabinetFamilyInstance
     {
-        get => _selectedFamilyInstance;
+        get => _selectedCabinetFamilyInstance;
         set
         {
-            if (_selectedFamilyInstance != value)
+            if (_selectedCabinetFamilyInstance != value)
             {
-                _selectedFamilyInstance = value;
-                OnStaticPropertyChanged(nameof(SelectedFamilyInstance));
+                _selectedCabinetFamilyInstance = value;
+                OnStaticPropertyChanged(nameof(SelectedCabinetFamilyInstance));
             }
         }
     }
@@ -134,12 +134,12 @@ public class InstanceParamsViewModel : INotifyPropertyChanged
     /// Sets all the properties in the view model that will be used by the view.
     /// Is executed by the selection-event handler function
     /// </summary>
-    public static void SyncViewModelWithRevit(Selection currentSelection, Document doc)
+    public static void SyncCurrentSelectionWithInstanceParamsViewModel(Selection currentSelection, Document doc)
     {
         var selectedIds = currentSelection.GetElementIds();
 
         // Check if all selected elements are Casework or Millwork
-        SelectionIsCaseWorkOnly = AllElementsAreCaseworkMillWork(selectedIds, doc);
+        SelectionIsCaseWorkOnly = AllElementsAreCabinets(selectedIds, doc);
 
         // Check if there is exactly one instance selected
         SelectionIsOneInstance = selectedIds.Count() == 1;
@@ -151,7 +151,7 @@ public class InstanceParamsViewModel : INotifyPropertyChanged
             if (selectedElement is FamilyInstance familyInstance)
             {
                 // Save the selected FamilyInstance
-                SelectedFamilyInstance = familyInstance;
+                SelectedCabinetFamilyInstance = familyInstance;
 
                 // Clear existing FamilyTypes
                 CurrentSelectionFamilySymbols.Clear();
@@ -162,27 +162,27 @@ public class InstanceParamsViewModel : INotifyPropertyChanged
                 // Add the associated FamilyTypes to the FamilyTypes collection
                 CurrentSelectionFamilySymbols.Add(symbol);
 
-
                 // get the brand name
                 Parameter vendorNameParam = familyInstance.Symbol.LookupParameter("Vendor_Name");
-                string vendorName = vendorNameParam.AsValueString();
+                string vendorName = vendorNameParam != null ? vendorNameParam.AsValueString() : "";
 
                 // get the list of style names availabe for this vendor-name
                 List<string> availableStyleNames = new List<string>();
 
+                /*
+                 The 4 possible values that i get for the Vendor_Name parameter value
+                "YORKTOWNE-HISTORIC"
+                "Yorktowne_Classic"
+                "Aristokraft" 
+                 "Eclipse"
 
-                // The 4 possible values that i get for the Vendor_Name parameter value
-                //"YORKTOWNE-HISTORIC"
-                //"Yorktowne_Classic"
-                //"Aristokraft" 
-                // "Eclipse"
-
-                // the BrandName ppy on the 4 RevitBrandData.Brands items
-                // "Yorktowne Historic"
-                // "Yorktowne Classic"
-                // "Aristokraft"
-                // "Eclipse by Shiloh"
-                // The mapping of Vendor_Name parameter values to BrandName
+                 the BrandName ppy on the 4 RevitBrandData.Brands items
+                 "Yorktowne Historic"
+                 "Yorktowne Classic"
+                 "Aristokraft"
+                 "Eclipse by Shiloh"
+                 The mapping of Vendor_Name parameter values to BrandName
+                */
                 var vendorNameToBrandNameMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                     {
                         { "YORKTOWNE-HISTORIC", "Yorktowne Historic" },
@@ -213,6 +213,8 @@ public class InstanceParamsViewModel : INotifyPropertyChanged
         }
         else
         {
+            // No cabinet instance is selected
+            SelectedCabinetFamilyInstance = null;
             AvailableVendorStyles = new List<string>();
         }
     }
@@ -231,20 +233,58 @@ public class InstanceParamsViewModel : INotifyPropertyChanged
         return param != null && param.HasValue ? param.AsString() : null;
     }
 
-    private static bool AllElementsAreCaseworkMillWork(ICollection<ElementId> allElementIds, Document doc)
+
+    private static bool AllElementsAreCabinets(ICollection<ElementId> allElementIds, Document doc)
     {
-        //return doc != null && allElementIds != null && allElementIds.Count != 0 && allElementIds.All(elementId => doc.GetElement(elementId).Category.Name == "Casework");
-        return doc != null
-            && allElementIds != null
-            && allElementIds.Count != 0
-            && allElementIds.All(elementId =>
+        if (doc == null || allElementIds == null || allElementIds.Count == 0)
+        {
+            return false;
+        }
+
+        string[] validPrefixes = {
+            "Aristokraft-W-",
+            "Aristokraft-B-",
+            "Aristokraft-T-",
+            "Eclipse-W-",
+            "Eclipse-B-",
+            "Eclipse-T-",
+            "Eclipse",
+            "YTC-W-",
+            "YTC-B-",
+            "YTC-T-",
+            "YTH-W-",
+            "YTH-B-",
+            "YTH-T-",
+            };
+
+        foreach (var elementId in allElementIds)
+        {
+            var element = doc.GetElement(elementId);
+            if (element == null || element.Category == null)
             {
-                var element = doc.GetElement(elementId);
-                return element != null
-                       && element.Category != null
-                       && element.Category.Name == "Casework";
-            });
+                return false;
+            }
+
+            if (element.Category.Name != "Casework")
+            {
+                return false;
+            }
+
+            if (!(element is FamilyInstance familyInstance))
+            {
+                return false;
+            }
+
+            string familyName = familyInstance.Symbol.Family.Name;
+            if (!validPrefixes.Any(prefix => familyName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
+
 
     public ICommand UpdateTypeCommand { get; }
 

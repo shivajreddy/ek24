@@ -45,8 +45,9 @@ public class SelectionChangedEvent
         // moving this to SelectionService
         //SelectionService.SyncSelectionWithRevit(currentSelection, doc);
 
-        CurrentSelectionViewModel.SyncViewModelWithRevit(currentSelection, doc);
-        InstanceParamsViewModel.SyncViewModelWithRevit(currentSelection, doc);
+        // :: Update ViewModels ::
+        TypeParamsViewModel.SyncCurrentSelectionWithTypeParamsViewModel(currentSelection, doc);
+        InstanceParamsViewModel.SyncCurrentSelectionWithInstanceParamsViewModel(currentSelection, doc);
     }
 
 

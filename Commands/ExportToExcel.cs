@@ -9,7 +9,10 @@ using System.Threading.Tasks;
 using Autodesk.Revit.UI.Selection;
 using ek24.UI.ViewModels.Manage;
 using System.IO;
+
+using ek24.UI.Models.Revit;
 using ek24.Utils;
+using System.Windows.Forms;
 
 
 namespace ek24.Commands;
@@ -22,69 +25,100 @@ public class ExportToExcel
     {
         Document doc = app.ActiveUIDocument.Document;
 
-        string current_project_path = doc.PathName;
+        FilteredElementCollector caseworkCollector = new FilteredElementCollector(doc);
+        FilteredElementCollector designOptionsCollector = new FilteredElementCollector(doc);
 
-        // Collect all casework and millwork family instances that have a type parameter of 'Vendor_Name'
-        var collector = new FilteredElementCollector(doc)
+        // Filter all the cabinet instances
+        FilteredElementCollector caseWorkCollector = caseworkCollector.OfCategory(BuiltInCategory.OST_Casework);
+
+        // Filter for FamilyInstance elements
+        ICollection<Element> cabinetFamilyInstances = caseWorkCollector
             .OfClass(typeof(FamilyInstance))
-            .OfCategory(BuiltInCategory.OST_Casework);
+            .WhereElementIsNotElementType()
+            .ToElements();
 
+        string[] cabinetFamilyNamePrefixes = {
+            "Aristokraft-W-",
+            "Aristokraft-B-",
+            "Aristokraft-T-",
+            "Eclipse-W-",
+            "Eclipse-B-",
+            "Eclipse-T-",
+            "Eclipse",
+            "YTC-W-",
+            "YTC-B-",
+            "YTC-T-",
+            "YTH-W-",
+            "YTH-B-",
+            "YTH-T-"
+        };
 
-        var data = new List<(string Brand, string FamilyName, string TypeName, string Notes, int count)>();
+        // Filter for cabinet instances with the prefixes
+        List<FamilyInstance> ekCabinetInstances = new List<FamilyInstance>();
 
-        // Dictionary to keep track of the unique entries and their counts
-        var groupedData = new Dictionary<(string Brand, string FamilyName, string TypeName, string Notes), int>();
-
-        foreach (FamilyInstance instance in collector)
+        foreach (Element element in cabinetFamilyInstances)
         {
+            FamilyInstance instance = element as FamilyInstance;
+
             // Get the family and type names
             string familyName = instance.Symbol.Family.Name;
-            string typeName = instance.Symbol.Name;
 
-            // Check if the 'Vendor_Name' parameter exists and is of type string
-            Parameter vendorNameParam = instance.Symbol.LookupParameter("Vendor_Name");
-            if (vendorNameParam != null && vendorNameParam.StorageType == StorageType.String)
+            // Check if the family name starts with any of the prefixes
+            if (cabinetFamilyNamePrefixes.Any(familyName.StartsWith))
             {
-                string vendorNameValue = vendorNameParam.AsValueString();
-
-                // Check if the 'Vendor_Notes' parameter exists
-                Parameter notesParam = instance.Symbol.LookupParameter("Vendor_Notes");
-                string notesValue = notesParam != null ? notesParam.AsString() : "";
-
-                // Create a key for grouping
-                var key = (vendorNameValue, familyName, typeName, notesValue);
-
-                // Increment the count if the key already exists, otherwise add it with a count of 1
-                if (groupedData.ContainsKey(key))
-                {
-                    groupedData[key]++;
-                }
-                else
-                {
-                    groupedData[key] = 1;
-                }
+                // Add the matching instance to the list
+                ekCabinetInstances.Add(instance);
             }
         }
 
-        // Convert the dictionary to the final list with the count included
-        data = groupedData.Select(entry => (entry.Key.Brand, entry.Key.FamilyName, entry.Key.TypeName, entry.Key.Notes, entry.Value)).ToList();
 
-        // Now 'data' contains the unique combinations of brand, family name, type name, and notes with their respective counts
+        // Extract type & instance params for each of the instances, and convert them to data model
+        var cabinetDataModels = CabinetsExportDataModel.ConvertInstancesToDataModels(ekCabinetInstances);
+
+        // Get all design options in the project
+        var designOptions = designOptionsCollector.OfCategory(BuiltInCategory.OST_DesignOptions).ToElements();
+
+        // TODO: User will pick a design option, here a small window should pop up for user to select
+        var chosenDesignOptionName = designOptions.FirstOrDefault().Name;
+
+        // Filter for cabinet-data-models with chosen design option
+        // Any element in the "Main Model" is included in every design option
+        List<CabinetDataModel> filteredCabinetDataModels = cabinetDataModels
+            .Where(model => model.DesignOption == chosenDesignOptionName || model.DesignOption == "Main Model")
+            .ToList();
+
+        // Open File Dialog in the project's directory
+        var currentProjectPathWithExtension = doc.PathName;
+        var currentProjectPath = Path.GetFileNameWithoutExtension(currentProjectPathWithExtension);
 
 
-        // Export to Excel
-        //var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        //var filePath = Path.Combine(desktopPath, "LindenIII_Purchase_List.xlsx");
+        // Use FolderBrowserDialog to choose the folder
+        using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+        {
+            saveFileDialog.InitialDirectory = currentProjectPath;
+            saveFileDialog.Filter = "Excel Workbook (*.xlsx)|*.xlsx";
+            saveFileDialog.Title = "Save Excel File";
+            saveFileDialog.DefaultExt = "xlsx";
+            saveFileDialog.AddExtension = true;
 
-        // Export to Excel
-        // Change the file extension to .xlsx
-        string filePath = Path.ChangeExtension(current_project_path, ".xlsx");
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = saveFileDialog.FileName;
 
-        var excelExporter = new ExcelExporter(filePath);
-        //excelExporter.ExportToExcel(data);
-        excelExporter.ExportCabinetDataToExcel(data);
+                // Export to Excel
+                var excelExporter = new ExcelExporter(filePath);
 
-        TaskDialog.Show("Successfully Exported", $"File Exported to: {filePath}");
+                excelExporter.ExportCabinetDataToExcel(chosenDesignOptionName, filteredCabinetDataModels);
+
+                TaskDialog.Show("Successfully Exported", $"File Exported to: {filePath}");
+            }
+            else
+            {
+                TaskDialog.Show("Export Canceled", "No file name was chosen. Export process has been canceled.");
+            }
+        }
+
+
     }
 
 

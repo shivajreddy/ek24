@@ -31,12 +31,12 @@
             </Border>
 
             <Border Grid.Row="1" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
-                <views_properties:CurrentSelectionView/>
+                <views_properties:TypeParamsView/>
             </Border>
 
-            <Border Grid.Row="2" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 10">
+            <StackPanel Grid.Row="2" Margin="0 10">
                 <views_projectbrowser:SelectCaseWorkView/>
-            </Border>
+            </StackPanel>
 
             <Border Grid.Row="3" Margin="0 5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
                 <views_properties:InstanceParamsView/>
