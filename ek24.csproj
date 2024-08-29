@@ -53,6 +53,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
@@ -104,6 +105,9 @@
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Convertors\EmptyListToVisibilityConverter.cs" />
+    <Compile Include="UI\Views\Manage\DesignOptionPicker.xaml.cs">
+      <DependentUpon>DesignOptionPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Views\Manage\ManageView.xaml.cs">
       <DependentUpon>ManageView.xaml</DependentUpon>
     </Compile>
@@ -387,6 +391,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Views\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\Manage\DesignOptionPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

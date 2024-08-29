@@ -30,7 +30,10 @@ public class CabinetsExportDataModel
             var notes = GetTypeParameterValue(instance, "Vendor_Notes");
             var vendorStyle = GetInstanceParameterValue(instance, "Vendor_Style");
             var vendorSpecies = GetInstanceParameterValue(instance, "Vendor_Species");
-            var finish = GetInstanceParameterValue(instance, "Material");
+
+            var finish = GetInstanceParameterValue(instance, "Vendor_Finish");
+            // empty value for material is '<By Category>' so ignore that
+            finish = finish != "<By Category>" ? finish : string.Empty;
 
             // Create a unique key by concatenating relevant fields
             string key = $"{designOption}|{brand}|{shape}|{eagleSkew}|{vendorSkew}|{notes}|{vendorStyle}|{vendorSpecies}|{finish}";
@@ -68,14 +71,41 @@ public class CabinetsExportDataModel
     {
         var type = instance.Symbol;
         var typeParam = type.LookupParameter(typeParamName);
-        return typeParam != null && typeParam.HasValue ? typeParam.AsString() : string.Empty;
+
+        // Param is not found or has no value
+        if (typeParam == null || !typeParam.HasValue)
+        {
+            return string.Empty;
+        }
+        if (typeParam.AsString() != null)
+        {
+            return typeParam.AsString();
+        }
+        if (typeParam.AsValueString() != null)
+        {
+            return typeParam.AsValueString();
+        }
+        return string.Empty;
     }
 
-    private static string GetInstanceParameterValue(Element element, string instanceParamName)
+    private static string GetInstanceParameterValue(FamilyInstance familyInstance, string instanceParamName)
     {
-        var instanceParam = element.LookupParameter(instanceParamName);
-        // .AsValueString() is <null> for 'Vendor_Style' since type of this param is GenericModel
-        return instanceParam != null && instanceParam.HasValue ? instanceParam.AsValueString() : string.Empty;
+        var instanceParam = familyInstance.LookupParameter(instanceParamName);
+
+        // Param is not found or has no value
+        if (instanceParam == null || !instanceParam.HasValue)
+        {
+            return string.Empty;
+        }
+        if (instanceParam.AsString() != null)
+        {
+            return instanceParam.AsString();
+        }
+        if (instanceParam.AsValueString() != null)
+        {
+            return instanceParam.AsValueString();
+        }
+        return string.Empty;
     }
 }
 

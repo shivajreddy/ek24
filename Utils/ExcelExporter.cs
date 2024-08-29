@@ -41,6 +41,7 @@ public class ExcelExporter
 
             // Create Headers
             // Look at CabinetsExportDataModel() and both places should have all same headers
+            // Part 1:
             List<string> allHeaders = new List<string>
             {
                 "Design Option",
@@ -50,6 +51,7 @@ public class ExcelExporter
                 "Brand-SKEW",
                 "Notes",
                 "Style",
+                "Species",
                 "Finish",
                 "Count"
             };
@@ -62,14 +64,17 @@ public class ExcelExporter
             // Write Data
             foreach (var cabinetDataModel in cabinetDataModels)
             {
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 1] = cabinetDataModel.Brand;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 2] = cabinetDataModel.Shape;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 3] = cabinetDataModel.EagleSkew;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 4] = cabinetDataModel.BrandSkew;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 5] = cabinetDataModel.Notes;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 6] = cabinetDataModel.Style;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 7] = cabinetDataModel.Finish;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 8] = cabinetDataModel.Count;
+                // Part 2:
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 1] = cabinetDataModel.DesignOption;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 2] = cabinetDataModel.Brand;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 3] = cabinetDataModel.Shape;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 4] = cabinetDataModel.EagleSkew;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 5] = cabinetDataModel.BrandSkew;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 6] = cabinetDataModel.Notes;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 7] = cabinetDataModel.Style;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 8] = cabinetDataModel.Species;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 9] = cabinetDataModel.Finish;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 10] = cabinetDataModel.Count;
             }
             //EagleKitchenViewModel.AppendLog("Data written to 'Cabinets' workbook");
 
