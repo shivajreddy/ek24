@@ -90,6 +90,9 @@ public class RequestHandler : IExternalEventHandler
             // 'Manage' related
             case RequestType.Manage_PrintDrawings:
                 PrintToPdf.PrintDocument(app);
+
+                PrintToPdf.PrintDocumentAsync(app);
+
                 break;
             case RequestType.Manage_ExportQuantitiesToExcel:
                 ExportToExcel.ExportQuantitiesToExcel(app);

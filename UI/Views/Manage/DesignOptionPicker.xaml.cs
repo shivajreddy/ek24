@@ -52,4 +52,3 @@ public partial class DesignOptionPicker : Window
         }
     }
 }
-

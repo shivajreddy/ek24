@@ -22,7 +22,16 @@ public class ExcelExporter
     public void ExportCabinetDataToExcel(string worksheetName, List<CabinetDataModel> cabinetDataModels)
     {
         // Here Application is Microsoft.Office.Interop.Excel.Application
+        /* Old Way
         Application excelApp = new Application();
+        // */
+
+        // /* New Way
+        Type excelType = Type.GetTypeFromProgID("Excel.Application");
+        dynamic excelApp = Activator.CreateInstance(excelType);
+        // */
+
+
 
         if (excelApp == null)
         {

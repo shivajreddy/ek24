@@ -135,6 +135,13 @@ public class ExportToExcel
 
         // Open File Dialog in the project's directory
         var currentProjectPathWithExtension = doc.PathName;
+
+        if (currentProjectPathWithExtension == "")
+        {
+            TaskDialog.Show("Can't Continue:", "Must be in a project that is saved");
+            return;
+        }
+
         var currentProjectPath = Path.GetDirectoryName(currentProjectPathWithExtension);
 
         // Use SaveFileDialog to choose the file location and name
@@ -162,10 +169,5 @@ public class ExportToExcel
             }
         }
 
-
-
-
     }
-
-
 }

@@ -66,6 +66,52 @@ public class PrintToPdf
 
     }
 
+    public static async Task PrintDocumentAsync(UIApplication app)
+    {
+        await Task.Run(() =>
+        {
+            UIDocument uiDoc = app.ActiveUIDocument;
+            Document doc = uiDoc.Document;
+
+            PrintManager printManager = doc.PrintManager;
+            printManager.PrintRange = PrintRange.Select;
+
+            string PrintSettingName = ManageViewModel.PrintSettingName;
+            string ViewSheetSetName = ManageViewModel.ViewSheetSetName;
+
+            PrintSetting printSetting = GetPrintSettingByName(doc, PrintSettingName);
+            if (printSetting != null)
+            {
+                printManager.PrintSetup.CurrentPrintSetting = printSetting;
+            }
+            else
+            {
+                TaskDialog.Show("Couldn't Print", $"Print setting with the name '{PrintSettingName}' not found");
+                return;
+            }
+
+            ViewSheetSet viewSheetSet = new FilteredElementCollector(doc)
+                .OfClass(typeof(ViewSheetSet))
+                .Cast<ViewSheetSet>()
+                .FirstOrDefault(vss => vss.Name == ViewSheetSetName);
+
+            if (viewSheetSet == null)
+            {
+                TaskDialog.Show("Error", "ViewSheetSet named '" + ViewSheetSetName + "' not found.");
+                return;
+            }
+
+            printManager.ViewSheetSetting.CurrentViewSheetSet = viewSheetSet;
+            printManager.CombinedFile = true;
+
+            printManager.SubmitPrint();
+            printManager.PrintSetup.Save();
+        });
+    }
+
+
+
+
     public static PrintSetting GetPrintSettingByName(Document doc, string targetName)
     {
         FilteredElementCollector collector = new FilteredElementCollector(doc);

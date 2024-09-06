@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Input;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
-
+using ek24.Commands;
 using ek24.RequestHandling;
 using ek24.UI.Commands;
 using ek24.UI.Models.Revit;
@@ -77,6 +77,11 @@ public class ManageViewModel : INotifyPropertyChanged
     public ManageViewModel()
     {
         PrintToPdfCommand = new RelayCommand(RaisePrintEvent);
+
+        // Asynchronous command to handle Print PDF operation
+        //PrintToPdfCommand = new AsyncRelayCommand(RaisePrintEvent);
+
+
         ExportToExcelCommand = new RelayCommand(RaiseExportToExcelEvent);
     }
 
