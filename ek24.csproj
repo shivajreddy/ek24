@@ -73,6 +73,10 @@
     <Compile Include="Commands\ExportToExcel.cs" />
     <Compile Include="Commands\PrintToPdf.cs" />
     <Compile Include="Commands\SelectionUpdates.cs" />
+    <Compile Include="Commands\TestViewModel.cs" />
+    <Compile Include="Commands\TestWindow.xaml.cs">
+      <DependentUpon>TestWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Commands\UiUpdates.cs" />
     <Compile Include="Commands\ShowDockCommand.cs" />
     <Compile Include="Commands\TestCommand.cs" />
@@ -396,6 +400,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Resource>
+    <Page Include="Commands\TestWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Resources\ComboStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -1,0 +1,12 @@
+﻿<Window x:Class="ek24.Commands.TestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ek24.Commands"
+        Title="Test Window" Height="150" Width="300">
+    <Grid Margin="10">
+        <StackPanel>
+            <TextBox Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+            <Button Content="Execute" Command="{Binding ExecuteCommand}" Width="100" HorizontalAlignment="Left"/>
+        </StackPanel>
+    </Grid>
+</Window>

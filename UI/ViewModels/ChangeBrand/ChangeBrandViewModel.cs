@@ -4,23 +4,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using ek24.Commands.Utils;
 using ek24.UI.Commands;
 using ek24.UI.Models.Revit;
-using ek24.UI.ViewModels.ChangeBrand;
 
 namespace ek24.UI.ViewModels.ChangeBrand;
 
@@ -149,7 +138,6 @@ public class ChangeBrandViewModel : INotifyPropertyChanged
 
         string defaultBrandName = "Aristokraft";
         var eagleKitchenBrands = RevitBrandData.BrandCatalogues;
-        //string[] allowedBrands = { "Aristokraft", "Eclipse", "Yorktowne Historic", "Yorktowne Classic" };
 
 
         if (doc == null)
@@ -255,6 +243,7 @@ public class ChangeBrandViewModel : INotifyPropertyChanged
     private void OnChangeKitchenBrand()
     {
 
+
         // Get the current Brand from the Project parameter, then use the binded value as the target value
         string currentKitchenBrand = GetKitchenBrandFromProjectParam();
         string targetBrand = ChosenBrand.BrandName;
@@ -296,14 +285,13 @@ public class ChangeBrandViewModel : INotifyPropertyChanged
         }
 
         // Display the information using TaskDialog
-        //TaskDialog.Show("Cabinet SKU Mapping", cabinetInfo.ToString());
+        TaskDialog.Show("Cabinet SKU Mapping", cabinetInfo.ToString());
 
         // Set the project parameter value
         SetKitchenBrandProjectParamValue(targetBrand);
 
         // Now the window should be closed here so that the trasaction doesn't get discarded
         // because while the wpf window is open i can see the transaction, but when i close it, it's gone.
-
         return;
     }
 

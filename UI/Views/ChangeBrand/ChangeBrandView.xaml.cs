@@ -16,4 +16,6 @@ public partial class ChangeBrandView : Window
         DataContext = new ChangeBrandViewModel(doc);
     }
 
+    public string ChosenBrandName => (DataContext as ChangeBrandViewModel).ChosenBrand.BrandName;
+
 }

@@ -30,7 +30,6 @@
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Text="Choose Brand" Padding="10 0"/>
-                    <TextBlock Text="{Binding projectChosenKitchenBrand}"/>
                     <ComboBox x:Name="Brands" Width="180"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding KitchenBrands}"
@@ -41,7 +40,8 @@
                     <Button Content="UPDATE" Margin="10 0" 
                         IsEnabled="{Binding ChosenBrand, Converter={StaticResource NullToBooleanConverter}}"
                         Style="{StaticResource ModernButton}"
-                        Command="{Binding ChangeKitchenBrandCommand}"/>
+                        Command="{Binding ChangeKitchenBrandCommand}"
+                        />
                 </StackPanel>
             </StackPanel>
 
