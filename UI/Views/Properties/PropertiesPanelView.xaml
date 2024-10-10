@@ -18,13 +18,15 @@
         <Grid Margin="10 5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="250"/>
-                <RowDefinition Height="225"/>
-                <RowDefinition Height="70"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="70"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Margin="0 5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
+            <Border Grid.Row="0" Margin="05" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
                 <StackPanel>
+                    <!-- Row 1: Create new item panel -->
+                    <TextBlock TextAlignment="Center">Create New Item</TextBlock>
                     <views_properties:CreateFamilyTypeView/>
                     <views_properties:CreateBrandTypeView/>
                 </StackPanel>
@@ -34,13 +36,14 @@
                 <views_properties:TypeParamsView/>
             </Border>
 
-            <StackPanel Grid.Row="2" Margin="0 10">
-                <views_projectbrowser:SelectCaseWorkView/>
-            </StackPanel>
 
-            <Border Grid.Row="3" Margin="0 5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
+            <Border Grid.Row="2" Margin="0 5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
                 <views_properties:InstanceParamsView/>
             </Border>
+
+            <StackPanel Grid.Row="3" Margin="0">
+                <views_projectbrowser:SelectCaseWorkView/>
+            </StackPanel>
 
         </Grid>
 

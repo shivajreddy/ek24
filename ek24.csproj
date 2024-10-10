@@ -67,6 +67,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ChangeBrandCommand.cs" />
     <Compile Include="Commands\ChangeType.cs" />
     <Compile Include="Commands\Create.cs" />
     <Compile Include="Commands\ExportToExcel.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Commands\UiUpdates.cs" />
     <Compile Include="Commands\ShowDockCommand.cs" />
     <Compile Include="Commands\TestCommand.cs" />
+    <Compile Include="Commands\Utils\FilterAllCabinets.cs" />
     <Compile Include="Events\SelectionChangedEvent.cs" />
     <Compile Include="Events\ViewActivatedEvent.cs" />
     <Compile Include="APP.cs" />
@@ -92,15 +94,20 @@
     <Compile Include="UI\Models\ProjectBrowser\SelectCaseWorkModel.cs" />
     <Compile Include="UI\Models\Revit\Brand.cs" />
     <Compile Include="UI\Services\SelectionService.cs" />
+    <Compile Include="UI\ViewModels\ChangeBrand\ChangeBrandViewModel.cs" />
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
     <Compile Include="UI\ViewModels\Manage\ManageViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\ProjectBrowserViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\SelectCaseWorkViewModel.cs" />
+    <Compile Include="UI\ViewModels\Properties\ChangeBrandViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\CreateBrandTypeViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\CreateFamilyTypeViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\InstanceParamsViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\PropertiesPanelViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\TypeParamsViewModel.cs" />
+    <Compile Include="UI\Views\ChangeBrand\ChangeBrandView.xaml.cs">
+      <DependentUpon>ChangeBrandView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -163,7 +170,7 @@
     <None Include="Resources\JSON\ek24_brands_styles_old.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\images\ek24_icon.png" />
+    <EmbeddedResource Include="Resources\images\icons\ek24_icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\images\styles\Eclipse\" />
@@ -174,8 +181,10 @@
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\images\icons\ek24_icon_old.png" />
     <Content Include="Resources\images\handlesets\traditionalknob.png" />
     <Content Include="Resources\images\handlesets\transitional.png" />
+    <EmbeddedResource Include="Resources\images\icons\change_brand.png" />
     <Content Include="Resources\images\materials\cherry.png" />
     <Content Include="Resources\images\materials\hickory.png" />
     <Content Include="Resources\images\materials\maple.png" />
@@ -393,6 +402,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\Resources\MainViewResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\ChangeBrand\ChangeBrandView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

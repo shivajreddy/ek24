@@ -61,19 +61,19 @@
                         <TextBlock Text="Select CaseWork Group"/>-->
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center">
-                        <StackPanel Margin="0 5" Orientation="Horizontal" CanVerticallyScroll="True">
-                            <Button Content="LOWERS" 
-                                    Width="100" Margin="5 0" Padding="5 0" 
+                        <StackPanel Margin="5" Orientation="Horizontal" CanVerticallyScroll="True">
+                            <Button Content="BASE CABINETS" 
+                                    Width="130" Margin="5 0" Padding="5 0" 
                                     Command="{Binding SelectAllLowerCabinetsCommand}"
                                     Style="{StaticResource ModernButton}"
                                     />
-                            <Button Content="UPPERS" 
-                                    Width="100" Margin="5 0" Padding="5 0" 
+                            <Button Content="WALL CABINETS" 
+                                    Width="130" Margin="5 0" Padding="5 0" 
                                     Command="{Binding SelectAllUpperCabinetsCommand}"
                                     Style="{StaticResource ModernButton}"
                                     />
-                            <Button Content="ALL" 
-                                    Width="100" Margin="5 0" Padding="5 0" 
+                            <Button Content="ALL CABINETS" 
+                                    Width="130" Margin="5 0" Padding="5 0" 
                                     Command="{Binding SelectAllCabinetsCommand}"
                                     Style="{StaticResource ModernButton}"
                                     />

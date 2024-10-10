@@ -19,7 +19,7 @@ public class ExcelExporter
         //EagleKitchenViewModel.AppendLog("created an instance of ExcelExporter with filePath: " + filePath);
     }
 
-    public void ExportCabinetDataToExcel(string worksheetName, List<CabinetDataModel> cabinetDataModels)
+    public void ExportCabinetDataToExcel(string worksheetName, List<EKCabinetDataModel> cabinetDataModels)
     {
         // Here Application is Microsoft.Office.Interop.Excel.Application
         /* Old Way
@@ -106,8 +106,9 @@ public class ExcelExporter
             TaskDialog.Show("Failed to export", ex.Message);
             return;
         }
-
     }
+
+
     private static string SanitizeWorkSheetName(string workSheetName)
     {
         // Limit the name to 31 characters

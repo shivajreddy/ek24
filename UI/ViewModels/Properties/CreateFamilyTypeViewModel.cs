@@ -103,7 +103,8 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
             if (_selectedFamilyType != value)
             {
                 _selectedFamilyType = value;
-                OnStaticPropertyChanged($"{nameof(SelectedFamilyType)}");
+                //OnStaticPropertyChanged($"{nameof(SelectedFamilyType)}");
+                OnStaticPropertyChanged(nameof(SelectedFamilyType));
             }
         }
     }

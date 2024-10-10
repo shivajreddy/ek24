@@ -57,6 +57,8 @@ public class APP : IExternalApplication
         PluginUtils.RegisterDockablePanel(application);
         PluginUtils.CreatePushButtonAndAddToPanel(_ribbonPanel);
 
+        PluginUtils.CreateButton2AndAddToPanel(_ribbonPanel);
+
         /// Subscribe to Events
         /// - List of Revit Events you can subscribe to: https://www.revitapidocs.com/2024/418cd49d-9c2f-700f-3db2-fcbe8929c5e5.htm
         /// - For each event, look at that particular EventArgs that revit will pass as 2nd arg to the given function.

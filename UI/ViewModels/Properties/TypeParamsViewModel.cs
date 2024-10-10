@@ -19,6 +19,7 @@ namespace ek24.UI.ViewModels.Properties;
 
 public class TypeParamsViewModel : INotifyPropertyChanged
 {
+    #region INotifyPropertyChanged implementation
     public event PropertyChangedEventHandler PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName)
     {
@@ -29,6 +30,7 @@ public class TypeParamsViewModel : INotifyPropertyChanged
     {
         StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
     }
+    #endregion
 
 
     private static bool _selectionIsCabinetsOnly { get; set; } = false;

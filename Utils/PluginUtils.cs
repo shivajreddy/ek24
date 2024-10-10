@@ -61,6 +61,36 @@ public static class PluginUtils
         ribbonPanel.AddItem(pushButtonData);
     }
 
+    public static void CreateButton2AndAddToPanel(RibbonPanel ribbonPanel)
+    {
+        var declaringType = MethodBase.GetCurrentMethod()?.DeclaringType;
+        if (declaringType == null) return;
+        var pushButtonName = declaringType?.Name;
+        const string pushButtonTextName = "Change Brand";
+        var assembly = Assembly.GetExecutingAssembly();
+        var assemblyLocation = assembly.Location;
+        const string iconName = "change_brand.png";
+        const string toolTipInfo = "Change the Brand of Kitchen";
+
+        /// Class that handles showing the UI
+        const string fullClassName = "ek24.Commands.ChangeBrandCommand";
+
+        var pushButtonData = new PushButtonData(
+            //name: pushButtonName,
+            name: "ChangeBrand",
+            text: pushButtonTextName,
+            assemblyName: assemblyLocation,
+            className: fullClassName
+        )
+        {
+            ToolTip = toolTipInfo,
+            Image = ImageUtilities.LoadImage(assembly, iconName),
+            LargeImage = ImageUtilities.LoadImage(assembly, iconName),
+            ToolTipImage = ImageUtilities.LoadImage(assembly, iconName)
+        };
+        ribbonPanel.AddItem(pushButtonData);
+    }
+
     /// <summary>
     /// Show the Dockable pane UI, only show if not current shown
     /// </summary>

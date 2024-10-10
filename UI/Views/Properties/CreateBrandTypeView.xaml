@@ -20,34 +20,34 @@
     </UserControl.Resources>
     <Grid>
 
-            <!--Createtion Panel: Second way-->
-            <StackPanel Margin="0 10" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <StackPanel Margin="5 0">
-                    <TextBlock Text="Brands" TextAlignment="Center"/>
-                    <ComboBox x:Name="Brands" Width="180"
+        <!--Createtion Panel: Second way-->
+        <StackPanel Margin="0 10" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel Margin="5 0">
+                <TextBlock Text="Brands" TextAlignment="Center"/>
+                <ComboBox x:Name="Brands" Width="180"
                               Style="{StaticResource ModernComboBox2}"
                               ItemsSource="{Binding BrandCatalogues}"
                               DisplayMemberPath="BrandName"
                               SelectedItem="{Binding SelectedBrandCatalogue, Mode=TwoWay}"
                               />
-                </StackPanel>
-                <StackPanel Margin="5 0">
-                    <!--<TextBox x:Name="SearchTermTextBox" VerticalAlignment="Top" Width="200" Height="25" />-->
-                    <TextBlock Text="Catalogue-SKEW" TextAlignment="Center"/>
-                    <ComboBox x:Name="BrandTypes" Width="180"
+            </StackPanel>
+            <StackPanel Margin="5 0">
+                <!--<TextBox x:Name="SearchTermTextBox" VerticalAlignment="Top" Width="200" Height="25" />-->
+                <TextBlock Text="Catalogue-SKEW" TextAlignment="Center"/>
+                <ComboBox x:Name="BrandTypes" Width="180"
                               Style="{StaticResource ModernComboBox2}"
                               ItemsSource="{Binding BrandFamilyTypes}"
                               DisplayMemberPath="TypeName"
                               SelectedItem="{Binding SelectedBrandFamilyType, Mode=TwoWay}"
                               />
-                </StackPanel>
-                <Button Content="Create" Width="80" Height="50"
+            </StackPanel>
+            <Button Content="Create" Width="80" Height="50"
                         Style="{StaticResource ModernButton}"
                         Command="{Binding CreateNewFamilyCommand}"
                         IsEnabled="False"
                         />
-            </StackPanel>
-            
+        </StackPanel>
+
     </Grid>
 </UserControl>
-                        <!--IsEnabled="{Binding SelectedBrandFamilyType, Converter={StaticResource NullToBooleanConverter}}"-->
+<!--IsEnabled="{Binding SelectedBrandFamilyType, Converter={StaticResource NullToBooleanConverter}}"-->

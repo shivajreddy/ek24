@@ -1,27 +1,19 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using ek24.UI.Models.Revit;
+using ek24.UI.Views.Manage;
+using ek24.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using Autodesk.Revit.UI.Selection;
-using ek24.UI.ViewModels.Manage;
-using System.IO;
-
-using ek24.UI.Models.Revit;
-using ek24.Utils;
 using System.Windows.Forms;
-using ek24.UI.Views.Manage;
 
-
-namespace ek24.Commands;
-
-
-public class ExportToExcel
+namespace ek24.Commands.Utils;
+class FilterAllCabinets
 {
-
     public static void ExportQuantitiesToExcel(UIApplication app)
     {
         Document doc = app.ActiveUIDocument.Document;
@@ -235,4 +227,5 @@ public class ExportToExcel
         }
 
     }
+
 }

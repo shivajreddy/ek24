@@ -32,7 +32,4 @@ public partial class TypeParamsView : UserControl
 
     }
 
-    private void Button_Click(object sender, RoutedEventArgs e)
-    {
-    }
 }

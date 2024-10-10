@@ -23,12 +23,11 @@
 
     <!--Row 2: Instance properties: Style/Material/Handles-->
     <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10"
-                                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 
         <StackPanel>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-
                 <StackPanel Margin="5 0" Width="150" HorizontalAlignment="Center">
                     <TextBlock Text="Set Vendor Style" TextAlignment="Center"/>
                     <ComboBox x:Name="VendorStyleOptions" Margin="10 2"
@@ -47,17 +46,13 @@
                 </StackPanel>
 
                 <Button x:Name="FamilyTypeSettingsUpdate" Content="Update Type" 
-                        Width="100" Height="25" Margin="20 0 0 0"
+                        Width="100" Height="30" Margin="20 0 0 0"
                         Style="{StaticResource ModernButton}"
                         Command="{Binding UpdateTypeCommand}"
                 />
-
-
-
             </StackPanel>
 
-            <TextBlock Text="Other instance properties go here" TextAlignment="Center" Margin="0 50"/>
-
+            <!--<TextBlock Text="Other instance properties go here" TextAlignment="Center" Margin="0 50"/>-->
             <!--<Button Content="Debug" Click="Button_Click"/>-->
         </StackPanel>
 
