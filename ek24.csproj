@@ -76,6 +76,7 @@
     <Compile Include="Commands\UiUpdates.cs" />
     <Compile Include="Commands\ShowDockCommand.cs" />
     <Compile Include="Commands\TestCommand.cs" />
+    <Compile Include="Commands\UpdateViewFilter.cs" />
     <Compile Include="Commands\Utils\FilterAllCabinets.cs" />
     <Compile Include="Events\SelectionChangedEvent.cs" />
     <Compile Include="Events\ViewActivatedEvent.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="UI\Models\Revit\Brand.cs" />
     <Compile Include="UI\Services\SelectionService.cs" />
     <Compile Include="UI\ViewModels\ChangeBrand\ChangeBrandViewModel.cs" />
+    <Compile Include="UI\ViewModels\ChangeBrand\FamilyInstanceInfo.cs" />
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
     <Compile Include="UI\ViewModels\Manage\ManageViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\ProjectBrowserViewModel.cs" />
@@ -185,6 +187,7 @@
     <Content Include="Resources\images\handlesets\traditionalknob.png" />
     <Content Include="Resources\images\handlesets\transitional.png" />
     <EmbeddedResource Include="Resources\images\icons\change_brand.png" />
+    <EmbeddedResource Include="Resources\images\icons\view_filter.png" />
     <Content Include="Resources\images\materials\cherry.png" />
     <Content Include="Resources\images\materials\hickory.png" />
     <Content Include="Resources\images\materials\maple.png" />

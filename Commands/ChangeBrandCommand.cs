@@ -26,6 +26,8 @@ public class ChangeBrandCommand : IExternalCommand
 
         var result = window.ShowDialog();
 
+        window.Close();
+
         return result == true ? Result.Succeeded : Result.Cancelled;
     }
 }

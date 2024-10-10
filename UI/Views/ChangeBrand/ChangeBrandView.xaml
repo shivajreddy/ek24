@@ -23,13 +23,13 @@
         <StackPanel Background="White" VerticalAlignment="Center">
 
             <StackPanel VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Current Brand"/>
-                    <TextBlock Text="{Binding ChosenKitchenBrand}"/>
+                <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Current Brand" Padding="5"/>
+                    <TextBlock Padding="5 0" Text="{Binding ChosenKitchenBrand}" FontSize="16px" FontWeight="SemiBold"/>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Choose Brand"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Choose Brand" Padding="10 0"/>
                     <TextBlock Text="{Binding projectChosenKitchenBrand}"/>
                     <ComboBox x:Name="Brands" Width="180"
                       Style="{StaticResource ModernComboBox2}"
@@ -39,7 +39,7 @@
                     />
 
                     <Button Content="UPDATE" Margin="10 0" 
-                        IsEnabled="{Binding SelectedFamilyType, Converter={StaticResource NullToBooleanConverter}}"
+                        IsEnabled="{Binding ChosenBrand, Converter={StaticResource NullToBooleanConverter}}"
                         Style="{StaticResource ModernButton}"
                         Command="{Binding ChangeKitchenBrandCommand}"/>
                 </StackPanel>

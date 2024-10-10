@@ -91,6 +91,38 @@ public static class PluginUtils
         ribbonPanel.AddItem(pushButtonData);
     }
 
+    public static void CreateButton3AndAddToPanel(RibbonPanel ribbonPanel)
+    {
+        var declaringType = MethodBase.GetCurrentMethod()?.DeclaringType;
+        if (declaringType == null) return;
+        var pushButtonName = declaringType?.Name;
+        const string pushButtonTextName = "Update View Filter";
+        var assembly = Assembly.GetExecutingAssembly();
+        var assemblyLocation = assembly.Location;
+        const string iconName = "view_filter.png";
+        const string toolTipInfo = "Update the View Filter to match Project Param Value";
+
+        /// Class that handles showing the UI
+        const string fullClassName = "ek24.Commands.UpdateViewFilterCommand";
+
+        var pushButtonData = new PushButtonData(
+            //name: pushButtonName,
+            name: "Update View Filter",
+            text: pushButtonTextName,
+            assemblyName: assemblyLocation,
+            className: fullClassName
+        )
+        {
+            ToolTip = toolTipInfo,
+            Image = ImageUtilities.LoadImage(assembly, iconName),
+            LargeImage = ImageUtilities.LoadImage(assembly, iconName),
+            ToolTipImage = ImageUtilities.LoadImage(assembly, iconName)
+        };
+        ribbonPanel.AddItem(pushButtonData);
+    }
+
+
+
     /// <summary>
     /// Show the Dockable pane UI, only show if not current shown
     /// </summary>

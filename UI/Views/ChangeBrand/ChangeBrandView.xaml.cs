@@ -13,7 +13,6 @@ public partial class ChangeBrandView : Window
     {
         InitializeComponent();
 
-        //DataContext = this;
         DataContext = new ChangeBrandViewModel(doc);
     }
 
