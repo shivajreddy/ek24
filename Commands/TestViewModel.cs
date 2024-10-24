@@ -1,6 +1,8 @@
-﻿using Autodesk.Revit.DB;
+﻿// TestViewModel.cs
+using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using ek24.UI.Commands;
+using System;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -43,21 +45,57 @@ namespace ek24.Commands
         }
 
         // Command bound to the button
-        public ICommand ExecuteCommand { get; }
+        public ICommand ExecuteCommand { get; set; }
 
         // Method executed when the button is clicked
         private void ExecuteTransaction()
         {
-            using (Transaction trans = new Transaction(_doc, "My Transaction"))
+            using (Transaction trans = new Transaction(_doc, "Toggle KitchenBrand"))
             {
                 trans.Start();
 
-                // Example: Show the input text in a TaskDialog
-                TaskDialog.Show("Revit", $"Input text: {InputText}");
+                try
+                {
+                    // Get the Project Information element
+                    ProjectInfo projectInfo = _doc.ProjectInformation;
+                    Parameter kitchenBrandParam = projectInfo.LookupParameter("KitchenBrand");
 
-                // TODO: Perform actual Revit operations using InputText
+                    if (kitchenBrandParam == null)
+                    {
+                        TaskDialog.Show("Error", "Parameter 'KitchenBrand' not found.");
+                        trans.RollBack();
+                        return;
+                    }
 
-                trans.Commit();
+                    string currentValue = kitchenBrandParam.AsString();
+
+                    if (currentValue == "Yorktowne Classic")
+                    {
+                        kitchenBrandParam.Set("Yorktowne Historic");
+                    }
+                    else if (currentValue == "Yorktowne Historic")
+                    {
+                        kitchenBrandParam.Set("Yorktowne Classic");
+                    }
+                    else
+                    {
+                        TaskDialog.Show("Info", $"Current KitchenBrand value is '{currentValue}'. No change made.");
+                        trans.RollBack();
+                        return;
+                    }
+
+                    // Update InputText to reflect new value
+                    InputText = kitchenBrandParam.AsString();
+
+                    TaskDialog.Show("Revit", $"New KitchenBrand: {InputText}");
+
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    TaskDialog.Show("Error", $"An error occurred: {ex.Message}");
+                    trans.RollBack();
+                }
             }
         }
 
@@ -68,6 +106,23 @@ namespace ek24.Commands
 
             // Initialize the command
             ExecuteCommand = new RelayCommand(ExecuteTransaction);
+
+            // Initialize InputText by reading the "KitchenBrand" parameter
+            ProjectInfo projectInfo = _doc.ProjectInformation;
+            Parameter kitchenBrandParam = projectInfo.LookupParameter("KitchenBrand");
+
+            if (kitchenBrandParam != null)
+            {
+                _inputText = kitchenBrandParam.AsString() ?? string.Empty;
+            }
+            else
+            {
+                _inputText = string.Empty;
+                TaskDialog.Show("Error", "Parameter 'KitchenBrand' not found.");
+            }
         }
     }
 }
+
+
+

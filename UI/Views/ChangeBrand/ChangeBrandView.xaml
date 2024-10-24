@@ -25,7 +25,7 @@
             <StackPanel VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Text="Current Brand" Padding="5"/>
-                    <TextBlock Padding="5 0" Text="{Binding ChosenKitchenBrand}" FontSize="16px" FontWeight="SemiBold"/>
+                    <TextBlock Padding="5 0" Text="{Binding ChosenKitchenBrand, UpdateSourceTrigger=PropertyChanged}" FontSize="16px" FontWeight="SemiBold"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -34,7 +34,7 @@
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding KitchenBrands}"
                       DisplayMemberPath="BrandName"
-                      SelectedItem="{Binding ChosenBrand, Mode=TwoWay}"
+                      SelectedItem="{Binding ChosenBrandFromDropdown, Mode=TwoWay}"
                     />
 
                     <Button Content="UPDATE" Margin="10 0" 

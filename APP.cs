@@ -58,9 +58,9 @@ public class APP : IExternalApplication
         PluginUtils.CreatePushButtonAndAddToPanel(_ribbonPanel);
 
         PluginUtils.CreateButton2AndAddToPanel(_ribbonPanel);
-        PluginUtils.CreateButton3AndAddToPanel(_ribbonPanel);
 
-        PluginUtils.CreateButton4AndAddToPanel(_ribbonPanel);
+        //PluginUtils.CreateButton3AndAddToPanel(_ribbonPanel);
+        //PluginUtils.CreateButton4AndAddToPanel(_ribbonPanel);
 
         /// Subscribe to Events
         /// - List of Revit Events you can subscribe to: https://www.revitapidocs.com/2024/418cd49d-9c2f-700f-3db2-fcbe8929c5e5.htm

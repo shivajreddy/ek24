@@ -31,6 +31,5 @@ public partial class CreateFamilyTypeView : UserControl
     //private void Button_Click(object sender, RoutedEventArgs e)
     //{
     //    Debug.WriteLine("hi");
-
     //}
 }

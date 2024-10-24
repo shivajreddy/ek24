@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\ChangeBrandCommand.cs" />
+    <Compile Include="Commands\ChangeBrandCommandCopy.cs" />
     <Compile Include="Commands\ChangeType.cs" />
     <Compile Include="Commands\Create.cs" />
     <Compile Include="Commands\ExportToExcel.cs" />
@@ -100,7 +101,7 @@
     <Compile Include="UI\Models\Revit\Brand.cs" />
     <Compile Include="UI\Services\SelectionService.cs" />
     <Compile Include="UI\ViewModels\ChangeBrand\ChangeBrandViewModel.cs" />
-    <Compile Include="UI\ViewModels\ChangeBrand\FamilyInstanceInfo.cs" />
+    <Compile Include="UI\ViewModels\ChangeBrand\CabinetFamilyInstance.cs" />
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
     <Compile Include="UI\ViewModels\Manage\ManageViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\ProjectBrowserViewModel.cs" />

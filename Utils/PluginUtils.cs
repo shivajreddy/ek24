@@ -91,6 +91,7 @@ public static class PluginUtils
         ribbonPanel.AddItem(pushButtonData);
     }
 
+    /*
     public static void CreateButton3AndAddToPanel(RibbonPanel ribbonPanel)
     {
         var declaringType = MethodBase.GetCurrentMethod()?.DeclaringType;
@@ -150,6 +151,7 @@ public static class PluginUtils
         };
         ribbonPanel.AddItem(pushButtonData);
     }
+    */
 
 
 

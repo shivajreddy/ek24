@@ -1,5 +1,4 @@
-﻿using Autodesk.Revit.DB;
-using System.Windows;
+﻿using System.Windows;
 using ek24.UI.ViewModels.ChangeBrand;
 
 
@@ -9,13 +8,9 @@ namespace ek24.UI.Views.ChangeBrand;
 public partial class ChangeBrandView : Window
 {
 
-    public ChangeBrandView(Document doc)
+    public ChangeBrandView(ChangeBrandViewModel viewModel)
     {
         InitializeComponent();
-
-        DataContext = new ChangeBrandViewModel(doc);
+        DataContext = viewModel;
     }
-
-    public string ChosenBrandName => (DataContext as ChangeBrandViewModel).ChosenBrand.BrandName;
-
 }
