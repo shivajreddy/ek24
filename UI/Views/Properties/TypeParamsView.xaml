@@ -20,7 +20,7 @@
                         <Setter Property="Background" Value="White"/>
                     </Trigger>
                     <Trigger Property="IsEnabled" Value="False">
-                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="Background" Value="WhiteSmoke"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -45,20 +45,25 @@
 
 
                     <StackPanel>
+
+                        <TextBlock Text="Current Cabinet Selection's: Configuration details" TextAlignment="Center" FontSize="16px" Padding="0 20"/>
+
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <StackPanel>
                                 <StackPanel Width="220" >
                                     <TextBlock Text="Brand" TextAlignment="Center"/>
-                                    <ComboBox Margin="10 0"/>
+                                    <ComboBox Margin="10 0"
+                                    ItemsSource="{Binding }"
+                                              />
                                 </StackPanel>
                                 <StackPanel Width="220" >
-                                    <TextBlock Text="Family Group" TextAlignment="Center"/>
+                                    <TextBlock Text="Vendor SKEW" TextAlignment="Center"/>
                                     <ComboBox Margin="10 0"/>
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel>
                                 <StackPanel Width="220" >
-                                    <TextBlock Text="Family" TextAlignment="Center"/>
+                                    <TextBlock Text="Configuration" TextAlignment="Center"/>
                                     <ComboBox Margin="10 0"/>
                                 </StackPanel>
                                 <StackPanel Width="220" >
@@ -77,20 +82,35 @@
 
 
                     <Border Height="1" Background="#e0def4" Margin="0 10 0 0" />
+                    <StackPanel>
 
-                    <StackPanel Margin="0 5"  Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Current Cabinet Selection's: Type(SKEW) details" TextAlignment="Center" FontSize="16px" Padding="0 20"/>
 
-                        <ComboBox x:Name="TypeOptions" Width="260" Margin="0 10"
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Text="Chosen SKEW: "/>
+                            <TextBlock 
+                            Text="{Binding ChosenCabinetTypeText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            FontWeight="SemiBold"
+                            TextAlignment="Center"
+                            />
+                        </StackPanel>
+
+                        <StackPanel Margin="0 5"  Orientation="Vertical" HorizontalAlignment="Center">
+                            <ComboBox x:Name="TypeOptions" Width="540" Margin="0 10"
+                            IsEnabled="{Binding AllCabinetsAreSameType}"
                             ItemsSource="{Binding AvailableCabinetTypes }"
-                            SelectedItem="{Binding ChosenCabinetType, Mode=OneWay}"
+                            SelectedItem="{Binding ChosenCabinetType, Mode=TwoWay}"
                             Text="{Binding ChosenCabinetTypeText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <!--Text="{Binding ChosenCabinetTypeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+                            <!--Text="{Binding ChosenCabinetTypeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
 
-                        <Button x:Name="FamilyTypeSettingsUpdate" Content="Update Type" Width="150" Height="30" Margin="20 0 0 0"
+                            <Button x:Name="FamilyTypeSettingsUpdate" Content="Update SKEW" Width="150" Height="30" Margin="20 0 0 0"
                             Style="{StaticResource ModernButton}"
                             Command="{Binding UpdateTypeCommand}"
                             IsEnabled="{Binding SelectionIsCabinetsOnly}"
                             />
+                        </StackPanel>
+
                     </StackPanel>
 
                 </StackPanel>

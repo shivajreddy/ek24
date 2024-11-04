@@ -23,15 +23,16 @@
     <Grid>
 
 
-        <StackPanel>
+        <StackPanel Margin="0 0 0 20">
             <!--Createtion Panel: First way-->
-            <StackPanel Margin="0" Orientation="Horizontal"
+            <StackPanel Margin="0" Orientation="Vertical"
                         HorizontalAlignment="Center" VerticalAlignment="Center">
 
-                <StackPanel>
+                <StackPanel Orientation="Vertical" Width="300">
+
                     <StackPanel Margin="10">
-                        <TextBlock Text="Family Group" HorizontalAlignment="Center"/>
-                        <ComboBox x:Name="FamilyGroups" Width="180"
+                        <TextBlock Text="Brand" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="FamilyGroups"
                               Style="{StaticResource ModernComboBox2}"
                               ItemsSource="{Binding FamilyGroups}"
                               DisplayMemberPath="GroupName"
@@ -39,21 +40,8 @@
                               />
                     </StackPanel>
                     <StackPanel Margin="10">
-                        <TextBlock Text="Type" HorizontalAlignment="Center"/>
-                        <ComboBox x:Name="Types" Width="180"
-                              Style="{StaticResource ModernComboBox2}"
-                              ItemsSource="{Binding FamilyTypes}"
-                              DisplayMemberPath="TypeName"
-                              SelectedItem="{Binding SelectedFamilyType, Mode=TwoWay}"
-                              IsEnabled="{Binding SelectedFamily, Converter={StaticResource NullToBooleanConverter}}"
-                              />
-                    </StackPanel>
-                </StackPanel>
-
-                <StackPanel>
-                    <StackPanel Margin="10">
-                        <TextBlock Text="Family" HorizontalAlignment="Center"/>
-                        <ComboBox x:Name="Familys" Width="180"
+                        <TextBlock Text="Configuration" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="Familys"
                               Style="{StaticResource ModernComboBox2}"
                               ItemsSource="{Binding Familys}"
                               DisplayMemberPath="FamilyName"
@@ -61,14 +49,24 @@
                               IsEnabled="{Binding SelectedFamilyGroup, Converter={StaticResource NullToBooleanConverter}}"
                               />
                     </StackPanel>
-                    <Button Content="Create" Height="35" Margin="10 24 0 0" 
-                        IsEnabled="{Binding SelectedFamilyType, Converter={StaticResource NullToBooleanConverter}}"
-                        Style="{StaticResource ModernButton}"
-                        Command="{Binding CreateNewFamilyCommand}"/>
+                </StackPanel>
+
+                <StackPanel Margin="10">
+                    <TextBlock Text="Vendor SKEW" HorizontalAlignment="Center"/>
+                    <ComboBox x:Name="Types"
+                              Style="{StaticResource ModernComboBox2}"
+                              ItemsSource="{Binding FamilyTypes}"
+                              DisplayMemberPath="TypeName"
+                              SelectedItem="{Binding SelectedFamilyType, Mode=TwoWay}"
+                              IsEnabled="{Binding SelectedFamily, Converter={StaticResource NullToBooleanConverter}}"
+                              />
                 </StackPanel>
 
             </StackPanel>
-
+            <Button Content="Create" Height="35" Margin="0" Width="100" 
+                        IsEnabled="{Binding SelectedFamilyType, Converter={StaticResource NullToBooleanConverter}}"
+                        Style="{StaticResource ModernButton}"
+                        Command="{Binding CreateNewFamilyCommand}"/>
         </StackPanel>
 
     </Grid>

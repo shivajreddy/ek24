@@ -65,7 +65,7 @@ public class ChangeType
             }
 
             // Start a transaction to change the type
-            using (Transaction trans = new Transaction(doc, "Change Family Instance Type"))
+            using (Transaction trans = new Transaction(doc, "Change Cabinet SKEW"))
             {
                 trans.Start();
 

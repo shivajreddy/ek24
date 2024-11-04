@@ -21,27 +21,31 @@
     <Grid>
 
         <!--Createtion Panel: Second way-->
-        <StackPanel Margin="0 10" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <StackPanel Margin="5 0">
+        <StackPanel Width="300"
+            Margin="0 10" 
+            Orientation="Vertical" 
+            VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel Margin="0 10" Width="300">
                 <TextBlock Text="Brands" TextAlignment="Center"/>
-                <ComboBox x:Name="Brands" Width="180"
+                <ComboBox x:Name="Brands"
                               Style="{StaticResource ModernComboBox2}"
                               ItemsSource="{Binding BrandCatalogues}"
                               DisplayMemberPath="BrandName"
                               SelectedItem="{Binding SelectedBrandCatalogue, Mode=TwoWay}"
                               />
             </StackPanel>
-            <StackPanel Margin="5 0">
+            <StackPanel Margin="0 10">
                 <!--<TextBox x:Name="SearchTermTextBox" VerticalAlignment="Top" Width="200" Height="25" />-->
                 <TextBlock Text="Catalogue-SKEW" TextAlignment="Center"/>
-                <ComboBox x:Name="BrandTypes" Width="180"
+                <ComboBox x:Name="BrandTypes"
                               Style="{StaticResource ModernComboBox2}"
                               ItemsSource="{Binding BrandFamilyTypes}"
                               DisplayMemberPath="TypeName"
                               SelectedItem="{Binding SelectedBrandFamilyType, Mode=TwoWay}"
+                              IsEnabled="{Binding SelectedFamilyGroup, Converter={StaticResource NullToBooleanConverter}}"
                               />
             </StackPanel>
-            <Button Content="Create" Width="80" Height="50"
+            <Button Content="Create" Width="100" Height="35"
                         Style="{StaticResource ModernButton}"
                         Command="{Binding CreateNewFamilyCommand}"
                         IsEnabled="False"

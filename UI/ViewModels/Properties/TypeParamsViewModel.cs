@@ -13,6 +13,7 @@ using System.Windows.Input;
 using ek24.RequestHandling;
 using ek24.UI.Commands;
 using ek24.UI.Services;
+using System.Runtime.InteropServices;
 
 
 namespace ek24.UI.ViewModels.Properties;
@@ -82,6 +83,41 @@ public class TypeParamsViewModel : INotifyPropertyChanged
         }
     }
 
+    public static bool _allCabinetsAreSameType { get; set; }
+    public static bool AllCabinetsAreSameType
+    {
+        get => _allCabinetsAreSameType;
+        set
+        {
+            _allCabinetsAreSameType = value;
+            OnStaticPropertyChanged(nameof(AllCabinetsAreSameType));
+        }
+    }
+
+
+    /*
+    public static (FamilySymbol, string) _chosenCabinetType { get; set; } = (null, "");
+    public static (FamilySymbol, string) ChosenCabinetType
+    {
+        get => _chosenCabinetType;
+        set
+        {
+            _chosenCabinetType = value;
+            OnStaticPropertyChanged(nameof(ChosenCabinetType.ToString));
+
+            if (value.Item2 == "")
+            {
+                ChosenCabinetTypeText = value.Item1.ToString();
+            }
+            else
+            {
+                ChosenCabinetTypeText = $"{value.Item1.ToString()} | {value.Item2}";
+            }
+        }
+    }
+    */
+
+
     public static (string, string) _chosenCabinetType { get; set; } = ("", "");
     public static (string, string) ChosenCabinetType
     {
@@ -90,6 +126,8 @@ public class TypeParamsViewModel : INotifyPropertyChanged
         {
             _chosenCabinetType = value;
             OnStaticPropertyChanged(nameof(ChosenCabinetType));
+
+            //ChosenCabinetTypeText = value.Item1;
 
             // Update the text property
             if (value.Item2 == "")
@@ -102,6 +140,7 @@ public class TypeParamsViewModel : INotifyPropertyChanged
             }
         }
     }
+
     public static string _chosenFamilySymbol { get; set; }
     public static string ChosenFamilySymbol
     {
@@ -116,6 +155,8 @@ public class TypeParamsViewModel : INotifyPropertyChanged
 
     public static void SyncCurrentSelectionWithTypeParamsViewModel(Selection currentSelection, Document doc)
     {
+        SelectedCabinetFamilyInstances.Clear();
+
         var selectedIds = currentSelection.GetElementIds();
         // When deselecting anything, this will be 0, so don't check anything else
         if (selectedIds.Count == 0)
@@ -146,8 +187,6 @@ public class TypeParamsViewModel : INotifyPropertyChanged
             return;
         }
 
-
-
         // prop-1
         SelectionIsCabinetsOnly = true;
 
@@ -169,6 +208,8 @@ public class TypeParamsViewModel : INotifyPropertyChanged
             //ChosenCabinetTypeText = $"{cabinetTypename} | {cabinetVendorNotes}";
             //ChosenCabinetType = new List<string> { cabinetTypename, cabinetVendorNotes };
 
+            AllCabinetsAreSameType = true;
+
 
         }
         // 2: Multipel cabinets with different types selected
@@ -178,6 +219,9 @@ public class TypeParamsViewModel : INotifyPropertyChanged
             // prop-3
             //ChosenCabinetType = ("Varies", "Varies");
             ChosenCabinetTypeText = "Varies";
+            AllCabinetsAreSameType = false;
+
+
             //ChosenCabinetType = new List<string> { "varies", "varies" };
 
         }
@@ -289,9 +333,9 @@ public class TypeParamsViewModel : INotifyPropertyChanged
     {
         SelectedCabinetFamilyInstances = new ObservableCollection<FamilyInstance>();
 
-        UpdateTypeCommand = new RelayCommand(HandleUpdateType);
+        UpdateTypeCommand = new RelayCommand(HandleUpdateTypeCommand);
     }
-    private void HandleUpdateType()
+    private void HandleUpdateTypeCommand()
     {
         //GoToViewName = view.Name;
         APP.RequestHandler.RequestType = RequestType.Properties_UpdateCabinetType;
