@@ -16,14 +16,14 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="10 0">
+    <Grid Margin="10">
 
         <Grid.RowDefinitions>
             <!-- 1st row takes 70% of the remaining height -->
             <RowDefinition Height="7*"/>
             <!-- 2nd row takes 30% of the remaining height -->
             <RowDefinition Height="3*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Row="0">
@@ -70,7 +70,7 @@
             </Border>
         </DockPanel>
 
-        <StackPanel Grid.Row="2" Margin="0 10" >
+        <StackPanel Grid.Row="2" Margin="0" >
             <views:SelectCaseWorkView/>
         </StackPanel>
 

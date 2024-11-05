@@ -15,32 +15,37 @@
 
         <!-- MAIN TAB 2: Properties: update Families/Types/Instances/Params -->
 
-        <Grid Margin="10 5">
+        <Grid Margin="10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="500"/>
+                <RowDefinition Height="350"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="100"/>
-                <RowDefinition Height="70"/>
+                <!--<RowDefinition Height="100"/>-->
+                <RowDefinition Height="80"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Margin="05" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
+            <Border Grid.Row="0" Margin="5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
                 <StackPanel>
-                    <!-- Row 1: Create new item panel -->
-                    <TextBlock TextAlignment="Center">Create New Item</TextBlock>
-                    <views_properties:CreateFamilyTypeView/>
-                    <Rectangle Height="1" Fill="DarkGray" HorizontalAlignment="Stretch" Width="300" />
-                    <views_properties:CreateBrandTypeView/>
+                    <!--  1: Create new item panel -->
+                    <TextBlock TextAlignment="Center" Margin="0 5">Create New Item</TextBlock>
+                    <TabControl Margin="10 0" BorderThickness="0">
+                        <TabItem Header="Brand-Shape-SKEW">
+                            <views_properties:CreateFamilyTypeView/>
+                        </TabItem>
+                        <TabItem Header="Brand-SKEW">
+                            <views_properties:CreateBrandTypeView/>
+                        </TabItem>
+                    </TabControl>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Row="1" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
+            <Border Grid.Row="1" Margin="5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
                 <views_properties:TypeParamsView/>
             </Border>
 
 
-            <Border Grid.Row="2" Margin="0 5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
+            <!--<Border Grid.Row="2" Margin="0 5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
                 <views_properties:InstanceParamsView/>
-            </Border>
+            </Border>-->
 
             <StackPanel Grid.Row="3" Margin="0">
                 <views_projectbrowser:SelectCaseWorkView/>
@@ -50,3 +55,17 @@
 
     </Grid>
 </UserControl>
+
+
+
+<!--
+                <StackPanel>
+                    -->
+<!-- Row 1: Create new item panel -->
+<!--
+                    <TextBlock TextAlignment="Center">Create New Item</TextBlock>
+                    <views_properties:CreateFamilyTypeView/>
+                    <Rectangle Height="1" Fill="DarkGray" HorizontalAlignment="Stretch" Width="300" />
+                    <views_properties:CreateBrandTypeView/>
+                </StackPanel>
+                -->

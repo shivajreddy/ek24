@@ -46,10 +46,10 @@
             <StackPanel>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Text="Note: For better experience close Excel"/>
-                    <TextBlock Text="application before using this feature" IsEnabled="False"/>
+                    <TextBlock Text="application before generating Item List" IsEnabled="False"/>
                 </StackPanel>
-                <Button x:Name="ExportToExcel" Content="Export To Excel" 
-                        Width="200" Height="40" Margin="20 5"
+                <Button x:Name="ExportToExcel" Content="Create Item List" 
+                        Width="200" Height="40" Margin="0 20"
                         Command="{Binding ExportToExcelCommand}"
                         Style="{StaticResource ModernButton}"
                     />

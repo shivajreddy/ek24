@@ -40,7 +40,7 @@
                               />
                     </StackPanel>
                     <StackPanel Margin="10">
-                        <TextBlock Text="Configuration" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Shape" HorizontalAlignment="Center"/>
                         <ComboBox x:Name="Familys"
                               Style="{StaticResource ModernComboBox2}"
                               ItemsSource="{Binding Familys}"
@@ -52,7 +52,7 @@
                 </StackPanel>
 
                 <StackPanel Margin="10">
-                    <TextBlock Text="Vendor SKEW" HorizontalAlignment="Center"/>
+                    <TextBlock Text="SKEW" HorizontalAlignment="Center"/>
                     <ComboBox x:Name="Types"
                               Style="{StaticResource ModernComboBox2}"
                               ItemsSource="{Binding FamilyTypes}"
