@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -24,11 +25,16 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+    public static event PropertyChangedEventHandler StaticPropertyChanged;
+    private static void OnStaticPropertyChanged(string propertyName)
+    {
+        StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
+    }
 
     // This comes from the Revit utility class that deserializes & maps data
     public List<BrandCatalogue> BrandCatalogues { get; set; } = RevitBrandData.BrandCatalogues;
 
-    //public List<FamilyType> _brandFamilyTypes { get; set; } = new List<FamilyType>();
+    /*
     public List<FamilyType> _brandFamilyTypes { get; set; }
     public List<FamilyType> BrandFamilyTypes
     {
@@ -42,6 +48,21 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
             }
         }
     }
+    */
+    private ObservableCollection<FamilyType> _brandFamilyTypes = new ObservableCollection<FamilyType>();
+    public ObservableCollection<FamilyType> BrandFamilyTypes
+    {
+        get => _brandFamilyTypes;
+        set
+        {
+            if (_brandFamilyTypes != value)
+            {
+                _brandFamilyTypes = value;
+                OnPropertyChanged(nameof(BrandFamilyTypes));
+            }
+        }
+    }
+
 
     public BrandCatalogue _selectedBrandCatalogue { get; set; }
     public BrandCatalogue SelectedBrandCatalogue
@@ -52,14 +73,14 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
             if (_selectedBrandCatalogue != value)
             {
                 _selectedBrandCatalogue = value;
-                OnPropertyChanged($"{nameof(SelectedBrandCatalogue)}");
+                OnPropertyChanged(nameof(SelectedBrandCatalogue));
                 UpdateTypes();
             }
         }
     }
 
-    public FamilyType _selectedBrandFamilyType { get; set; }
-    public FamilyType SelectedBrandFamilyType
+    public static FamilyType _selectedBrandFamilyType { get; set; }
+    public static FamilyType SelectedBrandFamilyType
     {
         get => _selectedBrandFamilyType;
         set
@@ -67,7 +88,7 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
             if (_selectedBrandFamilyType != value)
             {
                 _selectedBrandFamilyType = value;
-                OnPropertyChanged($"{nameof(SelectedBrandFamilyType)}");
+                OnStaticPropertyChanged(nameof(SelectedBrandFamilyType));
             }
         }
     }
@@ -75,10 +96,22 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
     {
         // Ensure that a brand is selected
         // If no brand is selected or no matching BrandCatalogue is found, FamilyTypes will remain empty
-        if (SelectedBrandCatalogue == null) return;
+        if (SelectedBrandCatalogue == null)
+        {
+            BrandFamilyTypes.Clear();
+            return;
+        }
 
+        // Clear the existing items efficiently
         BrandFamilyTypes.Clear();
 
+        foreach(var familyType in SelectedBrandCatalogue.FamilyTypes)
+        {
+            BrandFamilyTypes.Add(familyType);
+        }
+
+
+        /*
         //FamilyTypes = SelectedBrandCatalogue.FamilyTypes;
 
         // Get the brand name
@@ -93,13 +126,14 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
         {
             BrandFamilyTypes.AddRange(chosenBrandCatalogue.FamilyTypes);
         }
+        */
     }
 
     public ICommand CreateNewFamilyCommand { get; }
-    private void OnCreateNewFamily()
+    private void HandleCreateNewFamilyCommand()
     {
         //GoToViewName = view.Name;
-        APP.RequestHandler.RequestType = RequestType.Properties_FamilyAndType;
+        APP.RequestHandler.RequestType = RequestType.Properties_CreateNewFamilyAndTypeV2;
         APP.ExternalEvent?.Raise();
     }
 
@@ -107,13 +141,8 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
     {
         SelectedBrandCatalogue = null;
         SelectedBrandFamilyType = null;
-        BrandFamilyTypes = new List<FamilyType>();
+        //BrandFamilyTypes = new List<FamilyType>();
 
-        //BrandFamilyTypes = RevitBrandData.BrandCatalogues[0].FamilyTypes;
-        //BrandFamilyTypes.AddRange(RevitBrandData.BrandCatalogues[1].FamilyTypes);
-        //BrandFamilyTypes.AddRange(RevitBrandData.BrandCatalogues[2].FamilyTypes);
-        //BrandFamilyTypes.AddRange(RevitBrandData.BrandCatalogues[3].FamilyTypes);
-
-        CreateNewFamilyCommand = new RelayCommand(OnCreateNewFamily);
+        CreateNewFamilyCommand = new RelayCommand(HandleCreateNewFamilyCommand);
     }
 }

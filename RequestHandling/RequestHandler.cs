@@ -44,7 +44,9 @@ public enum RequestType
     RevitUI_SelectCaseWork,
 
     // 'Properties' related Requests
-    Properties_FamilyAndType,
+    Properties_CreateNewFamilyAndType,
+    Properties_CreateNewFamilyAndTypeV2,
+    Properties_UpdateCabinetFamilyType,
     Properties_UpdateCabinetType,
     Properties_MakeCustomizations,
 
@@ -80,8 +82,14 @@ public class RequestHandler : IExternalEventHandler
             case RequestType.RevitUI_SelectCaseWork:
                 SelectionUpdates.SelectCaseWorkElements(app);
                 break;
-            case RequestType.Properties_FamilyAndType:
-                Create.CreateNewInstance(app);
+            case RequestType.Properties_CreateNewFamilyAndType:
+                Create.CreateNewFamilyInstanceUsingPanel1(app);
+                break;
+            case RequestType.Properties_CreateNewFamilyAndTypeV2:
+                Create.CreateNewFamilyInstanceUsingPanel2(app);
+                break;
+            case RequestType.Properties_UpdateCabinetFamilyType:
+                ChangeType.UpdateCabinetFamilyTypeForSelectedInstance(app);
                 break;
             case RequestType.Properties_UpdateCabinetType:
                 ChangeType.UpdateCabinetTypeForSelectedInstance(app);

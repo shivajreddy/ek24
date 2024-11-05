@@ -19,6 +19,7 @@ namespace ek24.UI.ViewModels.Properties;
 
 public class CreateFamilyTypeViewModel : INotifyPropertyChanged
 {
+    #region INotifyPropertyChanged implementation
     public event PropertyChangedEventHandler PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName)
     {
@@ -29,6 +30,7 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
     {
         StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
     }
+    #endregion
 
     // This comes from the Revit utility class that deserializes the Resource data
     // before create UI instance
@@ -135,10 +137,10 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
 
 
     public ICommand CreateNewFamilyCommand { get; }
-    private void OnCreateNewFamily()
+    private void HandleCreateNewFamilyCommand()
     {
         //GoToViewName = view.Name;
-        APP.RequestHandler.RequestType = RequestType.Properties_FamilyAndType;
+        APP.RequestHandler.RequestType = RequestType.Properties_CreateNewFamilyAndType;
         APP.ExternalEvent?.Raise();
     }
 
@@ -148,7 +150,7 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
         SelectedFamily = null;
         SelectedFamilyType = null;
         Familys = new List<Family>(); // Initialize Familys to an empty list
-        CreateNewFamilyCommand = new RelayCommand(OnCreateNewFamily);
+        CreateNewFamilyCommand = new RelayCommand(HandleCreateNewFamilyCommand);
     }
 
 

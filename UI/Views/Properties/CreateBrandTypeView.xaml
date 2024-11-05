@@ -36,19 +36,19 @@
             </StackPanel>
             <StackPanel Margin="0 10">
                 <!--<TextBox x:Name="SearchTermTextBox" VerticalAlignment="Top" Width="200" Height="25" />-->
-                <TextBlock Text="Catalogue-SKEW" TextAlignment="Center"/>
+                <TextBlock Text="Vendor SKEW" TextAlignment="Center"/>
                 <ComboBox x:Name="BrandTypes"
                               Style="{StaticResource ModernComboBox2}"
                               ItemsSource="{Binding BrandFamilyTypes}"
                               DisplayMemberPath="TypeName"
                               SelectedItem="{Binding SelectedBrandFamilyType, Mode=TwoWay}"
-                              IsEnabled="{Binding SelectedFamilyGroup, Converter={StaticResource NullToBooleanConverter}}"
+                              IsEnabled="{Binding SelectedBrandCatalogue, Converter={StaticResource NullToBooleanConverter}}"
                               />
             </StackPanel>
             <Button Content="Create" Width="100" Height="35"
                         Style="{StaticResource ModernButton}"
                         Command="{Binding CreateNewFamilyCommand}"
-                        IsEnabled="False"
+                        IsEnabled="{Binding SelectedBrandFamilyType, Converter={StaticResource NullToBooleanConverter}}"
                         />
         </StackPanel>
 

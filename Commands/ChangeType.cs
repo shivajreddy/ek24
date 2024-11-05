@@ -14,6 +14,54 @@ namespace ek24.Commands;
 
 public class ChangeType
 {
+    public static void UpdateCabinetFamilyTypeForSelectedInstance(UIApplication app)
+    {
+        //TODO:
+        UIDocument uiDoc = app.ActiveUIDocument;
+        Document doc = uiDoc.Document;
+
+        // Get the new family name and type name
+        var familyName = TypeParamsViewModel.SelectedFamily.FamilyName;
+        var typeName = TypeParamsViewModel.SelectedFamilyType.TypeName;
+
+        ObservableCollection<FamilyInstance> selectedCabinetInstances = TypeParamsViewModel.SelectedCabinetFamilyInstances;
+
+        // Use a filtered element collector to find the family symbol
+        FamilySymbol familySymbol = new FilteredElementCollector(doc)
+                        .OfClass(typeof(FamilySymbol))
+                        .Cast<FamilySymbol>()
+                        .FirstOrDefault(symbol =>
+                            symbol.Family.Name.Equals(familyName, StringComparison.OrdinalIgnoreCase) &&
+                            symbol.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase));
+
+        // Handle FamilySymbol Not Found
+        if (familySymbol == null)
+        {
+            TaskDialog.Show("Error", $"Family symbol for '{familyName}' with type '{typeName}' not found.");
+            return;
+        }
+
+        // Start a transaction to change the type
+        using (Transaction trans = new Transaction(doc, "Change Cabinet SKEW"))
+        {
+            trans.Start();
+
+            foreach (FamilyInstance instance in selectedCabinetInstances)
+            {
+                if (instance == null)
+                {
+                    TaskDialog.Show("Error", "Invalid family instance provided.");
+                }
+                instance.Symbol = familySymbol;
+            }
+
+            trans.Commit();
+        }
+
+
+    }
+
+
     public static void UpdateCabinetTypeForSelectedInstance(UIApplication app)
     {
         UIDocument uiDoc = app.ActiveUIDocument;
@@ -31,7 +79,6 @@ public class ChangeType
         ObservableCollection<FamilyInstance> selectedCabinetInstances = TypeParamsViewModel.SelectedCabinetFamilyInstances;
 
         string chosenNewTypeName = TypeParamsViewModel.ChosenCabinetType.Item1;
-        //string chosenNewTypeName = TypeParamsViewModel.ChosenCabinetType[0];
 
 
         // Call the function to change the type
@@ -77,6 +124,7 @@ public class ChangeType
 
         }
     }
+
 
 
 

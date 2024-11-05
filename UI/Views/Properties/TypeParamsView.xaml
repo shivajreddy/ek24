@@ -43,45 +43,51 @@
 
                 <StackPanel Margin="10 10">
 
-
                     <StackPanel>
 
-                        <TextBlock Text="Current Cabinet Selection's: Configuration details" TextAlignment="Center" FontSize="16px" Padding="0 20"/>
+                        <TextBlock Text="Current Cabinet Selection's: Configuration details" TextAlignment="Center" FontSize="16px" Padding="0 0"/>
 
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Width="300" Margin="0 10 0 0">
                             <StackPanel>
-                                <StackPanel Width="220" >
-                                    <TextBlock Text="Brand" TextAlignment="Center"/>
-                                    <ComboBox Margin="10 0"
-                                    ItemsSource="{Binding }"
-                                              />
-                                </StackPanel>
-                                <StackPanel Width="220" >
-                                    <TextBlock Text="Vendor SKEW" TextAlignment="Center"/>
-                                    <ComboBox Margin="10 0"/>
-                                </StackPanel>
+                                <TextBlock Text="Brand" TextAlignment="Center"/>
+                                <ComboBox x:Name="FamilyGroups"
+                                              Style="{StaticResource ModernComboBox2}"
+                                              ItemsSource="{Binding FamilyGroups}"
+                                              DisplayMemberPath="GroupName"
+                                              SelectedItem="{Binding SelectedFamilyGroup, Mode=TwoWay}"
+                                />
                             </StackPanel>
-                            <StackPanel>
-                                <StackPanel Width="220" >
-                                    <TextBlock Text="Configuration" TextAlignment="Center"/>
-                                    <ComboBox Margin="10 0"/>
-                                </StackPanel>
-                                <StackPanel Width="220" >
-                                    <TextBlock Text="Type" TextAlignment="Center"/>
-                                    <ComboBox Margin="10 0"/>
-                                </StackPanel>
+                            <StackPanel >
+                                <TextBlock Text="Configuration" TextAlignment="Center"/>
+                                <ComboBox x:Name="Familys"
+                                          Style="{StaticResource ModernComboBox2}"
+                                          ItemsSource="{Binding Familys}"
+                                          DisplayMemberPath="FamilyName"
+                                          SelectedItem="{Binding SelectedFamily, Mode=TwoWay}"
+                                          IsEnabled="{Binding SelectedFamilyGroup, Converter={StaticResource NullToBooleanConverter}}"
+                                />
+                            </StackPanel>
+                            <StackPanel >
+                                <TextBlock Text="Vendor SKEW" TextAlignment="Center"/>
+                                <ComboBox x:Name="Types"
+                                          Style="{StaticResource ModernComboBox2}"
+                                          ItemsSource="{Binding FamilyTypes}"
+                                          DisplayMemberPath="TypeName"
+                                          SelectedItem="{Binding SelectedFamilyType, Mode=TwoWay}"
+                                          IsEnabled="{Binding SelectedFamily, Converter={StaticResource NullToBooleanConverter}}"
+                                />
                             </StackPanel>
                         </StackPanel>
                         <!--<Button Content="Update Family-Type" Margin="30 15 30 5"/>-->
-                        <Button x:Name="FamilySettingsUpdate" Content="Update Family-Type"
-                            Height="30" Margin="30 15 30 5"
+                        <Button x:Name="FamilySettingsUpdate" Content="Update SKEW" Width="150"
+                            Height="30" Margin="0 10"
                             Style="{StaticResource ModernButton}"
                             Command="{Binding UpdateTypeCommand}"
                             />
                     </StackPanel>
 
 
-                    <Border Height="1" Background="#e0def4" Margin="0 10 0 0" />
+                    <Border Height="1" Background="LightGray" Width="350" />
                     <StackPanel>
 
                         <TextBlock Text="Current Cabinet Selection's: Type(SKEW) details" TextAlignment="Center" FontSize="16px" Padding="0 20"/>
@@ -97,11 +103,13 @@
                         </StackPanel>
 
                         <StackPanel Margin="0 5"  Orientation="Vertical" HorizontalAlignment="Center">
-                            <ComboBox x:Name="TypeOptions" Width="540" Margin="0 10"
-                            IsEnabled="{Binding AllCabinetsAreSameType}"
-                            ItemsSource="{Binding AvailableCabinetTypes }"
-                            SelectedItem="{Binding ChosenCabinetType, Mode=TwoWay}"
-                            Text="{Binding ChosenCabinetTypeText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox x:Name="TypeOptions" Width="300" Margin="0 10"
+                                        Style="{StaticResource ModernComboBox2}"
+                                        IsEnabled="{Binding AllCabinetsAreSameType}"
+                                        ItemsSource="{Binding AvailableCabinetTypes }"
+                                        SelectedItem="{Binding ChosenCabinetType, Mode=TwoWay}"
+                                        Text="{Binding ChosenCabinetTypeText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            />
                             <!--Text="{Binding ChosenCabinetTypeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
 
                             <Button x:Name="FamilyTypeSettingsUpdate" Content="Update SKEW" Width="150" Height="30" Margin="20 0 0 0"

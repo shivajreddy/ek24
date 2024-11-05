@@ -28,6 +28,7 @@
                     <!-- Row 1: Create new item panel -->
                     <TextBlock TextAlignment="Center">Create New Item</TextBlock>
                     <views_properties:CreateFamilyTypeView/>
+                    <Rectangle Height="1" Fill="DarkGray" HorizontalAlignment="Stretch" Width="300" />
                     <views_properties:CreateBrandTypeView/>
                 </StackPanel>
             </Border>

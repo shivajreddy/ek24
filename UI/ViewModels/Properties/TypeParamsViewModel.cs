@@ -1,19 +1,18 @@
-﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI.Selection;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
+using Autodesk.Revit.DB;
 
 using ek24.RequestHandling;
 using ek24.UI.Commands;
-using ek24.UI.Services;
-using System.Runtime.InteropServices;
+using ek24.UI.Models.Revit;
+
+
+using System.Collections.ObjectModel;
+using Autodesk.Revit.UI.Selection;
 
 
 namespace ek24.UI.ViewModels.Properties;
@@ -33,7 +32,106 @@ public class TypeParamsViewModel : INotifyPropertyChanged
     }
     #endregion
 
+    public List<FamilyGroup> FamilyGroups { get; set; } = RevitFamilyGroups.FamilyGroups;
 
+    public static List<Models.Revit.Family> _familys { get; set; }
+    public static List<Models.Revit.Family> Familys
+    {
+        get => _familys;
+        set
+        {
+            if (_familys != value)
+            {
+                _familys = value;
+                OnStaticPropertyChanged(nameof(Familys));
+            }
+        }
+    }
+
+    public static List<Models.Revit.FamilyType> _familyTypes { get; set; }
+    public static List<Models.Revit.FamilyType> FamilyTypes
+    {
+        get => _familyTypes;
+        set
+        {
+            if (_familyTypes != value)
+            {
+                _familyTypes = value;
+                OnStaticPropertyChanged(nameof(FamilyTypes));
+            }
+        }
+    }
+
+
+    public static FamilyGroup _selectedFamilyGroup { get; set; }
+    public static FamilyGroup SelectedFamilyGroup
+    {
+        get => _selectedFamilyGroup;
+        set
+        {
+            if (_selectedFamilyGroup != value)
+            {
+                _selectedFamilyGroup = value;
+                OnStaticPropertyChanged(nameof(SelectedFamilyGroup));
+                UpdateFamilys();
+            }
+        }
+    }
+
+    public static Models.Revit.Family _selectedFamily { get; set; }
+    public static Models.Revit.Family SelectedFamily
+    {
+        get => _selectedFamily;
+        set
+        {
+            if (_selectedFamily != value)
+            {
+                _selectedFamily = value;
+                OnStaticPropertyChanged($"{nameof(SelectedFamily)}");
+                UpdateTypes();
+            }
+        }
+    }
+
+
+    public static Models.Revit.FamilyType _selectedFamilyType { get; set; }
+    public static Models.Revit.FamilyType SelectedFamilyType
+    {
+        get => _selectedFamilyType;
+        set
+        {
+            if (_selectedFamilyType != value)
+            {
+                _selectedFamilyType = value;
+                //OnStaticPropertyChanged($"{nameof(SelectedFamilyType)}");
+                OnStaticPropertyChanged(nameof(SelectedFamilyType));
+            }
+        }
+    }
+
+    private static void UpdateFamilys()
+    {
+        if (SelectedFamilyGroup != null)
+        {
+            Familys = SelectedFamilyGroup.Familys;
+        }
+        else
+        {
+            Familys = new List<Models.Revit.Family>();
+        }
+    }
+
+    private static void UpdateTypes()
+    {
+        if (SelectedFamily != null)
+        {
+            FamilyTypes = SelectedFamily.FamilyTypes;
+        }
+        else
+        {
+            FamilyTypes = new List<Models.Revit.FamilyType>();
+        }
+    }
     private static bool _selectionIsCabinetsOnly { get; set; } = false;
     public static bool SelectionIsCabinetsOnly
     {
@@ -47,7 +145,7 @@ public class TypeParamsViewModel : INotifyPropertyChanged
 
 
     // Capture all the multiple cabinet instances that user selects
-    private static ObservableCollection<FamilyInstance> _selectedCabinetFamilyInstances;
+    private static ObservableCollection<FamilyInstance> _selectedCabinetFamilyInstances = new ObservableCollection<FamilyInstance>();
     public static ObservableCollection<FamilyInstance> SelectedCabinetFamilyInstances
     {
         get => _selectedCabinetFamilyInstances;
@@ -156,6 +254,11 @@ public class TypeParamsViewModel : INotifyPropertyChanged
     public static void SyncCurrentSelectionWithTypeParamsViewModel(Selection currentSelection, Document doc)
     {
         SelectedCabinetFamilyInstances.Clear();
+
+        SelectedFamilyGroup = null;
+        SelectedFamily = null;
+        SelectedFamilyType = null;
+
 
         var selectedIds = currentSelection.GetElementIds();
         // When deselecting anything, this will be 0, so don't check anything else
@@ -328,18 +431,22 @@ public class TypeParamsViewModel : INotifyPropertyChanged
 
 
     public ICommand UpdateTypeCommand { get; }
-
-    public TypeParamsViewModel()
-    {
-        SelectedCabinetFamilyInstances = new ObservableCollection<FamilyInstance>();
-
-        UpdateTypeCommand = new RelayCommand(HandleUpdateTypeCommand);
-    }
     private void HandleUpdateTypeCommand()
     {
         //GoToViewName = view.Name;
-        APP.RequestHandler.RequestType = RequestType.Properties_UpdateCabinetType;
+        APP.RequestHandler.RequestType = RequestType.Properties_UpdateCabinetFamilyType;
         APP.ExternalEvent?.Raise();
+    }
+
+    public TypeParamsViewModel()
+    {
+
+        SelectedFamilyGroup = null;
+        SelectedFamily = null;
+        SelectedFamilyType = null;
+        Familys = new List<Models.Revit.Family>(); // Initialize Familys to an empty list
+
+        UpdateTypeCommand = new RelayCommand(HandleUpdateTypeCommand);
     }
 
 }
