@@ -5,9 +5,9 @@ using System.Windows.Controls;
 namespace ek24.UI.Views.Properties;
 
 
-public partial class PropertiesViewView : UserControl
+public partial class PropertiesView : UserControl
 {
-    public PropertiesViewView()
+    public PropertiesView()
     {
         InitializeComponent();
         DataContext = new PropertiesPanelViewModel();

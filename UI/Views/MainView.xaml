@@ -36,7 +36,7 @@
 			</TabItem>
 
             <TabItem Header="EK24-Properties" FontSize="14">
-                <views_properties:PropertiesViewView/>
+                <views_properties:PropertiesView/>
             </TabItem>
 
             <!--<TabItem Header="EK24-Manage" FontSize="14">

@@ -138,9 +138,6 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
         // Clear the existing items efficiently
         BrandFamilyTypesWithNotes.Clear();
 
-        // Search-Term is empty
-        var x = SelectedBrandCatalogue.FamilyTypes;
-
         List<EKCabinetType> ekCabinetTypes = new List<EKCabinetType>();
 
         foreach (EKFamilyType familyType in SelectedBrandCatalogue.FamilyTypes)
