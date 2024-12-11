@@ -53,6 +53,6 @@ public class SpeciesVariant
 public class BrandCatalogue
 {
     public string BrandName { get; set; }
-    public List<FamilyType> FamilyTypes { get; set; }
+    public List<EKFamilyType> FamilyTypes { get; set; }
 }
 

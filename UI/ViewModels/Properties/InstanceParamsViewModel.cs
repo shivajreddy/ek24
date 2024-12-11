@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI.Selection;
+using ek24.RequestHandling;
+using ek24.UI.Commands;
+using ek24.UI.Models.Revit;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI.Selection;
-
-using ek24.RequestHandling;
-using ek24.UI.Commands;
-using ek24.UI.Models.Revit;
 
 
 namespace ek24.UI.ViewModels.Properties;
@@ -154,13 +153,13 @@ public class InstanceParamsViewModel : INotifyPropertyChanged
                 SelectedCabinetFamilyInstance = familyInstance;
 
                 // Clear existing FamilyTypes
-                CurrentSelectionFamilySymbols.Clear();
+                CurrentSelectionFamilySymbols?.Clear();
 
                 // Get the FamilySymbol associated with the selected FamilyInstance
                 FamilySymbol symbol = familyInstance.Symbol;
 
                 // Add the associated FamilyTypes to the FamilyTypes collection
-                CurrentSelectionFamilySymbols.Add(symbol);
+                CurrentSelectionFamilySymbols?.Add(symbol);
 
                 // get the brand name
                 Parameter vendorNameParam = familyInstance.Symbol.LookupParameter("Vendor_Name");
@@ -223,7 +222,6 @@ public class InstanceParamsViewModel : INotifyPropertyChanged
     {
     }
 
-
     private static string GetParameterValue(Element element, string parameterName)
     {
         // Find the parameter by name
@@ -232,7 +230,6 @@ public class InstanceParamsViewModel : INotifyPropertyChanged
         // If the parameter is found and has a value, return it as a string; otherwise, return null
         return param != null && param.HasValue ? param.AsString() : null;
     }
-
 
     private static bool AllElementsAreCabinets(ICollection<ElementId> allElementIds, Document doc)
     {

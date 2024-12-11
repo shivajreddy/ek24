@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
+﻿using ek24.UI.ViewModels.ProjectBrowser;
 using System.Windows.Controls;
-
-using ek24.UI.ViewModels.ProjectBrowser;
 
 
 namespace ek24.UI.Views.ProjectBrowser;
@@ -16,5 +14,4 @@ public partial class ProjectBrowserView : UserControl
         /// set the DataContext to the ViewModel of this View
         DataContext = new ProjectBrowserViewModel();
     }
-
 }

@@ -1,4 +1,5 @@
-﻿<UserControl x:Class="ek24.UI.Views.Properties.PropertiesViewView"
+﻿<UserControl 
+	x:Class="ek24.UI.Views.Properties.PropertiesViewView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,7 +10,6 @@
              xmlns:views_projectbrowser="clr-namespace:ek24.UI.Views.ProjectBrowser"
 
              xmlns:views_properties="clr-namespace:ek24.UI.Views.Properties" 
-
              >
     <Grid>
 
@@ -29,27 +29,27 @@
                     <TextBlock TextAlignment="Center" Margin="0 5">Create New Item</TextBlock>
                     <TabControl Margin="10 0" BorderThickness="0">
                         <TabItem Header="Brand-Shape-SKEW">
-                            <views_properties:CreateFamilyTypeView/>
+                            <!--<views_properties:CreateFamilyTypeView/>-->
                         </TabItem>
                         <TabItem Header="Brand-SKEW">
-                            <views_properties:CreateBrandTypeView/>
+                            <!--<views_properties:CreateBrandTypeView/>-->
                         </TabItem>
                     </TabControl>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Row="1" Margin="5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
+            <!--<Border Grid.Row="1" Margin="5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
                 <views_properties:TypeParamsView/>
-            </Border>
+            </Border>-->
 
 
             <!--<Border Grid.Row="2" Margin="0 5" BorderBrush="DarkGray" BorderThickness="1" CornerRadius="4">
                 <views_properties:InstanceParamsView/>
             </Border>-->
 
-            <StackPanel Grid.Row="3" Margin="0">
+            <!--<StackPanel Grid.Row="3" Margin="0">
                 <views_projectbrowser:SelectCaseWorkView/>
-            </StackPanel>
+            </StackPanel>-->
 
         </Grid>
 

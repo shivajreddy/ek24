@@ -1,16 +1,10 @@
-﻿using System;
+﻿using ek24.UI.Models.Revit;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-using Newtonsoft.Json;
-
-using ek24.UI.Models.Revit;
-using System.Runtime.InteropServices;
 
 
 namespace ek24.Utils;
@@ -86,7 +80,7 @@ public static class RevitUtils
             FamilyGroup familyGroup = new FamilyGroup
             {
                 GroupName = Path.GetFileNameWithoutExtension(csvFile), // Set GroupName based on file name
-                Familys = new List<Family>()
+                Familys = new List<EKFamily>()
             };
 
             // Read all lines of the current CSV file
@@ -99,10 +93,10 @@ public static class RevitUtils
             // Iterate over the columns (families)
             for (int col = 0; col < familyNames.Length; col++)
             {
-                Family family = new Family
+                EKFamily family = new EKFamily
                 {
                     FamilyName = familyNames[col], // Set FamilyName
-                    FamilyTypes = new List<FamilyType>()
+                    FamilyTypes = new List<EKFamilyType>()
                 };
 
                 // Iterate over the rows to get FamilyType names
@@ -114,7 +108,7 @@ public static class RevitUtils
                         string familyTypeName = columns[col];
                         if (!string.IsNullOrEmpty(familyTypeName))
                         {
-                            FamilyType familyType = new FamilyType { TypeName = familyTypeName }; // Set TypeName
+                            EKFamilyType familyType = new EKFamilyType { TypeName = familyTypeName }; // Set TypeName
                             family.FamilyTypes.Add(familyType);
                         }
                     }
@@ -150,7 +144,7 @@ public static class RevitUtils
             BrandCatalogue brandCatalogue = new BrandCatalogue
             {
                 BrandName = brand.BrandName,
-                FamilyTypes = new List<FamilyType>()
+                FamilyTypes = new List<EKFamilyType>()
             };
 
             // Find the prefixes for this brand

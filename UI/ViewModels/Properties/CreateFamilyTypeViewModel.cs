@@ -36,8 +36,8 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
     // before create UI instance
     public List<FamilyGroup> FamilyGroups { get; set; } = RevitFamilyGroups.FamilyGroups;
 
-    public static List<Family> _familys { get; set; }
-    public static List<Family> Familys
+    public static List<EKFamily> _familys { get; set; }
+    public static List<EKFamily> Familys
     {
         get => _familys;
         set
@@ -50,8 +50,8 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
         }
     }
 
-    public static List<FamilyType> _familyTypes { get; set; }
-    public static List<FamilyType> FamilyTypes
+    public static List<EKFamilyType> _familyTypes { get; set; }
+    public static List<EKFamilyType> FamilyTypes
     {
         get => _familyTypes;
         set
@@ -80,8 +80,8 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
         }
     }
 
-    public static Family _selectedFamily { get; set; }
-    public static Family SelectedFamily
+    public static EKFamily _selectedFamily { get; set; }
+    public static EKFamily SelectedFamily
     {
         get => _selectedFamily;
         set
@@ -96,8 +96,8 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
     }
 
 
-    public static FamilyType _selectedFamilyType { get; set; }
-    public static FamilyType SelectedFamilyType
+    public static EKFamilyType _selectedFamilyType { get; set; }
+    public static EKFamilyType SelectedFamilyType
     {
         get => _selectedFamilyType;
         set
@@ -119,7 +119,7 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
         }
         else
         {
-            Familys = new List<Family>();
+            Familys = new List<EKFamily>();
         }
     }
 
@@ -131,7 +131,7 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
         }
         else
         {
-            FamilyTypes = new List<FamilyType>();
+            FamilyTypes = new List<EKFamilyType>();
         }
     }
 
@@ -149,7 +149,7 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
         SelectedFamilyGroup = null;
         SelectedFamily = null;
         SelectedFamilyType = null;
-        Familys = new List<Family>(); // Initialize Familys to an empty list
+        Familys = new List<EKFamily>(); // Initialize Familys to an empty list
         CreateNewFamilyCommand = new RelayCommand(HandleCreateNewFamilyCommand);
     }
 

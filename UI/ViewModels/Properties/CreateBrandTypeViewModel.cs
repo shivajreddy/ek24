@@ -1,18 +1,12 @@
-﻿using System;
+﻿using ek24.RequestHandling;
+using ek24.UI.Commands;
+using ek24.UI.Models.Revit;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Windows.Input;
-
-using ek24.RequestHandling;
-using ek24.UI.Commands;
-using ek24.UI.Models.Properties;
-using ek24.UI.Models.Revit;
 
 
 namespace ek24.UI.ViewModels.Properties;
@@ -35,20 +29,6 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
     public List<BrandCatalogue> BrandCatalogues { get; set; } = RevitBrandData.BrandCatalogues;
 
     /*
-    public List<FamilyType> _brandFamilyTypes { get; set; }
-    public List<FamilyType> BrandFamilyTypes
-    {
-        get => _brandFamilyTypes;
-        set
-        {
-            if (_brandFamilyTypes != value)
-            {
-                _brandFamilyTypes = value;
-                OnPropertyChanged(nameof(BrandFamilyTypes));
-            }
-        }
-    }
-    */
     private ObservableCollection<FamilyType> _brandFamilyTypes = new ObservableCollection<FamilyType>();
     public ObservableCollection<FamilyType> BrandFamilyTypes
     {
@@ -62,7 +42,28 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
             }
         }
     }
+    */
 
+    public class FamilyTypeWithNotes
+    {
+        public EKFamilyType familyType { get; set; }
+        public string notes { get; set; }
+        public string DisplayText => $"{familyType.TypeName}    {notes}";
+    }
+
+    private ObservableCollection<FamilyTypeWithNotes> _brandFamilyTypesWithNotes = new ObservableCollection<FamilyTypeWithNotes>();
+    public ObservableCollection<FamilyTypeWithNotes> BrandFamilyTypesWithNotes
+    {
+        get => _brandFamilyTypesWithNotes;
+        set
+        {
+            if (_brandFamilyTypesWithNotes != value)
+            {
+                _brandFamilyTypesWithNotes = value;
+                OnPropertyChanged(nameof(BrandFamilyTypesWithNotes));
+            }
+        }
+    }
 
     public BrandCatalogue _selectedBrandCatalogue { get; set; }
     public BrandCatalogue SelectedBrandCatalogue
@@ -79,8 +80,9 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
         }
     }
 
-    public static FamilyType _selectedBrandFamilyType { get; set; }
-    public static FamilyType SelectedBrandFamilyType
+    /*
+    public static EKFamilyType _selectedBrandFamilyType { get; set; }
+    public static EKFamilyType SelectedBrandFamilyType
     {
         get => _selectedBrandFamilyType;
         set
@@ -92,47 +94,108 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
             }
         }
     }
+    */
+
+    public static FamilyTypeWithNotes _selectedBrandFamilyTypeWithNotes { get; set; }
+    public static FamilyTypeWithNotes SelectedBrandFamilyTypeWithNotes
+    {
+        get => _selectedBrandFamilyTypeWithNotes;
+        set
+        {
+            if (_selectedBrandFamilyTypeWithNotes != value)
+            {
+                _selectedBrandFamilyTypeWithNotes = value;
+                OnStaticPropertyChanged(nameof(SelectedBrandFamilyTypeWithNotes));
+            }
+        }
+    }
+
+    private string _searchTerm;
+    public string SearchTerm
+    {
+        get => _searchTerm;
+        set
+        {
+            if (_searchTerm != value)
+            {
+                _searchTerm = value;
+                OnPropertyChanged(nameof(SearchTerm));
+                UpdateTypes(); // Update types whenever the search term changes
+            }
+        }
+    }
+
     private void UpdateTypes()
     {
         // Ensure that a brand is selected
         // If no brand is selected or no matching BrandCatalogue is found, FamilyTypes will remain empty
         if (SelectedBrandCatalogue == null)
         {
-            BrandFamilyTypes.Clear();
+            BrandFamilyTypesWithNotes.Clear();
             return;
         }
 
         // Clear the existing items efficiently
-        BrandFamilyTypes.Clear();
+        BrandFamilyTypesWithNotes.Clear();
 
-        foreach(var familyType in SelectedBrandCatalogue.FamilyTypes)
+        // Search-Term is empty
+        var x = SelectedBrandCatalogue.FamilyTypes;
+
+        List<EKCabinetType> ekCabinetTypes = new List<EKCabinetType>();
+
+        foreach (EKFamilyType familyType in SelectedBrandCatalogue.FamilyTypes)
         {
-            BrandFamilyTypes.Add(familyType);
+            string typeName = familyType.TypeName;
+
+            // Check each cabinet family in ProjectCabinetFamilies
+            foreach (EKCabinetFamily cabinetFamily in ProjectCabinetFamilies.CabinetFamilies)
+            {
+                if (cabinetFamily.TypeNames != null)
+                {
+                    // Find matching types
+                    var matchingTypes = cabinetFamily.TypeNames
+                        .Where(type => type.TypeName == typeName);
+
+                    // Add the matching EKCabinetType objects to the list
+                    ekCabinetTypes.AddRange(matchingTypes);
+                }
+            }
         }
 
+        Debug.Print("stop here");
 
-        /*
-        //FamilyTypes = SelectedBrandCatalogue.FamilyTypes;
-
-        // Get the brand name
-        string brandName = SelectedBrandCatalogue.BrandName;
-
-        // Find the corresponding BrandCatalogue for the selected brand
-        var chosenBrandCatalogue = RevitBrandData.BrandCatalogues
-                                .FirstOrDefault(catalogue => catalogue.BrandName.Equals(brandName, StringComparison.OrdinalIgnoreCase));
-
-        // If a BrandCatalogue is found, add the associated FamilyTypes to the FamilyTypes collection
-        if (chosenBrandCatalogue != null)
+        foreach (EKCabinetType ekCabinetType in ekCabinetTypes)
         {
-            BrandFamilyTypes.AddRange(chosenBrandCatalogue.FamilyTypes);
+            FamilyTypeWithNotes familyTypeWithNotes = new FamilyTypeWithNotes();
+
+            EKFamilyType familyType = new EKFamilyType();
+            familyType.TypeName = ekCabinetType.TypeName;
+
+            familyTypeWithNotes.familyType = familyType;
+            familyTypeWithNotes.notes = $"[ {ekCabinetType.Note} ]";
+
+            // Search Term is empty
+            if (string.IsNullOrEmpty(SearchTerm))
+            {
+                BrandFamilyTypesWithNotes.Add(familyTypeWithNotes);
+            }
+            // Search-Term Filtering
+            else
+            {
+                string search_term = SearchTerm.ToLower();
+                if (familyType.TypeName.ToLower().Contains(search_term) || familyTypeWithNotes.notes.ToLower().Contains(search_term))
+                {
+                    BrandFamilyTypesWithNotes.Add(familyTypeWithNotes);
+                }
+
+            }
         }
-        */
     }
+
 
     public ICommand CreateNewFamilyCommand { get; }
     private void HandleCreateNewFamilyCommand()
     {
-        //GoToViewName = view.Name;
         APP.RequestHandler.RequestType = RequestType.Properties_CreateNewFamilyAndTypeV2;
         APP.ExternalEvent?.Raise();
     }
@@ -140,8 +203,7 @@ public class CreateBrandTypeViewModel : INotifyPropertyChanged
     public CreateBrandTypeViewModel()
     {
         SelectedBrandCatalogue = null;
-        SelectedBrandFamilyType = null;
-        //BrandFamilyTypes = new List<FamilyType>();
+        SelectedBrandFamilyTypeWithNotes = null;
 
         CreateNewFamilyCommand = new RelayCommand(HandleCreateNewFamilyCommand);
     }

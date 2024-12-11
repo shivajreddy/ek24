@@ -1,9 +1,6 @@
-﻿using System.Diagnostics;
-
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-using ek24.UI.Services;
 using ek24.UI.ViewModels.Properties;
 using SelectionChangedEventArgs = Autodesk.Revit.UI.Events.SelectionChangedEventArgs;
 
@@ -32,10 +29,10 @@ public class SelectionChangedEvent
 
     public static void HandleSelectionChangedEvent(object sender, SelectionChangedEventArgs e)
     {
-
         UIApplication app = sender as UIApplication;
-        UIDocument uiDoc = app.ActiveUIDocument;
-        Document doc = app.ActiveUIDocument.Document;
+        UIDocument uiDoc = app?.ActiveUIDocument;
+        Document doc = uiDoc?.Document;
+        if (doc == null) return;
 
         Selection currentSelection = uiDoc.Selection;
 

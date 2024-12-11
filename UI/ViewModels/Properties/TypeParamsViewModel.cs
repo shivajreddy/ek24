@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Input;
-
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI.Selection;
 
 using ek24.RequestHandling;
 using ek24.UI.Commands;
 using ek24.UI.Models.Revit;
 
-
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Autodesk.Revit.UI.Selection;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Input;
 
 
 namespace ek24.UI.ViewModels.Properties;
@@ -34,8 +32,8 @@ public class TypeParamsViewModel : INotifyPropertyChanged
 
     public List<FamilyGroup> FamilyGroups { get; set; } = RevitFamilyGroups.FamilyGroups;
 
-    public static List<Models.Revit.Family> _familys { get; set; }
-    public static List<Models.Revit.Family> Familys
+    public static List<Models.Revit.EKFamily> _familys { get; set; }
+    public static List<Models.Revit.EKFamily> Familys
     {
         get => _familys;
         set
@@ -48,8 +46,8 @@ public class TypeParamsViewModel : INotifyPropertyChanged
         }
     }
 
-    public static List<Models.Revit.FamilyType> _familyTypes { get; set; }
-    public static List<Models.Revit.FamilyType> FamilyTypes
+    public static List<Models.Revit.EKFamilyType> _familyTypes { get; set; }
+    public static List<Models.Revit.EKFamilyType> FamilyTypes
     {
         get => _familyTypes;
         set
@@ -78,8 +76,8 @@ public class TypeParamsViewModel : INotifyPropertyChanged
         }
     }
 
-    public static Models.Revit.Family _selectedFamily { get; set; }
-    public static Models.Revit.Family SelectedFamily
+    public static Models.Revit.EKFamily _selectedFamily { get; set; }
+    public static Models.Revit.EKFamily SelectedFamily
     {
         get => _selectedFamily;
         set
@@ -94,8 +92,8 @@ public class TypeParamsViewModel : INotifyPropertyChanged
     }
 
 
-    public static Models.Revit.FamilyType _selectedFamilyType { get; set; }
-    public static Models.Revit.FamilyType SelectedFamilyType
+    public static Models.Revit.EKFamilyType _selectedFamilyType { get; set; }
+    public static Models.Revit.EKFamilyType SelectedFamilyType
     {
         get => _selectedFamilyType;
         set
@@ -117,7 +115,7 @@ public class TypeParamsViewModel : INotifyPropertyChanged
         }
         else
         {
-            Familys = new List<Models.Revit.Family>();
+            Familys = new List<Models.Revit.EKFamily>();
         }
     }
 
@@ -129,7 +127,7 @@ public class TypeParamsViewModel : INotifyPropertyChanged
         }
         else
         {
-            FamilyTypes = new List<Models.Revit.FamilyType>();
+            FamilyTypes = new List<Models.Revit.EKFamilyType>();
         }
     }
     private static bool _selectionIsCabinetsOnly { get; set; } = false;
@@ -444,7 +442,7 @@ public class TypeParamsViewModel : INotifyPropertyChanged
         SelectedFamilyGroup = null;
         SelectedFamily = null;
         SelectedFamilyType = null;
-        Familys = new List<Models.Revit.Family>(); // Initialize Familys to an empty list
+        Familys = new List<Models.Revit.EKFamily>(); // Initialize Familys to an empty list
 
         UpdateTypeCommand = new RelayCommand(HandleUpdateTypeCommand);
     }

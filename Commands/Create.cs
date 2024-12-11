@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
-
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-
 using ek24.UI.ViewModels.Properties;
+using System;
+using System.Linq;
 
 
 namespace ek24.Commands;
@@ -58,12 +56,12 @@ public static class Create
             // This is a dirty of cancelling out of creating event for now
             TaskDialog.Show("Finished Exited", "");
         }
-
     }
+
     public static void CreateNewFamilyInstanceUsingPanel2(UIApplication app)
     {
         // chosen Type
-        var typeName  = CreateBrandTypeViewModel.SelectedBrandFamilyType.TypeName;
+        var typeName = CreateBrandTypeViewModel.SelectedBrandFamilyTypeWithNotes.familyType.TypeName;
 
         // Active Document
         UIDocument uiDoc = app.ActiveUIDocument;
@@ -103,9 +101,8 @@ public static class Create
             // This is a dirty of cancelling out of creating event for now
             TaskDialog.Show("Finished Exited", "");
         }
-
-
     }
+
 
     public static FamilySymbol FindFamilySymbolWithTypeName(string typeName, Document doc)
     {

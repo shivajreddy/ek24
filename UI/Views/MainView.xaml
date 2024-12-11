@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ek24.UI.Views"
-             mc:Ignorable="d" 
 
-             xmlns:views="clr-namespace:ek24.UI.Views"
+             mc:Ignorable="d"
+
              xmlns:views_projectbrowser="clr-namespace:ek24.UI.Views.ProjectBrowser"
+             xmlns:views_newitem="clr-namespace:ek24.UI.Views.NewItem"
              xmlns:views_properties="clr-namespace:ek24.UI.Views.Properties"
              xmlns:views_manage="clr-namespace:ek24.UI.Views.Manage"
 
@@ -25,16 +26,22 @@
     <Grid Background="#f2e9e1">
 
         <TabControl>
-            <TabItem Header="Project Browser" FontSize="14">
-                <views_projectbrowser:ProjectBrowserView/>
+
+            <TabItem Header="EK24-Browser" FontSize="14">
+                 <views_projectbrowser:ProjectBrowserView/>
             </TabItem>
 
-            <TabItem Header="Properties" FontSize="14">
+            <TabItem Header="EK24-New Item" FontSize="14">
+				<views_newitem:NewItemView/>
+			</TabItem>
+
+            <TabItem Header="EK24-Properties" FontSize="14">
                 <views_properties:PropertiesViewView/>
             </TabItem>
-            <TabItem Header="Manage" FontSize="14">
+
+            <!--<TabItem Header="EK24-Manage" FontSize="14">
                 <views_manage:ManageView/>
-            </TabItem>
+            </TabItem>-->
 
         </TabControl>
 

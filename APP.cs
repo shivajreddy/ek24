@@ -1,14 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Windows.Media.Imaging;
-using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-
+﻿using Autodesk.Revit.UI;
+using ek24.Events;
 using ek24.RequestHandling;
 using ek24.Utils;
-using ek24.Events;
 
 
 namespace ek24;
@@ -71,6 +64,11 @@ public class APP : IExternalApplication
         application.SelectionChanged += SelectionChangedEvent.HandleSelectionChangedEvent;
         // Event: 2
         application.ViewActivated += ViewActivatedEvent.HandleViewActivatedEvent;
+        // Event: 3
+        //application.ControlledApplication.DocumentOpened += new EventHandler<Autodesk.Revit.DB.Events.DocumentOpenedEventArgs>();
+        application.ControlledApplication.DocumentOpened += DocumentOpenedEvent.HandleDocumentOpenedEvent;
+        // Event: 4
+        application.ControlledApplication.DocumentClosed += DocumentOpenedEvent.HandleDocumentClosedEvent;
 
         return Result.Succeeded;
     }
