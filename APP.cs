@@ -43,8 +43,9 @@ public class APP : IExternalApplication
         RequestHandler = new RequestHandler();
         ExternalEvent = ExternalEvent.Create(RequestHandler);
 
+        // TODO: Now going to be handled by document opened event
         // Setup the Revit Data
-        RevitUtils.SetUpRevitData();
+        //RevitUtils.SetUpRevitData();
 
         // Register Docks, Add PushButtons to Panels
         PluginUtils.RegisterDockablePanel(application);
@@ -66,9 +67,11 @@ public class APP : IExternalApplication
         application.ViewActivated += ViewActivatedEvent.HandleViewActivatedEvent;
         // Event: 3
         //application.ControlledApplication.DocumentOpened += new EventHandler<Autodesk.Revit.DB.Events.DocumentOpenedEventArgs>();
-        application.ControlledApplication.DocumentOpened += DocumentOpenedEvent.HandleDocumentOpenedEvent;
+        //application.ControlledApplication.DocumentOpened += DocumentOpenedEvent.HandleDocumentOpenedEvent;
+        application.ControlledApplication.DocumentOpened += ek24.Utils.EKUtils.HandleDocumentOpenedEvent;
         // Event: 4
-        application.ControlledApplication.DocumentClosed += DocumentOpenedEvent.HandleDocumentClosedEvent;
+        //application.ControlledApplication.DocumentClosed += DocumentOpenedEvent.HandleDocumentClosedEvent;
+        application.ControlledApplication.DocumentOpened += ek24.Utils.EKUtils.HandleDocumentClosedEvent;
 
         return Result.Succeeded;
     }

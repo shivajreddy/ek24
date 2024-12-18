@@ -22,34 +22,3 @@ public class FamilyGroup
 
 }
 
-public class EKFamily
-{
-    public string FamilyName { get; set; }
-    public List<EKFamilyType> FamilyTypes;
-
-}
-
-public class EKFamilyType
-{
-    public string TypeName { get; set; }
-}
-
-// Represent the family instance with properties that we care about
-
-public class EKCabinetType
-{
-    public string TypeName { get; set; }
-    public string Note { get; set; }
-}
-public class EKCabinetFamily
-{
-    public string FamilyName { get; set; }  // name of this family
-    public List<EKCabinetType> TypeNames { get; set; }    // all type names of this fmaily
-}
-
-// This is an UI data
-public static class ProjectCabinetFamilies
-{
-    public static List<EKCabinetFamily> CabinetFamilies { get; set; }
-}
-

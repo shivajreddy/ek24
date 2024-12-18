@@ -95,6 +95,7 @@
     <Compile Include="UI\Models\Properties\InstanceParamsModel.cs" />
     <Compile Include="UI\Models\Properties\PropertiesModel.cs" />
     <Compile Include="UI\Models\Properties\CurrentSelectionModel.cs" />
+    <Compile Include="Dtos\RevitEK.cs" />
     <Compile Include="UI\Models\Revit\Inventory.cs" />
     <Compile Include="UI\Models\MainModel.cs" />
     <Compile Include="UI\Models\ProjectBrowser\ProjectBrowserModel.cs" />
@@ -152,6 +153,7 @@
       <DependentUpon>TypeParamsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Models\Revit\CabinetsExportDataModel.cs" />
+    <Compile Include="Utils\EKUtils.cs" />
     <Compile Include="Utils\ExcelExporter.cs" />
     <Compile Include="Utils\ImageUtils.cs" />
     <Compile Include="Utils\PluginUtils.cs" />

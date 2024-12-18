@@ -1,25 +1,43 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Events;
-using ek24.UI.Models.Revit;
+using ek24.Dtos;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace ek24.Events;
+namespace ek24.Utils;
 
-public static class DocumentOpenedEvent
+/// <summary>
+/// - This utility class is responsible to Read the Document data
+/// - It creates Datastructures that represent the available Family Symbols,
+///   as a forward declaration for the application's UI
+/// - DocumentClosedEvent should clear the memory of these symbols
+/// </summary>
+public class EKUtils
 {
+    public static List<EKCaseworkFamily> EKCaseworkFamilies { get; set; }
 
-}
+
+    List<EKCaseworkFamily> createDataStructures(FilteredElementCollector familyCollecter)
+    {
+        List<EKCaseworkFamily> ekCaseworkFamily;
 
 
-public class DocumentOpenedEventOld
-{
+
+        return ekCaseworkFamily;
+    }
+
+
     public static void HandleDocumentOpenedEvent(object sender, DocumentOpenedEventArgs args)
     {
         // Grab the Document
-        var doc = args.Document;
+        Document doc = args.Document;
+        string documentPath = doc.PathName;
 
-        // Define cabinet family prefixes
+        FilteredElementCollector collector = new FilteredElementCollector(doc);
+        FilteredElementCollector familyCollecter = collector.OfClass(typeof(Family));
+
+        // Define cabinet family prefixes used for filtering
         string[] ekCabinetFamilyNamePrefixes = {
             "Aristokraft-W-",
             "Aristokraft-B-",
@@ -36,13 +54,11 @@ public class DocumentOpenedEventOld
             "YTH-T-"
         };
 
-        // Collect all families of the Casework category
-        FilteredElementCollector caseworkCollector = new FilteredElementCollector(doc)
-            .OfCategory(BuiltInCategory.OST_Casework)
-            .OfClass(typeof(Family));
+        ICollection<Element> familyElements = familyCollecter.ToElements();
+        int collectorCount = familyElements.Count();
 
         // Filter families matching the prefixes
-        var cabinetFamilies = caseworkCollector
+        var cabinetFamilies = familyElements
             .Cast<Family>()
             .Where(family => ekCabinetFamilyNamePrefixes.Any(prefix => family.Name.StartsWith(prefix)))
             .Select(family => new EKCabinetFamily
@@ -62,9 +78,11 @@ public class DocumentOpenedEventOld
             })
             .ToList();
 
+
         // Set the UI data property
         ProjectCabinetFamilies.CabinetFamilies = cabinetFamilies;
     }
+
 
     public static void HandleDocumentClosedEvent(object sender, EventArgs e)
     {
@@ -79,16 +97,10 @@ public class DocumentOpenedEventOld
     {
         // Implement logic to extract a note from the family symbol if available
         // This might involve reading parameters or other properties
-        var noteParam = symbol.LookupParameter("Note"); // Example
+        const string VENDOR_NOTES_PARAM_NAME = "Vendor_Notes";
+        var noteParam = symbol.LookupParameter(VENDOR_NOTES_PARAM_NAME);
         return noteParam?.AsString() ?? string.Empty;
     }
 
-    private static string GetCabinetNoteFromInstance(FamilyInstance cabinet)
-    {
-        // Implement logic to extract a note from the cabinet instance if available
-        // This might involve reading parameters or other properties
-        var noteParam = cabinet.LookupParameter("Note"); // Example
-        return noteParam?.AsString() ?? string.Empty;
-    }
 }
 
