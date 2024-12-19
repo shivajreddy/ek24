@@ -36,26 +36,28 @@ public class EKUtils
             var brandValue = brandParam.AsValueString();
             if (brandValue == null || brandValue == "") continue;
 
-            var categoryParam = familySymbol.LookupParameter("EKType");
-            var categoryValue = categoryParam == null ? "" : categoryParam.AsValueString();
+            var ekTypeParam = familySymbol.LookupParameter("EKType");
+            var ekTypeValue = ekTypeParam == null ? "" : ekTypeParam.AsValueString();
 
-            var configurationParam = familySymbol.LookupParameter("EKCategory");
-            var configurationValue = configurationParam == null ? "" : configurationParam.AsValueString();
+            var ekCategoryParam = familySymbol.LookupParameter("EKCategory");
+            var ekCategoryValue = ekCategoryParam == null ? "" : ekCategoryParam.AsValueString();
 
             var vendorSKUParam = familySymbol.LookupParameter("Vendor_SKU");
-            var vendorSKUValue = vendorSKUParam == null ? "" : vendorSKUParam.AsValueString();
+            // ONCE THE FAMILIES ARE UPDATED USE 'Vendor_SKU' param instead of the literal type name
+            //var vendorSKUValue = vendorSKUParam == null ? "" : vendorSKUParam.AsValueString();
+            var vendorSKUValue = familySymbol.Name;
 
             var notesParam = familySymbol.LookupParameter("Vendor_Notes");
             var notesValue = notesParam == null ? "" : notesParam.AsValueString();
 
-            var ek_sku = new EK_SKU(vendorSKUValue, notesValue);
+            var ek_sku = new EK_SKU(vendorSKUValue, notesValue, familySymbol);
 
             var ekFamilySymbol = new EKFamilySymbol(
-                revitFamilySymbol: familySymbol,
+                //revitFamilySymbol: familySymbol,
                 ekBrand: brandValue,
-                ekCategory: categoryValue,
-                ekConfiguration: configurationValue,
-                ekSKU: ek_sku
+                ekType: ekTypeValue,
+                ekCategory: ekCategoryValue,
+                ek_SKU: ek_sku
                 );
             ekFamilySymbols.Add(ekFamilySymbol);
         }

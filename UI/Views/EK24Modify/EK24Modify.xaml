@@ -39,10 +39,10 @@
 			</StackPanel>
 
 			<StackPanel Margin="0 5" MinWidth="300">
-				<TextBlock Text="Category" TextAlignment="Center"/>
-				<ComboBox x:Name="EKCategory"
+				<TextBlock Text="Type" TextAlignment="Center"/>
+				<ComboBox x:Name="EKType"
                       Style="{StaticResource ModernComboBox2}"
-                      ItemsSource="{Binding CategoryItems}"
+                      ItemsSource="{Binding EKTypeItems}"
                       SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
                       TabIndex="1"
                       IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
@@ -50,10 +50,10 @@
 			</StackPanel>
 
 			<StackPanel Margin="0 5" MinWidth="300">
-				<TextBlock Text="Configuration" TextAlignment="Center"/>
-				<ComboBox x:Name="EKConfiguration"
+				<TextBlock Text="Category" TextAlignment="Center"/>
+				<ComboBox x:Name="EKCategory"
                       Style="{StaticResource ModernComboBox2}"
-                      ItemsSource="{Binding ConfigurationItems}"
+                      ItemsSource="{Binding EKCategoryItems}"
                       SelectedItem="{Binding SelectedConfiguration, Mode=TwoWay}"
                       TabIndex="2"
                       IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
@@ -64,7 +64,7 @@
 				<TextBlock Text="SKU" TextAlignment="Center"/>
 				<ComboBox x:Name="SKU"
                       Style="{StaticResource ModernComboBox2}"
-                      ItemsSource="{Binding SKUItems}"
+                      ItemsSource="{Binding EKSKUItems}"
                       SelectedItem="{Binding SelectedSKU, Mode=TwoWay}"
                       TabIndex="3"
                       IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"

@@ -168,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="HowToUpdate.md" />
     <None Include="Out\ek24.addin" />
     <None Include="packages.config" />
     <None Include="Resources\CSV\Aristokraft-Base.csv" />
