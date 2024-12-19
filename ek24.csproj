@@ -91,6 +91,7 @@
     <Compile Include="UI\Commands\RelayCommand.cs" />
     <Compile Include="UI\Convertors\BoolToVisibilityConvertor.cs" />
     <Compile Include="UI\Convertors\NullToBooleanConvertor.cs" />
+    <Compile Include="UI\Models\EK24Modify\EK24ModifyModel.cs" />
     <Compile Include="UI\Models\Properties\CreateInstanceModel.cs" />
     <Compile Include="UI\Models\Properties\InstanceParamsModel.cs" />
     <Compile Include="UI\Models\Properties\PropertiesModel.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="UI\Services\SelectionService.cs" />
     <Compile Include="UI\ViewModels\ChangeBrand\ChangeBrandViewModel.cs" />
     <Compile Include="UI\ViewModels\ChangeBrand\CabinetFamilyInstance.cs" />
+    <Compile Include="UI\ViewModels\EK24Modify\EK24Modify.cs" />
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
     <Compile Include="UI\ViewModels\Manage\ManageViewModel.cs" />
     <Compile Include="UI\ViewModels\NewItem\NewItemViewModel.cs" />
@@ -127,6 +129,9 @@
     </Compile>
     <Compile Include="UI\Views\Manage\ManageView.xaml.cs">
       <DependentUpon>ManageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\EK24Modify\EK24Modify.xaml.cs">
+      <DependentUpon>EK24Modify.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Views\New Item\NewItemView.xaml.cs">
       <DependentUpon>NewItemView.xaml</DependentUpon>
@@ -437,6 +442,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Views\Manage\ManageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\EK24Modify\EK24Modify.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

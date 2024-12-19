@@ -41,6 +41,7 @@ public class DocumentOpenedEventOld
             .OfCategory(BuiltInCategory.OST_Casework)
             .OfClass(typeof(Family));
 
+        /*
         // Filter families matching the prefixes
         var cabinetFamilies = caseworkCollector
             .Cast<Family>()
@@ -64,15 +65,18 @@ public class DocumentOpenedEventOld
 
         // Set the UI data property
         ProjectCabinetFamilies.CabinetFamilies = cabinetFamilies;
+        */
     }
 
     public static void HandleDocumentClosedEvent(object sender, EventArgs e)
     {
+        /*
         // Clear the UI data property on document close
         if (ProjectCabinetFamilies.CabinetFamilies != null)
         {
             ProjectCabinetFamilies.CabinetFamilies.Clear();
         }
+        */
     }
 
     private static string GetCabinetNoteFromSymbol(FamilySymbol symbol)

@@ -65,13 +65,12 @@ public class APP : IExternalApplication
         application.SelectionChanged += SelectionChangedEvent.HandleSelectionChangedEvent;
         // Event: 2
         application.ViewActivated += ViewActivatedEvent.HandleViewActivatedEvent;
+
+        EKUtils ekUtils = new EKUtils();
         // Event: 3
-        //application.ControlledApplication.DocumentOpened += new EventHandler<Autodesk.Revit.DB.Events.DocumentOpenedEventArgs>();
-        //application.ControlledApplication.DocumentOpened += DocumentOpenedEvent.HandleDocumentOpenedEvent;
-        application.ControlledApplication.DocumentOpened += ek24.Utils.EKUtils.HandleDocumentOpenedEvent;
+        application.ControlledApplication.DocumentOpened += ekUtils.HandleDocumentOpenedEvent;
         // Event: 4
-        //application.ControlledApplication.DocumentClosed += DocumentOpenedEvent.HandleDocumentClosedEvent;
-        application.ControlledApplication.DocumentOpened += ek24.Utils.EKUtils.HandleDocumentClosedEvent;
+        application.ControlledApplication.DocumentClosed += ekUtils.HandleDocumentClosedEvent;
 
         return Result.Succeeded;
     }

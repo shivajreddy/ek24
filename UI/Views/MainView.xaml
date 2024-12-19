@@ -7,6 +7,8 @@
 
              mc:Ignorable="d"
 
+	         xmlns:ui="clr-namespace:ek24.UI"
+
              xmlns:views_projectbrowser="clr-namespace:ek24.UI.Views.ProjectBrowser"
              xmlns:views_newitem="clr-namespace:ek24.UI.Views.NewItem"
              xmlns:views_properties="clr-namespace:ek24.UI.Views.Properties"
@@ -27,13 +29,16 @@
 
         <TabControl>
 
-            <TabItem Header="EK24-Browser" FontSize="14">
+            <TabItem Header="EK24-VIEWS" FontSize="14">
                  <views_projectbrowser:ProjectBrowserView/>
             </TabItem>
 
-            <TabItem Header="EK24-New Item" FontSize="14">
+            <!--<TabItem Header="EK24-MODIFY" FontSize="14">
 				<views_newitem:NewItemView/>
-			</TabItem>
+			</TabItem>-->
+            <TabItem Header="EK24-MODIFY" FontSize="14">
+				<ui:EK24Modify_View/>
+            </TabItem>
 
             <TabItem Header="EK24-Properties" FontSize="14">
                 <views_properties:PropertiesView/>

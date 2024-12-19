@@ -3,7 +3,7 @@ using Autodesk.Revit.DB.Events;
 using ek24.Dtos;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 
 namespace ek24.Utils;
 
@@ -15,82 +15,59 @@ namespace ek24.Utils;
 /// </summary>
 public class EKUtils
 {
-    public static List<EKCaseworkFamily> EKCaseworkFamilies { get; set; }
-
-
-    List<EKCaseworkFamily> createDataStructures(FilteredElementCollector familyCollecter)
-    {
-        List<EKCaseworkFamily> ekCaseworkFamily;
-
-
-
-        return ekCaseworkFamily;
-    }
-
-
-    public static void HandleDocumentOpenedEvent(object sender, DocumentOpenedEventArgs args)
+    public static List<EKFamilySymbol> EKCaseworkFamilies { get; set; }
+    public void HandleDocumentOpenedEvent(object sender, DocumentOpenedEventArgs args)
     {
         // Grab the Document
         Document doc = args.Document;
-        string documentPath = doc.PathName;
 
+        // Element Collector
         FilteredElementCollector collector = new FilteredElementCollector(doc);
-        FilteredElementCollector familyCollecter = collector.OfClass(typeof(Family));
+        //FilteredElementCollector familyCollecter = collector.OfClass(typeof(Family));
+        FilteredElementCollector familySymbolsCollecter = collector.OfClass(typeof(FamilySymbol));
 
-        // Define cabinet family prefixes used for filtering
-        string[] ekCabinetFamilyNamePrefixes = {
-            "Aristokraft-W-",
-            "Aristokraft-B-",
-            "Aristokraft-T-",
-            "Eclipse-W-",
-            "Eclipse-B-",
-            "Eclipse-T-",
-            "Eclipse",
-            "YTC-W-",
-            "YTC-B-",
-            "YTC-T-",
-            "YTH-W-",
-            "YTH-B-",
-            "YTH-T-"
-        };
+        List<EKFamilySymbol> ekFamilySymbols = [];
 
-        ICollection<Element> familyElements = familyCollecter.ToElements();
-        int collectorCount = familyElements.Count();
+        foreach (FamilySymbol familySymbol in familySymbolsCollecter)
+        {
+            // MAIN FILTER: We use only FamilySymbols that have 'Manufacturer' param
+            var brandParam = familySymbol.LookupParameter("Manufacturer");
+            if (brandParam == null) continue;
+            var brandValue = brandParam.AsValueString();
+            if (brandValue == null || brandValue == "") continue;
 
-        // Filter families matching the prefixes
-        var cabinetFamilies = familyElements
-            .Cast<Family>()
-            .Where(family => ekCabinetFamilyNamePrefixes.Any(prefix => family.Name.StartsWith(prefix)))
-            .Select(family => new EKCabinetFamily
-            {
-                FamilyName = family.Name,
-                TypeNames = family.GetFamilySymbolIds()
-                    .Select(id => doc.GetElement(id) as FamilySymbol)
-                    .Where(symbol => symbol != null)
-                    .Select(symbol => new EKCabinetType
-                    {
-                        TypeName = symbol.Name,
-                        Note = GetCabinetNoteFromSymbol(symbol)
-                    })
-                    .GroupBy(type => type.TypeName) // Ensure unique types by grouping
-                    .Select(groupedType => groupedType.First())
-                    .ToList()
-            })
-            .ToList();
+            var categoryParam = familySymbol.LookupParameter("Category1");
+            var categoryValue = categoryParam == null ? "" : categoryParam.AsValueString();
 
+            var configurationParam = familySymbol.LookupParameter("Category2");
+            var configurationValue = configurationParam == null ? "" : configurationParam.AsValueString();
 
-        // Set the UI data property
-        ProjectCabinetFamilies.CabinetFamilies = cabinetFamilies;
+            var sku = familySymbol.Name;
+
+            var ekFamilySymbol = new EKFamilySymbol(
+                revitFamilySymbol: familySymbol,
+                ekBrand: brandValue,
+                ekCategory: categoryValue,
+                ekConfiguration: configurationValue,
+                sku: sku
+                );
+            ekFamilySymbols.Add(ekFamilySymbol);
+        }
+        EKCaseworkFamilies = ekFamilySymbols;
+
+        Debug.WriteLine(ekFamilySymbols.Count);
     }
 
-
-    public static void HandleDocumentClosedEvent(object sender, EventArgs e)
+    public void HandleDocumentClosedEvent(object sender, EventArgs e)
     {
+        EKCaseworkFamilies.Clear();
+        /*
         // Clear the UI data property on document close
         if (ProjectCabinetFamilies.CabinetFamilies != null)
         {
             ProjectCabinetFamilies.CabinetFamilies.Clear();
         }
+        */
     }
 
     private static string GetCabinetNoteFromSymbol(FamilySymbol symbol)
@@ -101,6 +78,69 @@ public class EKUtils
         var noteParam = symbol.LookupParameter(VENDOR_NOTES_PARAM_NAME);
         return noteParam?.AsString() ?? string.Empty;
     }
-
 }
 
+/*
+// Convert each revit-family into ek-family
+foreach (Family family in familyCollecter)
+{
+    //bc.Add(family.FamilyCategory.BuiltInCategory);
+    //continue;
+
+    // Only Families that a non empty "Manufacturer" parameter 
+    if (family == null) continue;
+    if (family.FamilyCategory.BuiltInCategory != BuiltInCategory.OST_Casework) continue;
+
+    // Check if the Family has any symbols
+    var familySymbolIds = family.GetFamilySymbolIds();
+    if (!familySymbolIds.Any()) continue;
+
+    // Get the first FamilySymbol
+    var firstSymbol = doc.GetElement(familySymbolIds.First()) as FamilySymbol;
+    if (firstSymbol == null) continue;
+
+    //if (family.GetFamilySymbolIds().Count == 0) continue;
+
+    var brandParam = firstSymbol.LookupParameter("Manufacturer");
+    if (brandParam == null) continue;
+
+    Debug.WriteLine("has atleast 1 type & it has Manufacturer Parameter");
+
+    var category1Param = family.LookupParameter("Category1");
+    var category2Param = family.LookupParameter("Category2");
+
+    string brandValue = brandParam.AsValueString();
+    string category1Value = category1Param == null ? "" : category1Param.AsValueString();
+    string category2Value = category2Param == null ? "" : category2Param.AsValueString();
+
+    // Collect all types of this family
+    List<EKCaseworkFamilyType> allEKFamilyTypes = [];
+
+    // Get all family symbols (types) for this family
+    foreach (FamilySymbol symbol in family.GetFamilySymbolIds()
+        .Select(id => doc.GetElement(id))
+        .Cast<FamilySymbol>())
+    {
+        var ekFamilyType = new EKCaseworkFamilyType(
+            symbol.Name,
+            symbol
+        );
+        allEKFamilyTypes.Add(ekFamilyType);
+    }
+
+    //names.Add(family.Name);
+    //symbol_names.Add(firstSymbol.Name);
+    //vals.Add(new Tuple<string, string, string>(brandValue, category1Value, category2Value));
+    //continue;
+
+    var ekFamily = new EKFamilySymbol(
+        revitFamily: family,
+        ekBrand: brandValue,
+        category1: category1Value,
+        category2: category2Value,
+        ekCaseworkFamilyTypes: allEKFamilyTypes
+    );
+    ekCaseworkFamilies.Add(ekFamily);
+}
+EKCaseworkFamilies = ekCaseworkFamilies;
+*/

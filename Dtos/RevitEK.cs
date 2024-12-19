@@ -7,29 +7,38 @@ using System.Collections.Generic;
 /// external APIs and your application. They often serve as clean models for transferring data.
 namespace ek24.Dtos;
 
-public enum EKBrand
+
+public static class EKBrands
 {
-    YORKTOWNE_CLASSIC,
-    YORKTOWNE_HISTORIC,
-    ARISTOKRAFT,
-    ECLIPSE,
+    public static List<string> all_brand_names = ["Yorktowne Classic", "Yorktowne Historic", "Aristokraft", "Eclipse"];
 }
 
-public class EKCaseworkFamily
+
+public class EKFamilySymbol
 {
-    public Family revitFamily;  // Actual Revit Family instance, used for symbol
+    public FamilySymbol RevitFamilySymbol { get; set; }  // Actual Revit FamilySymbol
+    public string EKBrand { get; set; } // ["Yorktowne Classic", "Yorktowne Historic", "Aristokraft", "Eclipse"];
+    public string EKCategory { get; set; } // Configuration
+    public string EKConfiguration { get; set; }
+    public string EKSKU { get; set; }
 
-    public EKBrand EKBrand { get; set; } // Brand
-    public string Category1 { get; set; } // Configuration
-    public string Category2 { get; set; }
-    public List<EKCaseworkFamilyType> FamilyTypes; // Actual type of the family Type
-
+    // Constructor to enforce initialization
+    public EKFamilySymbol(
+        FamilySymbol revitFamilySymbol,
+        string ekBrand,
+        string ekCategory,
+        string ekConfiguration,
+        string sku
+        )
+    {
+        RevitFamilySymbol = revitFamilySymbol;
+        EKBrand = ekBrand;
+        EKCategory = ekCategory;
+        EKConfiguration = ekConfiguration;
+        EKSKU = sku;
+    }
 }
 
-public class EKCaseworkFamilyType
-{
-    public string TypeName { get; set; }
-}
 
 // Specifically Cabinet
 public class EKCabinetFamily
@@ -45,8 +54,3 @@ public class EKCabinetType
     public string Note { get; set; }     // Parameter-value of "Vendor-Notes"
 }
 
-
-
-class RevitEK
-{
-}
