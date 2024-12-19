@@ -13,7 +13,7 @@
 5. Create columns
 	1. EKType##OTHER##   -> 2nd column
 	2. EKCategory##OTHER##   -> 3rd column
-6. Confirm the last 5 columns to be exactly same as below
+6. Confirm the last 5 columns to be exactly same as below  
 | ------------------------------- | --------------- | ------------------- | ------------------- | --------------------- |
 | Manufacturer[-1010108]##OTHER## | EKType##OTHER## | EKCategory##OTHER## | Vendor_SKU##OTHER## | Vendor_Notes##OTHER## |
 | ------------------------------- | --------------- | ------------------- | ------------------- | --------------------- |
