@@ -5,7 +5,8 @@
 	2. Eagle_SKEW
 2. Rename Columns
 	1. Vendor_SKEW => Vendor_SKU
-3. Create 4 Empty Columns to the left of last column (which should be 'Vendor_NOTES')
+	2. Vendor_Notes => Vendor_Notes
+3. Create 4 Empty Columns to the left of last column (which should be 'Vendor_Notes')
 4. Move Columns and delete the empty column left behind
 	1. Manufacturer[-1010108]##OTHER##  -> 1st column
 	2. Vendor_SKU  -> 4th column
@@ -13,7 +14,7 @@
 	1. EKType##OTHER##   -> 2nd column
 	2. EKCategory##OTHER##   -> 3rd column
 6. Confirm the last 5 columns to be exactly same as below
-
+| ------------------------------- | --------------- | ------------------- | ------------------- | --------------------- |
 | Manufacturer[-1010108]##OTHER## | EKType##OTHER## | EKCategory##OTHER## | Vendor_SKU##OTHER## | Vendor_Notes##OTHER## |
 | ------------------------------- | --------------- | ------------------- | ------------------- | --------------------- |
 
@@ -28,4 +29,9 @@
 	1. EKType -> Type Param, Common-Discipline, Length-Data Type, Identity Data-Group Under
 	2. EKCategory -> Type Param, Common-Discipline, Length-Data Type, Identity Data-Group Under
 4. Reorganize the params in the 'Identity Data' to confirm the following
-	![[Pasted image screenshot.png]]
+	1. Manufacturer
+	2. EKType
+	3. EKCategory
+	4. Vendor_SKU_
+	5. Vendor_Notes
+
