@@ -1,4 +1,5 @@
 ﻿using ek24.Dtos;
+using ek24.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -20,20 +21,73 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     }
     #endregion
 
+    public List<string> BrandItems { get; } = EKBrands.all_brand_names;
     // TODO : TEST WITH HARD CODE OPTIONS, FIX LATER
     // Static lists exposed as public properties
-    public List<string> BrandItems { get; } = EKBrands.all_brand_names;
-    public List<string> CategoryItems { get; set; } = new List<string> { "C1-A", "C1-B", "C1-C", "C1-D" };
-    public List<string> ConfigurationItems { get; set; } = new List<string> { "C2-A", "C2-B", "C2-C", "C2-D" };
-    public List<string> SKUItems { get; set; } = new List<string> { "SKU-A", "SKU-B", "SKU-C", "SKU-D" };
-    //public List<string> Category1Items { get; set; } = [];
-    //public List<string> Category2Items { get; set; } = [];
-    //public List<string> SKUItems { get; set; } = [];
+    //public List<string> CategoryItems { get; set; } = new List<string> { "C1-A", "C1-B", "C1-C", "C1-D" };
+    //public List<string> ConfigurationItems { get; set; } = new List<string> { "C2-A", "C2-B", "C2-C", "C2-D" };
+    //public List<EKSKU> SKUItems { get; set; } = new List<EKSKU> {
+    //    new EKSKU("SKU-A", "note for a"),
+    //    new EKSKU("SKU-B", ""),
+    //    new EKSKU("SKU-C", "note for c"),
+    //};
+
+    public List<string> CategoryItems { get; set; } = [];
+    public List<string> ConfigurationItems { get; set; } = [];
+    public List<EK_SKU> SKUItems { get; set; } = [];
+
+    // HELPER Functions to filter item sources
+    public void filter_category_items()// based on: SelectedBrand
+    {
+        CategoryItems = new List<string>(); // Reset the Category Items
+
+        var ekCaseworkFamilies = EKUtils.EKCaseworkSymbols;   // Gets created when document loads
+        foreach (var ekSymbol in ekCaseworkFamilies)
+        {
+            if (ekSymbol.EKBrand != SelectedBrand) continue;
+            CategoryItems.Add(ekSymbol.EKType);
+        }
+    }
+    public void filter_configuration_items() //based on: SelectedBrand, SelectedCategory
+    {
+        ConfigurationItems = new List<string>(); // Reset the Configuration Items
+
+        var ekCaseworkFamilies = EKUtils.EKCaseworkSymbols;   // Gets created when document loads
+        foreach (var ekSymbol in ekCaseworkFamilies)
+        {
+            if (ekSymbol.EKBrand != SelectedBrand || ekSymbol.EKType != SelectedCategory) continue;
+            ConfigurationItems.Add(ekSymbol.EKCategory);
+        }
+    }
+    public void filter_sku_items()  // based on: SelectedBrand, SelectedCategory, SelectedConfiguration
+    {
+        SKUItems = new List<EK_SKU>(); // Reset the SKU_Items list
+
+        var ekCaseworkFamilies = EKUtils.EKCaseworkSymbols;   // Gets created when document loads
+        foreach (var ekSymbol in ekCaseworkFamilies)
+        {
+            if (ekSymbol.EKBrand != SelectedBrand || ekSymbol.EKType != SelectedCategory || ekSymbol.EKCategory != SelectedConfiguration) continue;
+            SKUItems.Add(ekSymbol.EK_SKU);
+        }
+    }
+
+    public EKFamilySymbol _chosenEKFamilySymbol { get; set; }
+    public EKFamilySymbol ChosenEKFamilySymbol
+    {
+        get => _chosenEKFamilySymbol;
+        set
+        {
+            if (_chosenEKFamilySymbol == value) return;
+            _chosenEKFamilySymbol = value;
+            OnPropertyChanged(nameof(EKFamilySymbol));
+        }
+    }
+
 
     // TODO: ALL the getters should look at all EKFamilySymbols and filter available optiosn based on 
     // the previous selections
-    public static string _selectedBrand { get; set; }
-    public static string SelectedBrand
+    public string _selectedBrand { get; set; }
+    public string SelectedBrand
     {
         get => _selectedBrand;
         set
@@ -41,13 +95,19 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (_selectedBrand != value)
             {
                 _selectedBrand = value;
-                OnStaticPropertyChanged(nameof(SelectedBrand));
+                OnPropertyChanged(nameof(SelectedBrand));
+                // Reset dependent dropdowns
+                SelectedCategory = null;
+                SelectedConfiguration = null;
+                SelectedSKU = null;
+                // Set the Dependent dropdown items
+                filter_category_items();
             }
         }
     }
 
-    public static string _selectedCategory { get; set; }
-    public static string SelectedCategory
+    public string _selectedCategory { get; set; }
+    public string SelectedCategory
     {
         get => _selectedCategory;
         set
@@ -55,14 +115,18 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (_selectedCategory != value)
             {
                 _selectedCategory = value;
-                OnStaticPropertyChanged(nameof(SelectedCategory));
-                //UpdateFamilys();
+                OnPropertyChanged(nameof(SelectedCategory));
+                // Reset dependent dropdowns
+                SelectedConfiguration = null;
+                SelectedSKU = null;
+                // Set the Dependent dropdown items
+                filter_configuration_items();
             }
         }
     }
 
-    public static string _selectedConfiguration { get; set; }
-    public static string SelectedConfiguration
+    public string _selectedConfiguration { get; set; }
+    public string SelectedConfiguration
     {
         get => _selectedConfiguration;
         set
@@ -70,14 +134,17 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (_selectedConfiguration != value)
             {
                 _selectedConfiguration = value;
-                OnStaticPropertyChanged(nameof(SelectedConfiguration));
-                //UpdateFamilys();
+                OnPropertyChanged(nameof(SelectedConfiguration));
+                // Reset dependent dropdowns
+                SelectedSKU = null;
+                // Set the Dependent dropdown items
+                filter_sku_items();
             }
         }
     }
 
-    public static string _selectedSKU { get; set; }
-    public static string SelectedSKU
+    public string _selectedSKU { get; set; }
+    public string SelectedSKU
     {
         get => _selectedSKU;
         set
@@ -85,8 +152,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (_selectedSKU != value)
             {
                 _selectedSKU = value;
-                OnStaticPropertyChanged(nameof(SelectedSKU));
-                //UpdateFamilys();
+                OnPropertyChanged(nameof(SelectedSKU));
             }
         }
     }
@@ -102,419 +168,420 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     }
 }
 
-
 /*
-public List<FamilyGroup> FamilyGroups { get; set; } = RevitFamilyGroups.FamilyGroups;
-
-public static List<Models.Revit.EKFamily> _familys { get; set; }
-public static List<Models.Revit.EKFamily> Familys
+public class OLDCODE
 {
-    get => _familys;
-    set
+    public List<FamilyGroup> FamilyGroups { get; set; } = RevitFamilyGroups.FamilyGroups;
+
+    public static List<Models.Revit.EKFamily> _familys { get; set; }
+    public static List<Models.Revit.EKFamily> Familys
     {
-        if (_familys != value)
+        get => _familys;
+        set
         {
-            _familys = value;
-            OnStaticPropertyChanged(nameof(Familys));
+            if (_familys != value)
+            {
+                _familys = value;
+                OnStaticPropertyChanged(nameof(Familys));
+            }
         }
     }
-}
 
-public static List<Models.Revit.EKFamilyType> _familyTypes { get; set; }
-public static List<Models.Revit.EKFamilyType> FamilyTypes
-{
-    get => _familyTypes;
-    set
+    public static List<Models.Revit.EKFamilyType> _familyTypes { get; set; }
+    public static List<Models.Revit.EKFamilyType> FamilyTypes
     {
-        if (_familyTypes != value)
+        get => _familyTypes;
+        set
         {
-            _familyTypes = value;
-            OnStaticPropertyChanged(nameof(FamilyTypes));
+            if (_familyTypes != value)
+            {
+                _familyTypes = value;
+                OnStaticPropertyChanged(nameof(FamilyTypes));
+            }
         }
     }
-}
 
 
-public static FamilyGroup _selectedFamilyGroup { get; set; }
-public static FamilyGroup SelectedFamilyGroup
-{
-    get => _selectedFamilyGroup;
-    set
+    public static FamilyGroup _selectedFamilyGroup { get; set; }
+    public static FamilyGroup SelectedFamilyGroup
     {
-        if (_selectedFamilyGroup != value)
+        get => _selectedFamilyGroup;
+        set
         {
-            _selectedFamilyGroup = value;
-            OnStaticPropertyChanged(nameof(SelectedFamilyGroup));
-            UpdateFamilys();
+            if (_selectedFamilyGroup != value)
+            {
+                _selectedFamilyGroup = value;
+                OnStaticPropertyChanged(nameof(SelectedFamilyGroup));
+                UpdateFamilys();
+            }
         }
     }
-}
 
-public static Models.Revit.EKFamily _selectedFamily { get; set; }
-public static Models.Revit.EKFamily SelectedFamily
-{
-    get => _selectedFamily;
-    set
+    public static Models.Revit.EKFamily _selectedFamily { get; set; }
+    public static Models.Revit.EKFamily SelectedFamily
     {
-        if (_selectedFamily != value)
+        get => _selectedFamily;
+        set
         {
-            _selectedFamily = value;
-            OnStaticPropertyChanged($"{nameof(SelectedFamily)}");
-            UpdateTypes();
+            if (_selectedFamily != value)
+            {
+                _selectedFamily = value;
+                OnStaticPropertyChanged($"{nameof(SelectedFamily)}");
+                UpdateTypes();
+            }
         }
     }
-}
 
 
-public static Models.Revit.EKFamilyType _selectedFamilyType { get; set; }
-public static Models.Revit.EKFamilyType SelectedFamilyType
-{
-    get => _selectedFamilyType;
-    set
+    public static Models.Revit.EKFamilyType _selectedFamilyType { get; set; }
+    public static Models.Revit.EKFamilyType SelectedFamilyType
     {
-        if (_selectedFamilyType != value)
+        get => _selectedFamilyType;
+        set
         {
-            _selectedFamilyType = value;
-            //OnStaticPropertyChanged($"{nameof(SelectedFamilyType)}");
-            OnStaticPropertyChanged(nameof(SelectedFamilyType));
+            if (_selectedFamilyType != value)
+            {
+                _selectedFamilyType = value;
+                //OnStaticPropertyChanged($"{nameof(SelectedFamilyType)}");
+                OnStaticPropertyChanged(nameof(SelectedFamilyType));
+            }
         }
     }
-}
 
-private static void UpdateFamilys()
-{
-    if (SelectedFamilyGroup != null)
+    private static void UpdateFamilys()
     {
-        Familys = SelectedFamilyGroup.Familys;
-    }
-    else
-    {
-        Familys = new List<Models.Revit.EKFamily>();
-    }
-}
-
-private static void UpdateTypes()
-{
-    if (SelectedFamily != null)
-    {
-        FamilyTypes = SelectedFamily.FamilyTypes;
-    }
-    else
-    {
-        FamilyTypes = new List<Models.Revit.EKFamilyType>();
-    }
-}
-private static bool _selectionIsCabinetsOnly { get; set; } = false;
-public static bool SelectionIsCabinetsOnly
-{
-    get => _selectionIsCabinetsOnly;
-    set
-    {
-        _selectionIsCabinetsOnly = value;
-        OnStaticPropertyChanged(nameof(SelectionIsCabinetsOnly));
-    }
-}
-
-
-// Capture all the multiple cabinet instances that user selects
-private static ObservableCollection<FamilyInstance> _selectedCabinetFamilyInstances = new ObservableCollection<FamilyInstance>();
-public static ObservableCollection<FamilyInstance> SelectedCabinetFamilyInstances
-{
-    get => _selectedCabinetFamilyInstances;
-    set
-    {
-        _selectedCabinetFamilyInstances = value;
-        OnStaticPropertyChanged(nameof(SelectedCabinetFamilyInstances));
-    }
-}
-
-
-public static List<(string, string)> _availableCabinetTypes { get; set; }
-public static List<(string, string)> AvailableCabinetTypes
-{
-    get => _availableCabinetTypes;
-    set
-    {
-        _availableCabinetTypes = value;
-        OnStaticPropertyChanged(nameof(AvailableCabinetTypes));
-    }
-}
-
-// Binders for user to select the new type for the selected cabinet instances
-// (typename, vendor-notes) vendor-notes is "" if no param or value found
-private static string _chosenCabinetTypeText;
-public static string ChosenCabinetTypeText
-{
-    get => _chosenCabinetTypeText;
-    set
-    {
-        _chosenCabinetTypeText = value;
-        OnStaticPropertyChanged(nameof(ChosenCabinetTypeText));
-    }
-}
-
-public static bool _allCabinetsAreSameType { get; set; }
-public static bool AllCabinetsAreSameType
-{
-    get => _allCabinetsAreSameType;
-    set
-    {
-        _allCabinetsAreSameType = value;
-        OnStaticPropertyChanged(nameof(AllCabinetsAreSameType));
-    }
-}
-
-
-//public static (FamilySymbol, string) _chosenCabinetType { get; set; } = (null, "");
-//public static (FamilySymbol, string) ChosenCabinetType
-//{
-//    get => _chosenCabinetType;
-//    set
-//    {
-//        _chosenCabinetType = value;
-//        OnStaticPropertyChanged(nameof(ChosenCabinetType.ToString));
-
-//        if (value.Item2 == "")
-//        {
-//            ChosenCabinetTypeText = value.Item1.ToString();
-//        }
-//        else
-//        {
-//            ChosenCabinetTypeText = $"{value.Item1.ToString()} | {value.Item2}";
-//        }
-//    }
-//}
-
-
-public static (string, string) _chosenCabinetType { get; set; } = ("", "");
-public static (string, string) ChosenCabinetType
-{
-    get => _chosenCabinetType;
-    set
-    {
-        _chosenCabinetType = value;
-        OnStaticPropertyChanged(nameof(ChosenCabinetType));
-
-        //ChosenCabinetTypeText = value.Item1;
-
-        // Update the text property
-        if (value.Item2 == "")
+        if (SelectedFamilyGroup != null)
         {
-            ChosenCabinetTypeText = value.Item1;
+            Familys = SelectedFamilyGroup.Familys;
         }
         else
         {
-            ChosenCabinetTypeText = $"{value.Item1} | {value.Item2}";
+            Familys = new List<Models.Revit.EKFamily>();
         }
     }
-}
 
-public static string _chosenFamilySymbol { get; set; }
-public static string ChosenFamilySymbol
-{
-    get => _chosenFamilySymbol;
-    set
+    private static void UpdateTypes()
     {
-        _chosenFamilySymbol = value;
-        OnStaticPropertyChanged(nameof(ChosenFamilySymbol));
+        if (SelectedFamily != null)
+        {
+            FamilyTypes = SelectedFamily.FamilyTypes;
+        }
+        else
+        {
+            FamilyTypes = new List<Models.Revit.EKFamilyType>();
+        }
     }
-}
-
-
-public static void SyncCurrentSelectionWithTypeParamsViewModel(Selection currentSelection, Document doc)
-{
-    SelectedCabinetFamilyInstances.Clear();
-
-    SelectedFamilyGroup = null;
-    SelectedFamily = null;
-    SelectedFamilyType = null;
-
-
-    var selectedIds = currentSelection.GetElementIds();
-    // When deselecting anything, this will be 0, so don't check anything else
-    if (selectedIds.Count == 0)
+    private static bool _selectionIsCabinetsOnly { get; set; } = false;
+    public static bool SelectionIsCabinetsOnly
     {
-        // prop-1, prop-2, prop-3
+        get => _selectionIsCabinetsOnly;
+        set
+        {
+            _selectionIsCabinetsOnly = value;
+            OnStaticPropertyChanged(nameof(SelectionIsCabinetsOnly));
+        }
+    }
+
+
+    // Capture all the multiple cabinet instances that user selects
+    private static ObservableCollection<FamilyInstance> _selectedCabinetFamilyInstances = new ObservableCollection<FamilyInstance>();
+    public static ObservableCollection<FamilyInstance> SelectedCabinetFamilyInstances
+    {
+        get => _selectedCabinetFamilyInstances;
+        set
+        {
+            _selectedCabinetFamilyInstances = value;
+            OnStaticPropertyChanged(nameof(SelectedCabinetFamilyInstances));
+        }
+    }
+
+
+    public static List<(string, string)> _availableCabinetTypes { get; set; }
+    public static List<(string, string)> AvailableCabinetTypes
+    {
+        get => _availableCabinetTypes;
+        set
+        {
+            _availableCabinetTypes = value;
+            OnStaticPropertyChanged(nameof(AvailableCabinetTypes));
+        }
+    }
+
+    // Binders for user to select the new type for the selected cabinet instances
+    // (typename, vendor-notes) vendor-notes is "" if no param or value found
+    private static string _chosenCabinetTypeText;
+    public static string ChosenCabinetTypeText
+    {
+        get => _chosenCabinetTypeText;
+        set
+        {
+            _chosenCabinetTypeText = value;
+            OnStaticPropertyChanged(nameof(ChosenCabinetTypeText));
+        }
+    }
+
+    public static bool _allCabinetsAreSameType { get; set; }
+    public static bool AllCabinetsAreSameType
+    {
+        get => _allCabinetsAreSameType;
+        set
+        {
+            _allCabinetsAreSameType = value;
+            OnStaticPropertyChanged(nameof(AllCabinetsAreSameType));
+        }
+    }
+
+
+    //public static (FamilySymbol, string) _chosenCabinetType { get; set; } = (null, "");
+    //public static (FamilySymbol, string) ChosenCabinetType
+    //{
+    //    get => _chosenCabinetType;
+    //    set
+    //    {
+    //        _chosenCabinetType = value;
+    //        OnStaticPropertyChanged(nameof(ChosenCabinetType.ToString));
+
+    //        if (value.Item2 == "")
+    //        {
+    //            ChosenCabinetTypeText = value.Item1.ToString();
+    //        }
+    //        else
+    //        {
+    //            ChosenCabinetTypeText = $"{value.Item1.ToString()} | {value.Item2}";
+    //        }
+    //    }
+    //}
+
+
+    public static (string, string) _chosenCabinetType { get; set; } = ("", "");
+    public static (string, string) ChosenCabinetType
+    {
+        get => _chosenCabinetType;
+        set
+        {
+            _chosenCabinetType = value;
+            OnStaticPropertyChanged(nameof(ChosenCabinetType));
+
+            //ChosenCabinetTypeText = value.Item1;
+
+            // Update the text property
+            if (value.Item2 == "")
+            {
+                ChosenCabinetTypeText = value.Item1;
+            }
+            else
+            {
+                ChosenCabinetTypeText = $"{value.Item1} | {value.Item2}";
+            }
+        }
+    }
+
+    public static string _chosenFamilySymbol { get; set; }
+    public static string ChosenFamilySymbol
+    {
+        get => _chosenFamilySymbol;
+        set
+        {
+            _chosenFamilySymbol = value;
+            OnStaticPropertyChanged(nameof(ChosenFamilySymbol));
+        }
+    }
+
+
+    public static void SyncCurrentSelectionWithTypeParamsViewModel(Selection currentSelection, Document doc)
+    {
         SelectedCabinetFamilyInstances.Clear();
-        ChosenCabinetType = ("", "");
-        //ChosenCabinetTypeText = "";
-        //ChosenCabinetType = null;
-        SelectionIsCabinetsOnly = false;
-        return;
-    }
 
-    // Check if all selected elements are Casework or Millwork
-    List<FamilyInstance> cabinetInstances;
-    bool selectionIsCabinetsOnly = AllElementsAreCabinets(selectedIds, doc, out cabinetInstances);
-
-    // Exit if no cabinet is selected
-    if (!selectionIsCabinetsOnly)
-    {
-
-        // prop-1, prop-2, prop-3
-        SelectedCabinetFamilyInstances.Clear();
-        ChosenCabinetType = ("", "");
-        //ChosenCabinetTypeText = "";
-        //ChosenCabinetType = null;
-        SelectionIsCabinetsOnly = false;
-        return;
-    }
-
-    // prop-1
-    SelectionIsCabinetsOnly = true;
-
-    // check if all selected elements are of the same type
-    // Since multiple cabinets are selected, we show type name if all are same type
-    bool allCabinetsAreSameType = cabinetInstances
-        .Select(cabinetInstance => cabinetInstance.Symbol.Name)
-        .Distinct()
-        .Count() == 1;
-
-    // 1: Single cabinet or Multiple cabinets of same type is selected
-    if (cabinetInstances.Count == 1 || allCabinetsAreSameType)
-    {
-        // a. Update the current UI state to show the current selected instance type name
-        var cabinetTypename = cabinetInstances.First().Symbol.Name;
-        string cabinetVendorNotes = GetParameterValue(cabinetInstances.First().Symbol, "Vendor_Notes") ?? string.Empty;
-        // prop-3
-        ChosenCabinetType = (cabinetTypename, cabinetVendorNotes);
-        //ChosenCabinetTypeText = $"{cabinetTypename} | {cabinetVendorNotes}";
-        //ChosenCabinetType = new List<string> { cabinetTypename, cabinetVendorNotes };
-
-        AllCabinetsAreSameType = true;
+        SelectedFamilyGroup = null;
+        SelectedFamily = null;
+        SelectedFamilyType = null;
 
 
-    }
-    // 2: Multipel cabinets with different types selected
-    else
-    {
-
-        // prop-3
-        //ChosenCabinetType = ("Varies", "Varies");
-        ChosenCabinetTypeText = "Varies";
-        AllCabinetsAreSameType = false;
-
-
-        //ChosenCabinetType = new List<string> { "varies", "varies" };
-
-    }
-
-    // 3: Update the observable property to hold the selected cabinet instance
-    foreach (var cabinetInstance in cabinetInstances)
-    {
-
-        // prop-2
-        SelectedCabinetFamilyInstances.Add(cabinetInstance);
-    }
-
-    // 3. Show the available types for the selected cabinet instance
-
-    AvailableCabinetTypes = cabinetInstances.First().Symbol.Family
-        .GetFamilySymbolIds()
-        .Select(id => doc.GetElement(id) as FamilySymbol)
-        .Where(familySymbol => familySymbol != null)
-        .Select(familySymbol => (
-            familySymbol.Name,
-            GetParameterValue(familySymbol, "Vendor_Notes") ?? string.Empty))
-        .ToList();
-
-    //AvailableCabinetTypes = cabinetInstances.First().Symbol.Family
-    //    .GetFamilySymbolIds()
-    //    .Select(id => doc.GetElement(id) as FamilySymbol)
-    //    .Where(familySymbol => familySymbol != null)
-    //    .Select(familySymbol => familySymbol.Name)
-    //    .ToList();
-
-}
-
-private static string GetParameterValue(Element element, string parameterName)
-{
-    // Find the parameter by name
-    Parameter param = element.LookupParameter(parameterName);
-
-    // If the parameter is found and has a value, return it as a string; otherwise, return null
-    return param != null && param.HasValue ? param.AsString() : null;
-}
-
-
-private static bool AllElementsAreCabinets(ICollection<ElementId> allElementIds, Document doc, out List<FamilyInstance> selectedCabinetFamilyInstances)
-{
-    // This is the `out` argument passed to this function
-    selectedCabinetFamilyInstances = new List<FamilyInstance>();
-
-    // Null checks
-    if (doc == null || allElementIds == null || allElementIds.Count == 0)
-    {
-        return false;
-    }
-
-    // Check if all selected IDs are family instances
-    foreach (var elementId in allElementIds)
-    {
-        var element = doc.GetElement(elementId);
-        if (element == null || !(element is FamilyInstance))
+        var selectedIds = currentSelection.GetElementIds();
+        // When deselecting anything, this will be 0, so don't check anything else
+        if (selectedIds.Count == 0)
         {
-            return false;
+            // prop-1, prop-2, prop-3
+            SelectedCabinetFamilyInstances.Clear();
+            ChosenCabinetType = ("", "");
+            //ChosenCabinetTypeText = "";
+            //ChosenCabinetType = null;
+            SelectionIsCabinetsOnly = false;
+            return;
         }
+
+        // Check if all selected elements are Casework or Millwork
+        List<FamilyInstance> cabinetInstances;
+        bool selectionIsCabinetsOnly = AllElementsAreCabinets(selectedIds, doc, out cabinetInstances);
+
+        // Exit if no cabinet is selected
+        if (!selectionIsCabinetsOnly)
+        {
+
+            // prop-1, prop-2, prop-3
+            SelectedCabinetFamilyInstances.Clear();
+            ChosenCabinetType = ("", "");
+            //ChosenCabinetTypeText = "";
+            //ChosenCabinetType = null;
+            SelectionIsCabinetsOnly = false;
+            return;
+        }
+
+        // prop-1
+        SelectionIsCabinetsOnly = true;
+
+        // check if all selected elements are of the same type
+        // Since multiple cabinets are selected, we show type name if all are same type
+        bool allCabinetsAreSameType = cabinetInstances
+            .Select(cabinetInstance => cabinetInstance.Symbol.Name)
+            .Distinct()
+            .Count() == 1;
+
+        // 1: Single cabinet or Multiple cabinets of same type is selected
+        if (cabinetInstances.Count == 1 || allCabinetsAreSameType)
+        {
+            // a. Update the current UI state to show the current selected instance type name
+            var cabinetTypename = cabinetInstances.First().Symbol.Name;
+            string cabinetVendorNotes = GetParameterValue(cabinetInstances.First().Symbol, "Vendor_Notes") ?? string.Empty;
+            // prop-3
+            ChosenCabinetType = (cabinetTypename, cabinetVendorNotes);
+            //ChosenCabinetTypeText = $"{cabinetTypename} | {cabinetVendorNotes}";
+            //ChosenCabinetType = new List<string> { cabinetTypename, cabinetVendorNotes };
+
+            AllCabinetsAreSameType = true;
+
+
+        }
+        // 2: Multipel cabinets with different types selected
+        else
+        {
+
+            // prop-3
+            //ChosenCabinetType = ("Varies", "Varies");
+            ChosenCabinetTypeText = "Varies";
+            AllCabinetsAreSameType = false;
+
+
+            //ChosenCabinetType = new List<string> { "varies", "varies" };
+
+        }
+
+        // 3: Update the observable property to hold the selected cabinet instance
+        foreach (var cabinetInstance in cabinetInstances)
+        {
+
+            // prop-2
+            SelectedCabinetFamilyInstances.Add(cabinetInstance);
+        }
+
+        // 3. Show the available types for the selected cabinet instance
+
+        AvailableCabinetTypes = cabinetInstances.First().Symbol.Family
+            .GetFamilySymbolIds()
+            .Select(id => doc.GetElement(id) as FamilySymbol)
+            .Where(familySymbol => familySymbol != null)
+            .Select(familySymbol => (
+                familySymbol.Name,
+                GetParameterValue(familySymbol, "Vendor_Notes") ?? string.Empty))
+            .ToList();
+
+        //AvailableCabinetTypes = cabinetInstances.First().Symbol.Family
+        //    .GetFamilySymbolIds()
+        //    .Select(id => doc.GetElement(id) as FamilySymbol)
+        //    .Where(familySymbol => familySymbol != null)
+        //    .Select(familySymbol => familySymbol.Name)
+        //    .ToList();
+
     }
 
-    string[] validPrefixes = {
-        "Aristokraft-W-",
-        "Aristokraft-B-",
-        "Aristokraft-T-",
-        "Eclipse-W-",
-        "Eclipse-B-",
-        "Eclipse-T-",
-        "Eclipse",
-        "YTC-W-",
-        "YTC-B-",
-        "YTC-T-",
-        "YTH-W-",
-        "YTH-B-",
-        "YTH-T-"
-    };
-
-    foreach (var elementId in allElementIds)
+    private static string GetParameterValue(Element element, string parameterName)
     {
-        var element = doc.GetElement(elementId);
-        if (element == null || element.Category == null || element.Category.Name != "Casework")
+        // Find the parameter by name
+        Parameter param = element.LookupParameter(parameterName);
+
+        // If the parameter is found and has a value, return it as a string; otherwise, return null
+        return param != null && param.HasValue ? param.AsString() : null;
+    }
+
+
+    private static bool AllElementsAreCabinets(ICollection<ElementId> allElementIds, Document doc, out List<FamilyInstance> selectedCabinetFamilyInstances)
+    {
+        // This is the `out` argument passed to this function
+        selectedCabinetFamilyInstances = new List<FamilyInstance>();
+
+        // Null checks
+        if (doc == null || allElementIds == null || allElementIds.Count == 0)
         {
             return false;
         }
 
-        var familyInstance = element as FamilyInstance;
-        string familyName = familyInstance.Symbol.Family.Name;
-
-        if (!validPrefixes.Any(prefix => familyName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
+        // Check if all selected IDs are family instances
+        foreach (var elementId in allElementIds)
         {
-            return false;
+            var element = doc.GetElement(elementId);
+            if (element == null || !(element is FamilyInstance))
+            {
+                return false;
+            }
         }
 
-        selectedCabinetFamilyInstances.Add(familyInstance);
+        string[] validPrefixes = {
+       "Aristokraft-W-",
+       "Aristokraft-B-",
+       "Aristokraft-T-",
+       "Eclipse-W-",
+       "Eclipse-B-",
+       "Eclipse-T-",
+       "Eclipse",
+       "YTC-W-",
+       "YTC-B-",
+       "YTC-T-",
+       "YTH-W-",
+       "YTH-B-",
+       "YTH-T-"
+   };
+
+        foreach (var elementId in allElementIds)
+        {
+            var element = doc.GetElement(elementId);
+            if (element == null || element.Category == null || element.Category.Name != "Casework")
+            {
+                return false;
+            }
+
+            var familyInstance = element as FamilyInstance;
+            string familyName = familyInstance.Symbol.Family.Name;
+
+            if (!validPrefixes.Any(prefix => familyName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
+            {
+                return false;
+            }
+
+            selectedCabinetFamilyInstances.Add(familyInstance);
+        }
+
+        return true;
     }
 
-    return true;
+
+    public ICommand UpdateTypeCommand { get; }
+    private void HandleUpdateTypeCommand()
+    {
+        //GoToViewName = view.Name;
+        APP.RequestHandler.RequestType = RequestType.Properties_UpdateCabinetFamilyType;
+        APP.ExternalEvent?.Raise();
+    }
+
+    // Constructor
+    public EK24Modify_ViewModel()
+    {
+
+        SelectedFamilyGroup = null;
+        SelectedFamily = null;
+        SelectedFamilyType = null;
+        Familys = new List<Models.Revit.EKFamily>(); // Initialize Familys to an empty list
+
+        UpdateTypeCommand = new RelayCommand(HandleUpdateTypeCommand);
+    }
 }
-
-
-public ICommand UpdateTypeCommand { get; }
-private void HandleUpdateTypeCommand()
-{
-    //GoToViewName = view.Name;
-    APP.RequestHandler.RequestType = RequestType.Properties_UpdateCabinetFamilyType;
-    APP.ExternalEvent?.Raise();
-}
-
-// Constructor
-public EK24Modify_ViewModel()
-{
-
-    SelectedFamilyGroup = null;
-    SelectedFamily = null;
-    SelectedFamilyType = null;
-    Familys = new List<Models.Revit.EKFamily>(); // Initialize Familys to an empty list
-
-    UpdateTypeCommand = new RelayCommand(HandleUpdateTypeCommand);
-}
-*/
-
+// */

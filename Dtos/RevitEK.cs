@@ -18,9 +18,9 @@ public class EKFamilySymbol
 {
     public FamilySymbol RevitFamilySymbol { get; set; }  // Actual Revit FamilySymbol
     public string EKBrand { get; set; } // ["Yorktowne Classic", "Yorktowne Historic", "Aristokraft", "Eclipse"];
-    public string EKCategory { get; set; } // Configuration
-    public string EKConfiguration { get; set; }
-    public string EKSKU { get; set; }
+    public string EKType { get; set; } // Configuration
+    public string EKCategory { get; set; }
+    public EK_SKU EK_SKU { get; set; } // <Type_name, VendorNote_param_value>
 
     // Constructor to enforce initialization
     public EKFamilySymbol(
@@ -28,14 +28,35 @@ public class EKFamilySymbol
         string ekBrand,
         string ekCategory,
         string ekConfiguration,
-        string sku
+        EK_SKU ekSKU
         )
     {
         RevitFamilySymbol = revitFamilySymbol;
         EKBrand = ekBrand;
-        EKCategory = ekCategory;
-        EKConfiguration = ekConfiguration;
-        EKSKU = sku;
+        EKType = ekCategory;
+        EKCategory = ekConfiguration;
+        EK_SKU = ekSKU;
+    }
+}
+
+public class EK_SKU
+{
+    public string TypeName { get; set; }    // Revit's Type of a family
+    public string VendorNotes { get; set; }    // "Vendor_Notes" param's value
+
+    public override string ToString()
+    {
+        if (VendorNotes == "")
+        {
+            return TypeName;
+        }
+        return $"{TypeName} - {VendorNotes}";
+    }
+
+    public EK_SKU(string typeName, string vendorNotes)
+    {
+        TypeName = typeName;
+        VendorNotes = vendorNotes;
     }
 }
 

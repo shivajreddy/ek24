@@ -56,7 +56,7 @@
                       ItemsSource="{Binding ConfigurationItems}"
                       SelectedItem="{Binding SelectedConfiguration, Mode=TwoWay}"
                       TabIndex="2"
-                      IsEnabled="{Binding SelectedCategory, Converter={StaticResource NullToBooleanConverter}}"
+                      IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
                       Focusable="True"/>
 			</StackPanel>
 
@@ -67,7 +67,7 @@
                       ItemsSource="{Binding SKUItems}"
                       SelectedItem="{Binding SelectedSKU, Mode=TwoWay}"
                       TabIndex="3"
-                      IsEnabled="{Binding SelectedConfiguration, Converter={StaticResource NullToBooleanConverter}}"
+                      IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
                       Focusable="True"/>
 			</StackPanel>
 

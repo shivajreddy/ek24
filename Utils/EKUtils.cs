@@ -15,7 +15,7 @@ namespace ek24.Utils;
 /// </summary>
 public class EKUtils
 {
-    public static List<EKFamilySymbol> EKCaseworkFamilies { get; set; }
+    public static List<EKFamilySymbol> EKCaseworkSymbols { get; set; }
     public void HandleDocumentOpenedEvent(object sender, DocumentOpenedEventArgs args)
     {
         // Grab the Document
@@ -36,31 +36,37 @@ public class EKUtils
             var brandValue = brandParam.AsValueString();
             if (brandValue == null || brandValue == "") continue;
 
-            var categoryParam = familySymbol.LookupParameter("Category1");
+            var categoryParam = familySymbol.LookupParameter("EKType");
             var categoryValue = categoryParam == null ? "" : categoryParam.AsValueString();
 
-            var configurationParam = familySymbol.LookupParameter("Category2");
+            var configurationParam = familySymbol.LookupParameter("EKCategory");
             var configurationValue = configurationParam == null ? "" : configurationParam.AsValueString();
 
-            var sku = familySymbol.Name;
+            var vendorSKUParam = familySymbol.LookupParameter("Vendor_SKU");
+            var vendorSKUValue = vendorSKUParam == null ? "" : vendorSKUParam.AsValueString();
+
+            var notesParam = familySymbol.LookupParameter("Vendor_Notes");
+            var notesValue = notesParam == null ? "" : notesParam.AsValueString();
+
+            var ek_sku = new EK_SKU(vendorSKUValue, notesValue);
 
             var ekFamilySymbol = new EKFamilySymbol(
                 revitFamilySymbol: familySymbol,
                 ekBrand: brandValue,
                 ekCategory: categoryValue,
                 ekConfiguration: configurationValue,
-                sku: sku
+                ekSKU: ek_sku
                 );
             ekFamilySymbols.Add(ekFamilySymbol);
         }
-        EKCaseworkFamilies = ekFamilySymbols;
+        EKCaseworkSymbols = ekFamilySymbols;
 
         Debug.WriteLine(ekFamilySymbols.Count);
     }
 
     public void HandleDocumentClosedEvent(object sender, EventArgs e)
     {
-        EKCaseworkFamilies.Clear();
+        EKCaseworkSymbols.Clear();
         /*
         // Clear the UI data property on document close
         if (ProjectCabinetFamilies.CabinetFamilies != null)
