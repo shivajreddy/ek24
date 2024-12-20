@@ -19,23 +19,23 @@
 	2. EKCategory##OTHER##   -> 3rd column
 7. Confirm the last 5 columns to be exactly same as below  
 
-| Manufacturer[-1010108]##OTHER## | EKType##OTHER## | EKCategory##OTHER## | Vendor_SKU##OTHER## | Vendor_Notes##OTHER## |
+| Manufacturer[-1010108] | EKType | EKCategory | Vendor_SKU | Vendor_Notes |
 | ------------------------------- | --------------- | ------------------- | ------------------- | --------------------- |
 
 ## Family .rfa file udpate steps
 1. Remove Parameter
 	1. Vendor_NAME
-	1. Vendor_SKEW
+	1. Eagle_SKEW
 2. Rename Parameter
-	1. Eagle_SKEW => Vendor_SKU
+	1. Vendor_SKEW => Vendor_SKU
 3. Create 2 new parameters
 	- Best way to create the following params is duplicate 'Vendor_SKU'
-	1. EKType -> Type Param, Common-Discipline, Length-Data Type, Identity Data-Group Under
-	2. EKCategory -> Type Param, Common-Discipline, Length-Data Type, Identity Data-Group Under
+	1. EKType -> Type Param, Common-Discipline, Text-Data Type, Identity Data-Group Under
+	2. EKCategory -> Type Param, Common-Discipline, Text-Data Type, Identity Data-Group Under
 4. Reorganize the params in the 'Identity Data' to confirm the following order under (Identity Data)
 	1. Manufacturer
 	2. EKType
 	3. EKCategory
-	4. Vendor_SKU_
+	4. Vendor_SKU
 	5. Vendor_Notes
 

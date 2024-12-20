@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.UI;
-using ek24.Events;
 using ek24.RequestHandling;
 using ek24.Utils;
 
@@ -33,6 +32,8 @@ public class APP : IExternalApplication
     private const string PluginPanelName = "EagleKitchen";
     private static RibbonPanel _ribbonPanel;
 
+    private EKEventsUtility ekEventsUtility { get; set; }
+
     public Result OnStartup(UIControlledApplication application)
     {
         // Create Tab, Panel on RevitUI
@@ -42,6 +43,9 @@ public class APP : IExternalApplication
         // Set up the EventHandler
         RequestHandler = new RequestHandler();
         ExternalEvent = ExternalEvent.Create(RequestHandler);
+
+        // Set up Events Untility
+        ekEventsUtility = new EKEventsUtility();
 
         // TODO: Now going to be handled by document opened event
         // Setup the Revit Data
@@ -61,16 +65,16 @@ public class APP : IExternalApplication
         /// - For each event, look at that particular EventArgs that revit will pass as 2nd arg to the given function.
         /// - the first argument is the sender: Here sender is the 'UIApplication' not 'UIControlledApplication' nor 'Application',
         /// - but however we can type cast to 'Application' type, if we need that type.
-        // Event: 1
-        application.SelectionChanged += SelectionChangedEventHandler.HandleSelectionChangedEvent;
-        // Event: 2
-        application.ViewActivated += ViewActivatedEvent.HandleViewActivatedEvent;
 
-        EKUtils ekUtils = new EKUtils();
+        // Event: 1
+        application.SelectionChanged += ekEventsUtility.HandleSelectionChangedEvent;
+        // Event: 2
+        application.ViewActivated += ekEventsUtility.HandleViewActivatedEvent;
+
         // Event: 3
-        application.ControlledApplication.DocumentOpened += ekUtils.HandleDocumentOpenedEvent;
+        application.ControlledApplication.DocumentOpened += ekEventsUtility.HandleDocumentOpenedEvent;
         // Event: 4
-        application.ControlledApplication.DocumentClosed += ekUtils.HandleDocumentClosedEvent;
+        application.ControlledApplication.DocumentClosed += ekEventsUtility.HandleDocumentClosedEvent;
 
         return Result.Succeeded;
     }

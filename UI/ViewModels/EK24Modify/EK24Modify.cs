@@ -77,7 +77,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     {
         List<string> newEktypeItems = new List<string>(); // Reset the Category Items
 
-        var ekCaseworkSymbols = EKUtils.EKCaseworkSymbols;   // Gets created when document loads
+        var ekCaseworkSymbols = EKEventsUtility.EKCaseworkSymbols;   // Gets created when document loads
         foreach (var ekSymbol in ekCaseworkSymbols)
         {
             if (ekSymbol.EKBrand != SelectedBrand) continue;
@@ -92,7 +92,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     {
         var temp_EKCategoryItems = new List<string>(); // Reset the Configuration Items
 
-        var ekCaseworkSymbols = EKUtils.EKCaseworkSymbols;   // Gets created when document loads
+        var ekCaseworkSymbols = EKEventsUtility.EKCaseworkSymbols;   // Gets created when document loads
 
         // Chosen:: Type
         if (SelectedEKType != null && SelectedEKType != "")
@@ -124,7 +124,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     {
         var temp_EKSKUItems = new List<EK_SKU>(); // Reset the SKU_Items list
 
-        var ekCaseworkSymbols = EKUtils.EKCaseworkSymbols;   // Gets created when document loads
+        var ekCaseworkSymbols = EKEventsUtility.EKCaseworkSymbols;   // Gets created when document loads
 
         // Chosen:: Type & Category 
         if (SelectedEKType != null && SelectedEKType != "" && SelectedEKCategory != null && SelectedEKCategory != "")
