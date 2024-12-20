@@ -1,11 +1,10 @@
 ﻿## Steps to update Families
-0. Open .txt in Excel with comma delim
+0. Right click .txt, open in Excel, select 1st column, 'Data' > 'Text to Columns' > 'Delimited' > 'comma'  
 1. Delete Columns
 	1. Vendor_Name
 	2. Eagle_SKEW
 2. Rename Columns
 	1. Vendor_SKEW => Vendor_SKU
-	2. Vendor_Notes => Vendor_Notes
 3. Create 4 Empty Columns to the left of last column (which should be 'Vendor_Notes')
 4. Move Columns and delete the empty column left behind
 	1. Manufacturer[-1010108]##OTHER##  -> 1st column
@@ -28,10 +27,10 @@
 2. Rename Parameter
 	1. Eagle_SKEW => Vendor_SKU
 3. Create 2 new parameters
-	- Best way to create the following params is duplicate 'Eagle_SKU'
+	- Best way to create the following params is duplicate 'Vendor_SKU'
 	1. EKType -> Type Param, Common-Discipline, Length-Data Type, Identity Data-Group Under
 	2. EKCategory -> Type Param, Common-Discipline, Length-Data Type, Identity Data-Group Under
-4. Reorganize the params in the 'Identity Data' to confirm the following
+4. Reorganize the params in the 'Identity Data' to confirm the following order under (Identity Data)
 	1. Manufacturer
 	2. EKType
 	3. EKCategory

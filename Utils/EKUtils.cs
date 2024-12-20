@@ -1,9 +1,13 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Events;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Selection;
 using ek24.Dtos;
+using ek24.UI.ViewModels.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Controls;
 
 namespace ek24.Utils;
 
@@ -12,10 +16,20 @@ namespace ek24.Utils;
 /// - It creates Datastructures that represent the available Family Symbols,
 ///   as a forward declaration for the application's UI
 /// - DocumentClosedEvent should clear the memory of these symbols
+///
+/// How to implement methods for Revit Events:
+/// https://www.revitapidocs.com/2024/7d51c9f8-1bea-32ec-0e54-5921242e57c3.htm
+/// You can use the `sender` and typecast to 'UIApplication'. and from that you can any of the following
+///      UIApplication app = commandData.Application;
+///      UIDocument uiDoc = app.ActiveUIDocument;
+///      Document doc = app.ActiveUIDocument.Document;
+/// OR you can use the methods available on the <particular>EventArgs variable
+/// These event implementations execute when that revit event/behaviour happens.
 /// </summary>
 public class EKUtils
 {
     public static List<EKFamilySymbol> EKCaseworkSymbols { get; set; }
+
     public void HandleDocumentOpenedEvent(object sender, DocumentOpenedEventArgs args)
     {
         // Grab the Document
@@ -78,14 +92,31 @@ public class EKUtils
         */
     }
 
-    private static string GetCabinetNoteFromSymbol(FamilySymbol symbol)
+
+    /// <summary>
+    /// This event is added as revit api's 'SelectionChanged' event, and performs
+    /// logic when ever 'SelectionChanged' event on Revit triggers
+    /// </summary>
+    public static void HandleSelectionChangedEvent(object sender, SelectionChangedEventArgs e)
     {
-        // Implement logic to extract a note from the family symbol if available
-        // This might involve reading parameters or other properties
-        const string VENDOR_NOTES_PARAM_NAME = "Vendor_Notes";
-        var noteParam = symbol.LookupParameter(VENDOR_NOTES_PARAM_NAME);
-        return noteParam?.AsString() ?? string.Empty;
+        UIApplication app = sender as UIApplication;
+        UIDocument uiDoc = app?.ActiveUIDocument;
+        Document doc = uiDoc?.Document;
+        if (doc == null) return;
+
+        Selection currentSelection = uiDoc.Selection;
+
+        // Update the ViewModel with the new selection
+
+
+        // moving this to SelectionService
+        //SelectionService.SyncSelectionWithRevit(currentSelection, doc);
+
+        // :: Update ViewModels ::
+        TypeParamsViewModel.SyncCurrentSelectionWithTypeParamsViewModel(currentSelection, doc);
+        InstanceParamsViewModel.SyncCurrentSelectionWithInstanceParamsViewModel(currentSelection, doc);
     }
+
 }
 
 /*

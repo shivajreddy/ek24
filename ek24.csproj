@@ -84,7 +84,7 @@
     <Compile Include="Commands\UpdateViewFilter.cs" />
     <Compile Include="Commands\Utils\FilterAllCabinets.cs" />
     <Compile Include="Events\DocumentOpenedEvent.cs" />
-    <Compile Include="Events\SelectionChangedEvent.cs" />
+    <Compile Include="Events\SelectionChangedEventHandler.cs" />
     <Compile Include="Events\ViewActivatedEvent.cs" />
     <Compile Include="APP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

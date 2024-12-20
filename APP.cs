@@ -62,7 +62,7 @@ public class APP : IExternalApplication
         /// - the first argument is the sender: Here sender is the 'UIApplication' not 'UIControlledApplication' nor 'Application',
         /// - but however we can type cast to 'Application' type, if we need that type.
         // Event: 1
-        application.SelectionChanged += SelectionChangedEvent.HandleSelectionChangedEvent;
+        application.SelectionChanged += SelectionChangedEventHandler.HandleSelectionChangedEvent;
         // Event: 2
         application.ViewActivated += ViewActivatedEvent.HandleViewActivatedEvent;
 
