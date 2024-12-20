@@ -9,5 +9,6 @@ public partial class EK24Modify_View : UserControl
         InitializeComponent();
         DataContext = new EK24Modify_ViewModel();
     }
+
 }
 

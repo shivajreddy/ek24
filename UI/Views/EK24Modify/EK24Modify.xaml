@@ -29,7 +29,30 @@
                 HorizontalAlignment="Center">
 
 			<StackPanel Margin="0 5" MinWidth="300">
-				<TextBlock Text="Brand" TextAlignment="Center"/>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 2">
+					<TextBlock Text="BRAND" TextAlignment="Center" FontSize="16"/>
+					<Button Content="X"
+							Command="{Binding Command_Reset_SelectedBrand}"
+							Width="20"
+							Height="20"
+							Margin="10 0"
+							Background="GhostWhite"
+							Foreground="Black"
+							BorderThickness="1"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center">
+							<Button.Template>
+								<ControlTemplate TargetType="Button">
+									<Border CornerRadius="20" 
+											Background="{TemplateBinding Background}" 
+											BorderBrush="{TemplateBinding BorderBrush}" 
+											BorderThickness="{TemplateBinding BorderThickness}">
+											<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+									</Border>
+							</ControlTemplate>
+						</Button.Template>
+					</Button>
+				</StackPanel>
 				<ComboBox x:Name="Brands"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding BrandItems}"
@@ -39,29 +62,98 @@
 			</StackPanel>
 
 			<StackPanel Margin="0 5" MinWidth="300">
-				<TextBlock Text="Type" TextAlignment="Center"/>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 2">
+					<TextBlock Text="TYPE" TextAlignment="Center" FontSize="16"/>
+					<Button Content="X"
+							Command="{Binding Command_Reset_SelectedEKType}"
+							Width="20"
+							Height="20"
+							Margin="10 0"
+							Background="GhostWhite"
+							Foreground="Black"
+							BorderThickness="1"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center">
+							<Button.Template>
+								<ControlTemplate TargetType="Button">
+									<Border CornerRadius="20" 
+											Background="{TemplateBinding Background}" 
+											BorderBrush="{TemplateBinding BorderBrush}" 
+											BorderThickness="{TemplateBinding BorderThickness}">
+											<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+									</Border>
+							</ControlTemplate>
+						</Button.Template>
+					</Button>
+				</StackPanel>
 				<ComboBox x:Name="EKType"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding EKTypeItems}"
-                      SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                      SelectedItem="{Binding SelectedEKType, Mode=TwoWay}"
                       TabIndex="1"
                       IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
                       Focusable="True"/>
 			</StackPanel>
 
 			<StackPanel Margin="0 5" MinWidth="300">
-				<TextBlock Text="Category" TextAlignment="Center"/>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 2">
+					<TextBlock Text="CATEGORY" TextAlignment="Center" FontSize="16"/>
+					<Button Content="X"
+							Command="{Binding Command_Reset_SelectedEKCategory}"
+							Width="20"
+							Height="20"
+							Margin="10 0"
+							Background="GhostWhite"
+							Foreground="Black"
+							BorderThickness="1"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center">
+							<Button.Template>
+								<ControlTemplate TargetType="Button">
+									<Border CornerRadius="20" 
+											Background="{TemplateBinding Background}" 
+											BorderBrush="{TemplateBinding BorderBrush}" 
+											BorderThickness="{TemplateBinding BorderThickness}">
+											<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+									</Border>
+							</ControlTemplate>
+						</Button.Template>
+					</Button>
+				</StackPanel>
 				<ComboBox x:Name="EKCategory"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding EKCategoryItems}"
-                      SelectedItem="{Binding SelectedConfiguration, Mode=TwoWay}"
+                      SelectedItem="{Binding SelectedEKCategory, Mode=TwoWay}"
                       TabIndex="2"
                       IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
                       Focusable="True"/>
 			</StackPanel>
 
 			<StackPanel Margin="0 5" MinWidth="300">
-				<TextBlock Text="SKU" TextAlignment="Center"/>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 2">
+					<TextBlock Text="SKU" TextAlignment="Center" FontSize="16"/>
+					<Button Content="X"
+							Command="{Binding Command_Reset_SelectedSKU}"
+							Width="20"
+							Height="20"
+							Margin="10 0"
+							Background="GhostWhite"
+							Foreground="Black"
+							BorderThickness="1"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center">
+							<Button.Template>
+								<ControlTemplate TargetType="Button">
+									<Border CornerRadius="20" 
+											Background="{TemplateBinding Background}" 
+											BorderBrush="{TemplateBinding BorderBrush}" 
+											BorderThickness="{TemplateBinding BorderThickness}">
+											<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+									</Border>
+							</ControlTemplate>
+						</Button.Template>
+					</Button>
+				</StackPanel>
 				<ComboBox x:Name="SKU"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding EKSKUItems}"

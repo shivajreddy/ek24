@@ -1,8 +1,10 @@
 ﻿using Autodesk.Revit.DB;
 using ek24.Dtos;
+using ek24.UI.Commands;
 using ek24.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Input;
 
 
 namespace ek24.UI;
@@ -83,12 +85,12 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (ekSymbol.EKType == "" || newEktypeItems.Contains(ekSymbol.EKType)) continue; // no empty or repeated entries
             newEktypeItems.Add(ekSymbol.EKType);
         }
-        EKTypeItems = newEktypeItems;
+        EKTypeItems = newEktypeItems;   // Now it triggers the binding ppty
         return;
     }
     public void filter_ekCategory_items() //based on: SelectedBrand, SelectedCategory
     {
-        EKCategoryItems = new List<string>(); // Reset the Configuration Items
+        var temp_EKCategoryItems = new List<string>(); // Reset the Configuration Items
 
         var ekCaseworkSymbols = EKUtils.EKCaseworkSymbols;   // Gets created when document loads
 
@@ -100,8 +102,8 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
                 if (ekSymbol.EKBrand != SelectedBrand) continue; // Same as Chosen brand
                 if (ekSymbol.EKType != SelectedEKType) continue; // Same as Chosen EKType
 
-                if (ekSymbol.EKCategory == "" || EKCategoryItems.Contains(ekSymbol.EKCategory)) continue; // no empty or repeated entries
-                EKCategoryItems.Add(ekSymbol.EKCategory);
+                if (ekSymbol.EKCategory == "" || temp_EKCategoryItems.Contains(ekSymbol.EKCategory)) continue; // no empty or repeated entries
+                temp_EKCategoryItems.Add(ekSymbol.EKCategory);
             }
         }
         // EKTYpe is not chosen or left empty
@@ -111,15 +113,16 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             {
                 if (ekSymbol.EKBrand != SelectedBrand) continue; // Same as Chosen brand
 
-                if (ekSymbol.EKCategory == "" || EKCategoryItems.Contains(ekSymbol.EKCategory)) continue; // no empty or repeated entries
-                EKCategoryItems.Add(ekSymbol.EKCategory);
+                if (ekSymbol.EKCategory == "" || temp_EKCategoryItems.Contains(ekSymbol.EKCategory)) continue; // no empty or repeated entries
+                temp_EKCategoryItems.Add(ekSymbol.EKCategory);
             }
         }
+        EKCategoryItems = temp_EKCategoryItems;
         return;
     }
     public void filter_sku_items()  // based on: SelectedBrand, SelectedCategory, SelectedConfiguration
     {
-        EKSKUItems = new List<EK_SKU>(); // Reset the SKU_Items list
+        var temp_EKSKUItems = new List<EK_SKU>(); // Reset the SKU_Items list
 
         var ekCaseworkSymbols = EKUtils.EKCaseworkSymbols;   // Gets created when document loads
 
@@ -133,9 +136,9 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
                 if (ekSymbol.EKCategory != SelectedEKCategory) continue; // Same as Chosen EKCategory
 
                 // Shouldn't need to do the following because all SKU must be unique
-                //if (ekSymbol.EKSKU == null || ekSymbol.EKSKU.TypeName == "" || EKSKUItems.Contains(ekSymbol.EKSKU)) continue;
+                //if (ekSymbol.EKSKU == null || ekSymbol.EKSKU.TypeName == "" || temp_EKSKUItems.Contains(ekSymbol.EKSKU)) continue;
 
-                EKSKUItems.Add(ekSymbol.EKSKU);
+                temp_EKSKUItems.Add(ekSymbol.EKSKU);
             }
         }
         // Chosen:: Type
@@ -149,7 +152,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
                 // Shouldn't need to do the following because all SKU must be unique
                 //if (ekSymbol.EKSKU == null || ekSymbol.EKSKU.TypeName == "" || EKSKUItems.Contains(ekSymbol.EKSKU)) continue;
 
-                EKSKUItems.Add(ekSymbol.EKSKU);
+                temp_EKSKUItems.Add(ekSymbol.EKSKU);
             }
         }
         // Chosen:: Category
@@ -161,9 +164,9 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
                 if (ekSymbol.EKCategory != SelectedEKCategory) continue; // Same as Chosen EKCategory
 
                 // Shouldn't need to do the following because all SKU must be unique
-                //if (ekSymbol.EKSKU == null || ekSymbol.EKSKU.TypeName == "" || EKSKUItems.Contains(ekSymbol.EKSKU)) continue;
+                //if (ekSymbol.EKSKU == null || ekSymbol.EKSKU.TypeName == "" || temp_EKSKUItems.Contains(ekSymbol.EKSKU)) continue;
 
-                EKSKUItems.Add(ekSymbol.EKSKU);
+                temp_EKSKUItems.Add(ekSymbol.EKSKU);
             }
         }
         // Only Brand is Chosen
@@ -174,12 +177,13 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
                 if (ekSymbol.EKBrand != SelectedBrand) continue; // Same as Chosen brand
 
                 // Shouldn't need to do the following because all SKU must be unique
-                //if (ekSymbol.EKSKU == null || ekSymbol.EKSKU.TypeName == "" || EKSKUItems.Contains(ekSymbol.EKSKU)) continue;
+                //if (ekSymbol.EKSKU == null || ekSymbol.EKSKU.TypeName == "" || temp_EKSKUItems.Contains(ekSymbol.EKSKU)) continue;
 
-                EKSKUItems.Add(ekSymbol.EKSKU);
+                temp_EKSKUItems.Add(ekSymbol.EKSKU);
             }
 
         }
+        EKSKUItems = temp_EKSKUItems;
         return;
     }
 
@@ -195,8 +199,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         }
     }
 
-    // TODO: ALL the getters should look at all EKFamilySymbols and filter available optiosn based on 
-    // the previous selections
+    #region Selected Item for ComboBoxes
     public string _selectedBrand { get; set; }
     public string SelectedBrand
     {
@@ -205,6 +208,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         {
             if (_selectedBrand == value) return;
             _selectedBrand = value;
+            OnPropertyChanged(nameof(SelectedBrand));
 
             // Reset dependent dropdowns
             //SelectedEKType = null;
@@ -216,7 +220,6 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             filter_ekCategory_items();
             filter_sku_items();
 
-            OnPropertyChanged(nameof(SelectedBrand));
         }
     }
 
@@ -246,17 +249,15 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         get => _selectedEKCategory;
         set
         {
-            if (_selectedEKCategory != value)
-            {
-                _selectedEKCategory = value;
-                OnPropertyChanged(nameof(SelectedEKCategory));
+            if (_selectedEKCategory == value) return;
+            _selectedEKCategory = value;
+            OnPropertyChanged(nameof(SelectedEKCategory));
 
-                // Reset dependent dropdowns
-                //SelectedSKU = null;
+            // Reset dependent dropdowns
+            //SelectedSKU = null;
 
-                // Set the Dependent dropdown items
-                filter_sku_items();
-            }
+            // Set the Dependent dropdown items
+            filter_sku_items();
         }
     }
 
@@ -274,7 +275,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             }
         }
     }
-
+    #endregion
 
     // Constructor
     public EK24Modify_ViewModel()
@@ -283,7 +284,35 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         SelectedEKType = null;
         SelectedEKCategory = null;
         SelectedSKU = null;
+        Command_Reset_SelectedBrand = new RelayCommand(Handle_Command_Reset_SelectedBrand);
+        Command_Reset_SelectedEKType = new RelayCommand(Handle_Command_Reset_SelectedEKType);
+        Command_Reset_SelectedEKCategory = new RelayCommand(Handle_Command_Reset_SelectedEKCategory);
+        Command_Reset_SelectedSKU = new RelayCommand(Handle_Command_Reset_SelectedSKU);
     }
+
+    #region Helper FN's: Reset Combo box selections
+    public ICommand Command_Reset_SelectedBrand { get; }
+    public void Handle_Command_Reset_SelectedBrand()
+    {
+        SelectedBrand = null;
+    }
+    public ICommand Command_Reset_SelectedEKType { get; }
+    public void Handle_Command_Reset_SelectedEKType()
+    {
+        SelectedEKType = null;
+    }
+    public ICommand Command_Reset_SelectedEKCategory { get; }
+    public void Handle_Command_Reset_SelectedEKCategory()
+    {
+        SelectedEKCategory = null;
+    }
+    public ICommand Command_Reset_SelectedSKU { get; }
+    public void Handle_Command_Reset_SelectedSKU()
+    {
+        SelectedSKU = null;
+    }
+    #endregion
+
 }
 
 /*
