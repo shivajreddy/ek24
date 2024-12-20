@@ -1,4 +1,6 @@
-﻿## Steps to update Families
+﻿# Steps to update Families
+
+## TXT File update steps
 0. Right click .txt, open in Excel, select 1st column, 'Data' > 'Text to Columns' > 'Delimited' > 'comma'  
 1. Delete Columns
 	1. Vendor_Name
@@ -20,7 +22,7 @@
 | Manufacturer[-1010108]##OTHER## | EKType##OTHER## | EKCategory##OTHER## | Vendor_SKU##OTHER## | Vendor_Notes##OTHER## |
 | ------------------------------- | --------------- | ------------------- | ------------------- | --------------------- |
 
-## Steps to Family .rfa file
+## Family .rfa file udpate steps
 1. Remove Parameter
 	1. Vendor_NAME
 	1. Vendor_SKEW
