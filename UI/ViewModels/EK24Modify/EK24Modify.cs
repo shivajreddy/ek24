@@ -4,6 +4,8 @@ using ek24.UI.Commands;
 using ek24.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 
 
@@ -24,20 +26,23 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     }
     #endregion
 
-    public List<string> BrandItems { get; } = EKBrands.all_brand_names;
-    // TODO : TEST WITH HARD CODE OPTIONS, FIX LATER
-    // Static lists exposed as public properties
-    //public List<string> CategoryItems { get; set; } = new List<string> { "C1-A", "C1-B", "C1-C", "C1-D" };
-    //public List<string> ConfigurationItems { get; set; } = new List<string> { "C2-A", "C2-B", "C2-C", "C2-D" };
-    //public List<EKSKU> SKUItems { get; set; } = new List<EKSKU> {
-    //    new EKSKU("SKU-A", "note for a"),
-    //    new EKSKU("SKU-B", ""),
-    //    new EKSKU("SKU-C", "note for c"),
-    //};
+    #region TEMPORARY DELETE LATER
+    public string _latestProjectName { get; set; }
+    public string LatestProjectName
+    {
+        get => _latestProjectName;
+        set
+        {
+            if (_latestProjectName == value) return;
+            _latestProjectName = value;
+            OnPropertyChanged(nameof(LatestProjectName));
+        }
+    }
+    #endregion
 
-    //public List<string> EKTypeItems { get; set; } = [];
-    //public List<string> EKCategoryItems { get; set; } = [];
-    //public List<EK_SKU> EKSKUItems { get; set; } = [];
+
+    #region All 4 Combo Box Values
+    public List<string> BrandItems { get; } = EKBrands.all_brand_names;
     public List<string> _ekTypeItems { get; set; } = [];
     public List<string> EKTypeItems
     {
@@ -71,8 +76,9 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(EKSKUItems));
         }
     }
+    #endregion
 
-    // HELPER Functions to filter item sources
+    #region HELPER Functions to filter item sources
     public void filter_ekType_items()// based on: SelectedBrand
     {
         List<string> newEktypeItems = new List<string>(); // Reset the Category Items
@@ -85,6 +91,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (ekSymbol.EKType == "" || newEktypeItems.Contains(ekSymbol.EKType)) continue; // no empty or repeated entries
             newEktypeItems.Add(ekSymbol.EKType);
         }
+        newEktypeItems.Sort();
         EKTypeItems = newEktypeItems;   // Now it triggers the binding ppty
         return;
     }
@@ -117,7 +124,8 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
                 temp_EKCategoryItems.Add(ekSymbol.EKCategory);
             }
         }
-        EKCategoryItems = temp_EKCategoryItems;
+        temp_EKCategoryItems.Sort();
+        EKCategoryItems = temp_EKCategoryItems;   // Now it triggers the binding ppty
         return;
     }
     public void filter_sku_items()  // based on: SelectedBrand, SelectedCategory, SelectedConfiguration
@@ -183,9 +191,18 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             }
 
         }
-        EKSKUItems = temp_EKSKUItems;
+
+        // Sort by TypeName, then by VendorNotes
+        temp_EKSKUItems = temp_EKSKUItems
+            .OrderBy(sku => sku.TypeName)
+            .ThenBy(sku => sku.VendorNotes)
+            .ToList();
+        EKSKUItems = temp_EKSKUItems;   // Now it triggers the binding ppty
         return;
     }
+    #endregion
+
+    #region Chosen Revit Family Symbol & CURRENT SELECTION FROM REVIT UI
 
     public FamilySymbol _chosenRevitFamilySymbol { get; set; }
     public FamilySymbol ChosenRevitFamilySymbol
@@ -198,6 +215,9 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(EKFamilySymbol));
         }
     }
+
+
+    #endregion
 
     #region Selected Item for ComboBoxes
     public string _selectedBrand { get; set; }
@@ -277,7 +297,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     }
     #endregion
 
-    // Constructor
+    #region Constructor
     public EK24Modify_ViewModel()
     {
         SelectedBrand = null;
@@ -288,7 +308,10 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         Command_Reset_SelectedEKType = new RelayCommand(Handle_Command_Reset_SelectedEKType);
         Command_Reset_SelectedEKCategory = new RelayCommand(Handle_Command_Reset_SelectedEKCategory);
         Command_Reset_SelectedSKU = new RelayCommand(Handle_Command_Reset_SelectedSKU);
+        Command_UpdateFamily = new RelayCommand(Handle_Command_UpdateFamily);
+        Command_CreateNewFamily = new RelayCommand(Handle_Command_CreateNewFamily);
     }
+    #endregion
 
     #region Helper FN's: Reset Combo box selections
     public ICommand Command_Reset_SelectedBrand { get; }
@@ -310,6 +333,19 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     public void Handle_Command_Reset_SelectedSKU()
     {
         SelectedSKU = null;
+    }
+    #endregion
+
+    #region Relay Commands for UPDATE & CREATE
+    public ICommand Command_UpdateFamily { get; }
+    public void Handle_Command_UpdateFamily()
+    {
+        Debug.WriteLine("Hello Update existing family");
+    }
+    public ICommand Command_CreateNewFamily { get; }
+    public void Handle_Command_CreateNewFamily()
+    {
+        Debug.WriteLine("Chosen symbol is", ChosenRevitFamilySymbol);
     }
     #endregion
 
@@ -732,3 +768,4 @@ public class OLDCODE
     }
 }
 // */
+

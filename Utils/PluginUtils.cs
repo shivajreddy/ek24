@@ -1,8 +1,7 @@
 ﻿using Autodesk.Revit.UI;
+using ek24.UI.Views;
 using System;
 using System.Reflection;
-
-using ek24.UI.Views;
 
 
 namespace ek24.Utils;
@@ -15,7 +14,7 @@ public static class PluginUtils
     private static readonly DockablePaneId DockId = new DockablePaneId(new Guid(PanelId));
     private const string DockName = "Eagle Kitchen";
 
-    public static MainView MainView;
+    public static MainView mainView;
 
     /// <summary>
     /// Register the DockablePane with a Static instance of the MainView
@@ -23,9 +22,9 @@ public static class PluginUtils
     /// <param name="uiControlledApplication"></param>
     public static void RegisterDockablePanel(UIControlledApplication uiControlledApplication)
     {
-        MainView = new MainView();
+        mainView = new MainView();
 
-        uiControlledApplication.RegisterDockablePane(DockId, DockName, MainView);
+        uiControlledApplication.RegisterDockablePane(DockId, DockName, mainView);
     }
 
     /// <summary>

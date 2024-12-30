@@ -163,12 +163,17 @@
                       Focusable="True"/>
 			</StackPanel>
 
+			<StackPanel Orientation="Horizontal" Background="White">
+				<TextBlock Text="Latest Opened Project Name: " />
+				<TextBlock Text="{Binding LatestProjectName}"/>
+			</StackPanel>
+
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10">
 				<Button Content="UPDATE" 
                     Width="100" 
                     Height="35" 
                     Margin="10 0"
-                    Command="{Binding CreateNewFamilyCommand}"
+                    Command="{Binding Command_UpdateFamily}"
                     Style="{StaticResource ModernButton2}" 
                     TabIndex="4"
                     IsEnabled="{Binding SelectedSKU, Converter={StaticResource NullToBooleanConverter}}"
@@ -177,7 +182,7 @@
                     Width="100" 
                     Height="35" 
                     Margin="10 0"
-                    Command="{Binding CreateNewFamilyCommand}"
+                    Command="{Binding Command_CreateNewFamily}"
                     Style="{StaticResource ModernButton2}" 
                     TabIndex="5"
                     IsEnabled="{Binding SelectedSKU, Converter={StaticResource NullToBooleanConverter}}"

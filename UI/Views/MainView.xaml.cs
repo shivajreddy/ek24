@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.UI;
-using ek24.UI.ViewModels;
 
 
 namespace ek24.UI.Views;
@@ -13,7 +12,8 @@ public partial class MainView : IDockablePaneProvider
     {
         InitializeComponent();
 
-        DataContext = new MainViewModel();
+        //DataContext = new MainViewModel();
+        DataContext = APP.global_state.mainViewModel;
     }
 
     // Required to be implemented by the IDockablePaneProvider

@@ -39,6 +39,12 @@ public class EKEventsUtility
         // Grab the Document
         Document doc = args.Document;
 
+        // Create Project State inside the Global State
+        string project_name = doc.Title;
+        APP.global_state.AddProjectState(project_name);
+
+        APP.global_state.eK24Modify_ViewModel.LatestProjectName = project_name;
+
         // Element Collector
         FilteredElementCollector collector = new FilteredElementCollector(doc);
         //FilteredElementCollector familyCollecter = collector.OfClass(typeof(Family));
@@ -85,7 +91,18 @@ public class EKEventsUtility
     }
 
 
-    public void HandleDocumentClosedEvent(object sender, EventArgs e)
+    // Clear the Project's State When document is closing
+    public void HandleDocumentClosingEvent(object sender, DocumentClosingEventArgs e)
+    {
+        // Grab the Document
+        Document doc = e.Document;
+
+        // Remove Project State inside the Global State
+        string project_name = doc.Title;
+        APP.global_state.RemoveProjectState(project_name);
+    }
+
+    public void HandleDocumentClosedEvent(object sender, DocumentClosedEventArgs e)
     {
         EKCaseworkSymbols.Clear();
         /*
@@ -109,10 +126,15 @@ public class EKEventsUtility
         Document doc = uiDoc?.Document;
         if (doc == null) return;
 
+        string project_name = doc?.Title;
+
         Selection currentSelection = uiDoc.Selection;
 
-        // Update the ViewModel with the new selection
+        // Update the EK-Project's State
+        EK_Project_State project_state = APP.global_state.GetProjectState(project_name);
+        project_state.EKProjectsCurrentSelection = currentSelection;
 
+        // Update the ViewModel with the new selection
 
         // moving this to SelectionService
         //SelectionService.SyncSelectionWithRevit(currentSelection, doc);
