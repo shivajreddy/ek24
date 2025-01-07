@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI.Selection;
 using ek24.Dtos;
 using ek24.UI.Commands;
 using ek24.Utils;
@@ -39,7 +40,6 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         }
     }
     #endregion
-
 
     #region All 4 Combo Box Values
     public List<string> BrandItems { get; } = EKBrands.all_brand_names;
@@ -297,9 +297,56 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     }
     #endregion
 
+    // MAIN THING
+    private readonly EK_Global_State _ek_Global_State;
+
+    public int EK_Selection_Count
+    {
+        get
+        {
+            if (APP.global_state.Current_Project_State == null || APP.global_state.Current_Project_State.EKProjectsCurrentSelection == null) return 0;
+
+            return APP.global_state.Current_Project_State.EKProjectsCurrentSelection.GetElementIds().Count;
+        }
+    }
+
+    public Selection Current_Project_Revit_Selection
+    {
+        get => APP.global_state.Current_Project_State.EKProjectsCurrentSelection;
+        set => APP.global_state.Current_Project_State.EKProjectsCurrentSelection = value;
+    }
+
+    // Handle the ppties that change on Global State
+    private void GlobalState_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(EK_Global_State.Current_Project_State.EKProjectsCurrentSelection))
+        {
+            OnPropertyChanged(nameof(Current_Project_Revit_Selection));
+            update_modify_ui_based_on_selection();
+        }
+        if (e.PropertyName == nameof(EK_Global_State.EKSelectionCount))
+        {
+            OnPropertyChanged(nameof(EK_Selection_Count));
+        }
+    }
+
+    void update_modify_ui_based_on_selection()
+    {
+        // When selection is empty, clear the UI
+        if (Current_Project_Revit_Selection.GetElementIds().Count == 0)
+        {
+            SelectedBrand = null;
+        }
+    }
+
     #region Constructor
     public EK24Modify_ViewModel()
     {
+        _ek_Global_State = APP.global_state;
+        _ek_Global_State.PropertyChanged += GlobalState_PropertyChanged;
+
+        //_current_project_state = APP.global_state.current_project_state;
+
         SelectedBrand = null;
         SelectedEKType = null;
         SelectedEKCategory = null;

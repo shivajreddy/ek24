@@ -7,6 +7,7 @@ using ek24.UI.ViewModels.ProjectBrowser;
 using ek24.UI.ViewModels.Properties;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SelectionChangedEventArgs = Autodesk.Revit.UI.Events.SelectionChangedEventArgs;
 using View = Autodesk.Revit.DB.View;
 
@@ -41,10 +42,14 @@ public class EKEventsUtility
 
         // Create Project State inside the Global State
         string project_name = doc.Title;
-        APP.global_state.AddProjectState(project_name);
+        var ek_project_state = APP.global_state.CreateProjectState(project_name);
 
-        APP.global_state.eK24Modify_ViewModel.LatestProjectName = project_name;
+        // Set the current project to newly opened project
+        APP.global_state.Current_Project_State = ek_project_state;
 
+        //APP.global_state.eK24Modify_ViewModel.LatestProjectName = project_name;
+
+        // TODO: Move the EKCaseworkSymbols to ProjectState
         // Element Collector
         FilteredElementCollector collector = new FilteredElementCollector(doc);
         //FilteredElementCollector familyCollecter = collector.OfClass(typeof(Family));
@@ -104,7 +109,7 @@ public class EKEventsUtility
 
     public void HandleDocumentClosedEvent(object sender, DocumentClosedEventArgs e)
     {
-        EKCaseworkSymbols.Clear();
+        //EKCaseworkSymbols.Clear();
         /*
         // Clear the UI data property on document close
         if (ProjectCabinetFamilies.CabinetFamilies != null)
@@ -130,9 +135,14 @@ public class EKEventsUtility
 
         Selection currentSelection = uiDoc.Selection;
 
-        // Update the EK-Project's State
-        EK_Project_State project_state = APP.global_state.GetProjectState(project_name);
-        project_state.EKProjectsCurrentSelection = currentSelection;
+        //EK_Project_State project_state = APP.global_state.current_project_state;
+        //project_state.EKProjectsCurrentSelection = currentSelection;
+        //project_state.EKSelectionCount = currentSelection.GetElementIds().Count;
+
+        APP.global_state.EKSelectionCount = currentSelection.GetElementIds().Count;
+        APP.global_state.Current_Project_State.EKProjectsCurrentSelection = currentSelection;
+
+        Debug.WriteLine("hi");
 
         // Update the ViewModel with the new selection
 
@@ -143,7 +153,6 @@ public class EKEventsUtility
         TypeParamsViewModel.SyncCurrentSelectionWithTypeParamsViewModel(currentSelection, doc);
         InstanceParamsViewModel.SyncCurrentSelectionWithInstanceParamsViewModel(currentSelection, doc);
     }
-
 
     /// <summary>
     /// How to implement methods for Revit Events:
@@ -162,6 +171,13 @@ public class EKEventsUtility
         var uiDoc = app.ActiveUIDocument;
         var doc = app.ActiveUIDocument.Document;
 
+        // Create Project State inside the Global State
+        string project_name = doc.Title;
+        // Update current project
+        var project_state = APP.global_state.GetProjectState(project_name);
+        APP.global_state.Current_Project_State = project_state;
+
+        // TODO: Move these to Project_State
         var collector = new FilteredElementCollector(doc);
         var allViews = collector.OfClass(typeof(View)).ToElements();
 
@@ -262,3 +278,5 @@ foreach (Family family in familyCollecter)
 }
 EKCaseworkFamilies = ekCaseworkFamilies;
 */
+
+

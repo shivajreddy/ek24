@@ -1,11 +1,8 @@
 ﻿using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using ek24.RequestHandling;
-using ek24.UI;
-using ek24.UI.ViewModels;
 using ek24.Utils;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace ek24;
@@ -14,19 +11,45 @@ namespace ek24;
 /// This Object will hold the state of the plugin, in the current revit instance
 /// Inside is all the project's state of each opened project in this instance of Revit
 /// </summary>
-public class EK_Global_State
+public class EK_Global_State : INotifyPropertyChanged
 {
+    #region INotifyPropertyChanged implementation
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    public static event PropertyChangedEventHandler StaticPropertyChanged;
+    private static void OnStaticPropertyChanged(string propertyName)
+    {
+        StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
+    }
+    #endregion
+    public int _ekSelectionCount { get; set; }
+    public int EKSelectionCount
+    {
+        get => _ekSelectionCount;
+        set
+        {
+            if (_ekSelectionCount == value) return;
+            _ekSelectionCount = value;
+            OnPropertyChanged(nameof(EKSelectionCount));
+        }
+    }
+
     // This will hold all projects state, mapped to the unique project name
     // Dictionary to hold all projects' states, mapped by unique project name
     private Dictionary<string, EK_Project_State> _projectStates = new Dictionary<string, EK_Project_State>();
 
     // Add a new project state
-    public void AddProjectState(string projectName)
+    public EK_Project_State CreateProjectState(string projectName)
     {
         if (!_projectStates.ContainsKey(projectName))
         {
             _projectStates[projectName] = new EK_Project_State(projectName);
+            return _projectStates[projectName];
         }
+        return null;
     }
 
     // Get a project state by name
@@ -49,23 +72,20 @@ public class EK_Global_State
     {
         return _projectStates.Values;
     }
-
-    // Create ViewModels
-    public MainViewModel mainViewModel { get; set; }
-    public EK24Modify_ViewModel eK24Modify_ViewModel { get; set; }
-
-    // Constructor
-    public EK_Global_State()
+    // This is the current active project, this updates upon view change
+    private EK_Project_State _current_project_state { get; set; }
+    public EK_Project_State Current_Project_State
     {
-        eK24Modify_ViewModel = new EK24Modify_ViewModel();
-        mainViewModel = new MainViewModel();
+        get => _current_project_state;
+        set => _current_project_state = value;
     }
+
 }
 
 /// <summary>
 /// This is the state of the Project that is opened inside the current Revit Instance
 /// </summary>
-public class EK_Project_State
+public class EK_Project_State : INotifyPropertyChanged
 {
     #region INotifyPropertyChanged implementation
     public event PropertyChangedEventHandler PropertyChanged;
@@ -80,27 +100,25 @@ public class EK_Project_State
     }
     #endregion
     public string ProjectName { get; set; }
-    public Selection EKProjectsCurrentSelection { get; set; }
 
-    private static ObservableCollection<Selection> _project_current_selection = new ObservableCollection<Selection>();
-    public static ObservableCollection<Selection> Project_current_selection
+    public Selection _EKProjectsCurrentSelection { get; set; }
+    public Selection EKProjectsCurrentSelection
     {
-        get => _project_current_selection;
+        get { return _EKProjectsCurrentSelection; }
         set
         {
-            if (value == null || value == _project_current_selection) return;
-            _project_current_selection = value;
+            if (value == null || value == _EKProjectsCurrentSelection) return;
+            _EKProjectsCurrentSelection = value;
         }
     }
 
-    // Other Project properties
-    public int total_items { get; set; }
 
     public EK_Project_State(string project_name)
     {
         ProjectName = project_name;
     }
 }
+
 
 /// <summary>
 /// Entry Point of the application
@@ -169,8 +187,8 @@ public class APP : IExternalApplication
         application.ControlledApplication.DocumentOpened += ekEventsUtility.HandleDocumentOpenedEvent;
         // Event: 2
         application.ControlledApplication.DocumentClosing += ekEventsUtility.HandleDocumentClosingEvent;
-        // Event: 3
-        application.ControlledApplication.DocumentClosed += ekEventsUtility.HandleDocumentClosedEvent;
+        //Even: 3 (not going to use this, instead using DocumentClosing)
+        //application.ControlledApplication.DocumentClosed += ekEventsUtility.HandleDocumentClosedEvent;
 
         // Event: 4
         application.SelectionChanged += ekEventsUtility.HandleSelectionChangedEvent;
