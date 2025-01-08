@@ -53,7 +53,8 @@ public class EKEventsUtility
 
         // Temporary Dictionary and List that will be assigned to the ProjectState
         //Dictionary<FamilySymbol, EKFamilySymbol> temp_revitFamilySymbolToEKFAMILYSYMBOL = new Dictionary<FamilySymbol, EKFamilySymbol>();
-        Dictionary<string, EKFamilySymbol> temp_revitFamilySymbolToEKFAMILYSYMBOL = new Dictionary<string, EKFamilySymbol>();
+        Dictionary<ElementId, EKFamilySymbol> temp_revitFamilySymbolIdEKFamilySymbol = new Dictionary<ElementId, EKFamilySymbol>();
+        //Dictionary<string, EKFamilySymbol> temp_revitFamilySymbolToEKFAMILYSYMBOL = new Dictionary<string, EKFamilySymbol>();
         List<EKFamilySymbol> temp_ekFamilySymbols = [];
 
         foreach (FamilySymbol familySymbol in familySymbolsCollecter)
@@ -63,6 +64,9 @@ public class EKEventsUtility
             if (brandParam == null) continue;
             var brandValue = brandParam.AsValueString();
             if (brandValue == null || brandValue == "") continue;
+            // NOTE: Brand value must be one of the allowed values
+            //List<string> allowed_brandValues = new List<string> { "Aristokraft", "Yorktowne Classic", "", "Yorktowne Historic", "Eclipse" };
+            //if (!allowed_brandValues.Contains(brandValue)) continue;
 
             var ekTypeParam = familySymbol.LookupParameter("EKType");
             var ekTypeValue = ekTypeParam == null ? "" : ekTypeParam.AsValueString();
@@ -85,17 +89,18 @@ public class EKEventsUtility
                 ekBrand: brandValue,
                 ekType: ekTypeValue,
                 ekCategory: ekCategoryValue,
-                ek_SKU: ek_sku
+                ek_SKU: ek_sku,
+                revitFamilySymbolId: familySymbol.Id
                 );
             //temp_revitFamilySymbolToEKFAMILYSYMBOL[familySymbol] = ekFamilySymbol;   // add to temporary dictionary
-            temp_revitFamilySymbolToEKFAMILYSYMBOL[familySymbol.ToString()] = ekFamilySymbol;   // add to temporary dictionary
-            temp_ekFamilySymbols.Add(ekFamilySymbol);                                // add to temporary list
+            //temp_revitFamilySymbolToEKFAMILYSYMBOL[familySymbol.ToString()] = ekFamilySymbol;   // add to temporary dictionary
+            temp_revitFamilySymbolIdEKFamilySymbol[familySymbol.Id] = ekFamilySymbol;   // add to temporary dictionary
+            temp_ekFamilySymbols.Add(ekFamilySymbol);                                   // add to temporary list
         }
 
         // Set the Dictionary & EK-Symbols ppty for this project
-        APP.Global_State.Current_Project_State.Map_RevitFamilySymbol_EKFamilySymbol = temp_revitFamilySymbolToEKFAMILYSYMBOL;
+        APP.Global_State.Current_Project_State.Map_RevitFamilySymbolId_EKFamilySymbol = temp_revitFamilySymbolIdEKFamilySymbol;
         APP.Global_State.Current_Project_State.EKCaseworkSymbols = temp_ekFamilySymbols;
-
         //Debug.WriteLine(ekFamilySymbols.Count);
     }
 

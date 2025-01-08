@@ -16,11 +16,11 @@ public static class EKBrands
 
 public class EKFamilySymbol
 {
-    //public FamilySymbol RevitFamilySymbol { get; set; }  // Actual Revit FamilySymbol
     public string EKBrand { get; set; } // ["Yorktowne Classic", "Yorktowne Historic", "Aristokraft", "Eclipse"];
     public string EKType { get; set; } // Configuration
     public string EKCategory { get; set; }
-    public EK_SKU EKSKU { get; set; } // <Type_name, VendorNote_param_value>
+    public EK_SKU EKSKU { get; set; } // <Actual_Revit_FamilySymbol, Type_name, VendorNote_param_value>
+    public ElementId RevitFamilySymbolId { get; set; }
 
     // Constructor to enforce initialization
     public EKFamilySymbol(
@@ -28,7 +28,8 @@ public class EKFamilySymbol
         string ekBrand,
         string ekType,
         string ekCategory,
-        EK_SKU ek_SKU
+        EK_SKU ek_SKU,
+        ElementId revitFamilySymbolId
         )
     {
         //RevitFamilySymbol = revitFamilySymbol;
@@ -36,6 +37,7 @@ public class EKFamilySymbol
         EKType = ekType;
         EKCategory = ekCategory;
         EKSKU = ek_SKU;
+        RevitFamilySymbolId = revitFamilySymbolId;
     }
 }
 

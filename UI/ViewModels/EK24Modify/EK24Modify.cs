@@ -409,8 +409,9 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         }
 
         // Get current documents Family Symbols
-        var map_RevitFamilySymbol_EKFamilySymbol = APP.Global_State.Current_Project_State.Map_RevitFamilySymbol_EKFamilySymbol;
-        var ekCaseworkSymbols = APP.Global_State.Current_Project_State.EKCaseworkSymbols;
+        //var map_RevitFamilySymbol_EKFamilySymbol = APP.Global_State.Current_Project_State.Map_RevitFamilySymbol_EKFamilySymbol;
+        var map_RevitFamilySymbolId_EKFamilySymbol = APP.Global_State.Current_Project_State.Map_RevitFamilySymbolId_EKFamilySymbol;
+        var all_ekCaseworkSymbols = APP.Global_State.Current_Project_State.EKCaseworkSymbols;
 
         // Get the current Document & Selection
         Document document = APP.Global_State.Current_Project_State.Document;
@@ -419,6 +420,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         // Get the selected element IDs
         ICollection<ElementId> selectedIds = selection.GetElementIds();
 
+        // NOTE: Ensure all selected elements are family instances
         // 1. Filter for FamilyInstance elements from the selected IDs
         List<FamilyInstance> familyInstances = selectedIds
             .Select(id => document.GetElement(id))
@@ -437,70 +439,58 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         foreach (var familyInstance in familyInstances)
         {
             EKFamilySymbol ekFamilySymbol;
-            //map_RevitFamilySymbol_EKFamilySymbol.TryGetValue(familyInstance.Symbol, out ekFamilySymbol);
-            map_RevitFamilySymbol_EKFamilySymbol.TryGetValue(familyInstance.Symbol.ToString(), out ekFamilySymbol);
+            map_RevitFamilySymbolId_EKFamilySymbol.TryGetValue(familyInstance.Symbol.Id, out ekFamilySymbol);
             if (ekFamilySymbol != null)
             {
                 ekFamilySymbols.Add(ekFamilySymbol);
             }
         }
 
-        bool all_selected_elements_are_same_ekbrand = false;
-        bool all_selected_elements_are_same_ektype = false;
-        bool all_selected_elements_are_same_ekcategory = false;
-        bool all_selected_elements_are_same_sku = false;
+        // NOTE: all selected family instances must be also in ekFamilySymbols
+        if (familyInstances.Count != ekFamilySymbols.Count)
+        {
+            SelectedBrand = null;
+            return;
+        }
+
+        //bool all_selected_elements_are_same_ekbrand = false;
+        //bool all_selected_elements_are_same_ektype = false;
+        //bool all_selected_elements_are_same_ekcategory = false;
+        //bool all_selected_elements_are_same_sku = false;
 
         // Fill up all boolean values based on the 'ekFamilySymbols'
         // Only run checks if the list is not empty
         if (ekFamilySymbols.Any())
         {
-            all_selected_elements_are_same_ekbrand =
-                ekFamilySymbols.Select(x => x.EKBrand).Distinct().Count() == 1;
+            if (ekFamilySymbols.Select(x => x.EKBrand).Distinct().Count() != 1)
+            {
+                SelectedBrand = null;
+                return;
+            }
+            SelectedBrand = ekFamilySymbols.First().EKBrand;
 
-            all_selected_elements_are_same_ektype =
-                ekFamilySymbols.Select(x => x.EKType).Distinct().Count() == 1;
+            if (ekFamilySymbols.Select(x => x.EKType).Distinct().Count() != 1)
+            {
+                SelectedEKType = null;
+                return;
+            }
+            SelectedEKType = ekFamilySymbols.First().EKType;
 
-            all_selected_elements_are_same_ekcategory =
-                ekFamilySymbols.Select(x => x.EKCategory).Distinct().Count() == 1;
+            if (ekFamilySymbols.Select(x => x.EKCategory).Distinct().Count() != 1)
+            {
+                SelectedEKCategory = null;
+                return;
+            }
+            SelectedEKCategory = ekFamilySymbols.First().EKCategory;
 
-            all_selected_elements_are_same_sku =
-                ekFamilySymbols.Select(x => x.EKSKU).Distinct().Count() == 1;
+            if (ekFamilySymbols.Select(x => x.EKSKU).Distinct().Count() != 1)
+            {
+                SelectedSKU = null;
+                return;
+            }
+            SelectedSKU = ekFamilySymbols.First().EKSKU;
         }
-
-        if (!all_selected_elements_are_same_ekbrand)
-        {
-            SelectedBrand = null;
-            return;
-        }
-        SelectedBrand = ekCaseworkSymbols.First().EKBrand;
-
-        if (!all_selected_elements_are_same_ektype)
-        {
-            SelectedEKType = null;
-            return;
-        }
-        SelectedEKType = ekCaseworkSymbols.First().EKType;
-
-        if (!all_selected_elements_are_same_ekcategory)
-        {
-            SelectedEKCategory = null;
-            return;
-        }
-        SelectedEKCategory = ekCaseworkSymbols.First().EKCategory;
-
-        if (!all_selected_elements_are_same_sku)
-        {
-            SelectedSKU = null;
-            return;
-        }
-        SelectedSKU = ekCaseworkSymbols.First().EKSKU;
-
-        Debug.WriteLine("Here");
-
-        // Unpack the get the equivalent ek-family-symbol
-
-        //  Set UI selected fields: SelectedBrand, SelectedEKType, SelectedEKCategory, SelectedSKU
-        return;
+        //Debug.WriteLine("Here");
     }
 
     #region Constructor

@@ -100,7 +100,8 @@ public class EK_Project_State : INotifyPropertyChanged
     // All the EK-Family-Symbols of this project, will be  loaded on `HandleDocumentOpenedEvent`
     public List<EKFamilySymbol> EKCaseworkSymbols { get; set; }
     //public Dictionary<FamilySymbol, EKFamilySymbol> Map_RevitFamilySymbol_EKFamilySymbol = new Dictionary<FamilySymbol, EKFamilySymbol>();
-    public Dictionary<string, EKFamilySymbol> Map_RevitFamilySymbol_EKFamilySymbol = new Dictionary<string, EKFamilySymbol>();
+    //public Dictionary<string, EKFamilySymbol> Map_RevitFamilySymbol_EKFamilySymbol = new Dictionary<string, EKFamilySymbol>();
+    public Dictionary<ElementId, EKFamilySymbol> Map_RevitFamilySymbolId_EKFamilySymbol = new Dictionary<ElementId, EKFamilySymbol>();
 
     private int _ekSelectionCount { get; set; }
     public int EKSelectionCount
@@ -113,7 +114,6 @@ public class EK_Project_State : INotifyPropertyChanged
             OnPropertyChanged(nameof(EKSelectionCount));
         }
     }
-
 
     private Selection _ekCurrentProjectSelection { get; set; }
     public Selection EKCurrentProjectSelection
