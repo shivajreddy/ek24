@@ -1,5 +1,7 @@
-﻿using Autodesk.Revit.UI;
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using ek24.Dtos;
 using ek24.RequestHandling;
 using ek24.Utils;
 using System.Collections.Generic;
@@ -25,19 +27,7 @@ public class EK_Global_State : INotifyPropertyChanged
         StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
     }
     #endregion
-    public int _ekSelectionCount { get; set; }
-    public int EKSelectionCount
-    {
-        get => _ekSelectionCount;
-        set
-        {
-            if (_ekSelectionCount == value) return;
-            _ekSelectionCount = value;
-            OnPropertyChanged(nameof(EKSelectionCount));
-        }
-    }
 
-    // This will hold all projects state, mapped to the unique project name
     // Dictionary to hold all projects' states, mapped by unique project name
     private Dictionary<string, EK_Project_State> _projectStates = new Dictionary<string, EK_Project_State>();
 
@@ -73,11 +63,16 @@ public class EK_Global_State : INotifyPropertyChanged
         return _projectStates.Values;
     }
     // This is the current active project, this updates upon view change
-    private EK_Project_State _current_project_state { get; set; }
+
+    private EK_Project_State _current_project_state { get; set; } = new EK_Project_State();
     public EK_Project_State Current_Project_State
     {
         get => _current_project_state;
-        set => _current_project_state = value;
+        set
+        {
+            _current_project_state = value;
+            OnPropertyChanged(nameof(Current_Project_State));
+        }
     }
 
 }
@@ -101,18 +96,39 @@ public class EK_Project_State : INotifyPropertyChanged
     #endregion
     public string ProjectName { get; set; }
 
-    public Selection _EKProjectsCurrentSelection { get; set; }
-    public Selection EKProjectsCurrentSelection
+    public Document Document { get; set; }
+    // All the EK-Family-Symbols of this project, will be  loaded on `HandleDocumentOpenedEvent`
+    public List<EKFamilySymbol> EKCaseworkSymbols { get; set; }
+    //public Dictionary<FamilySymbol, EKFamilySymbol> Map_RevitFamilySymbol_EKFamilySymbol = new Dictionary<FamilySymbol, EKFamilySymbol>();
+    public Dictionary<string, EKFamilySymbol> Map_RevitFamilySymbol_EKFamilySymbol = new Dictionary<string, EKFamilySymbol>();
+
+    private int _ekSelectionCount { get; set; }
+    public int EKSelectionCount
     {
-        get { return _EKProjectsCurrentSelection; }
+        get => _ekSelectionCount;
         set
         {
-            if (value == null || value == _EKProjectsCurrentSelection) return;
-            _EKProjectsCurrentSelection = value;
+            if (_ekSelectionCount == value) return;
+            _ekSelectionCount = value;
+            OnPropertyChanged(nameof(EKSelectionCount));
         }
     }
 
 
+    private Selection _ekCurrentProjectSelection { get; set; }
+    public Selection EKCurrentProjectSelection
+    {
+        get { return _ekCurrentProjectSelection; }
+        set
+        {
+            //if (value == null || value == _EKProjectsCurrentSelection) return;
+            _ekCurrentProjectSelection = value;
+            OnPropertyChanged(nameof(EKCurrentProjectSelection));
+        }
+    }
+
+    // Constructor
+    public EK_Project_State() { } // default
     public EK_Project_State(string project_name)
     {
         ProjectName = project_name;
@@ -140,7 +156,7 @@ public class EK_Project_State : INotifyPropertyChanged
 public class APP : IExternalApplication
 {
     // CREATE EK24 PLUGIN'S GLOBAL STATE
-    public static EK_Global_State global_state = new EK_Global_State();
+    public static EK_Global_State Global_State = new EK_Global_State();
 
     // static Request-handler variables
     public static RequestHandler RequestHandler { get; set; }
@@ -203,3 +219,5 @@ public class APP : IExternalApplication
     }
 
 }
+
+

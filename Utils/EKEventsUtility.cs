@@ -4,10 +4,8 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using ek24.Dtos;
 using ek24.UI.ViewModels.ProjectBrowser;
-using ek24.UI.ViewModels.Properties;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using SelectionChangedEventArgs = Autodesk.Revit.UI.Events.SelectionChangedEventArgs;
 using View = Autodesk.Revit.DB.View;
 
@@ -30,11 +28,6 @@ namespace ek24.Utils;
 /// </summary>
 public class EKEventsUtility
 {
-    #region Properties
-    public static List<EKFamilySymbol> EKCaseworkSymbols { get; set; }
-    #endregion
-
-
     public void HandleDocumentOpenedEvent(object sender, DocumentOpenedEventArgs args)
     {
         // Grab the Document
@@ -42,10 +35,13 @@ public class EKEventsUtility
 
         // Create Project State inside the Global State
         string project_name = doc.Title;
-        var ek_project_state = APP.global_state.CreateProjectState(project_name);
+        var ek_project_state = APP.Global_State.CreateProjectState(project_name);
+
+        // Set the document for later use
+        ek_project_state.Document = doc;
 
         // Set the current project to newly opened project
-        APP.global_state.Current_Project_State = ek_project_state;
+        APP.Global_State.Current_Project_State = ek_project_state;
 
         //APP.global_state.eK24Modify_ViewModel.LatestProjectName = project_name;
 
@@ -55,7 +51,10 @@ public class EKEventsUtility
         //FilteredElementCollector familyCollecter = collector.OfClass(typeof(Family));
         FilteredElementCollector familySymbolsCollecter = collector.OfClass(typeof(FamilySymbol));
 
-        List<EKFamilySymbol> ekFamilySymbols = [];
+        // Temporary Dictionary and List that will be assigned to the ProjectState
+        //Dictionary<FamilySymbol, EKFamilySymbol> temp_revitFamilySymbolToEKFAMILYSYMBOL = new Dictionary<FamilySymbol, EKFamilySymbol>();
+        Dictionary<string, EKFamilySymbol> temp_revitFamilySymbolToEKFAMILYSYMBOL = new Dictionary<string, EKFamilySymbol>();
+        List<EKFamilySymbol> temp_ekFamilySymbols = [];
 
         foreach (FamilySymbol familySymbol in familySymbolsCollecter)
         {
@@ -88,15 +87,18 @@ public class EKEventsUtility
                 ekCategory: ekCategoryValue,
                 ek_SKU: ek_sku
                 );
-            ekFamilySymbols.Add(ekFamilySymbol);
+            //temp_revitFamilySymbolToEKFAMILYSYMBOL[familySymbol] = ekFamilySymbol;   // add to temporary dictionary
+            temp_revitFamilySymbolToEKFAMILYSYMBOL[familySymbol.ToString()] = ekFamilySymbol;   // add to temporary dictionary
+            temp_ekFamilySymbols.Add(ekFamilySymbol);                                // add to temporary list
         }
-        EKCaseworkSymbols = ekFamilySymbols;
+
+        // Set the Dictionary & EK-Symbols ppty for this project
+        APP.Global_State.Current_Project_State.Map_RevitFamilySymbol_EKFamilySymbol = temp_revitFamilySymbolToEKFAMILYSYMBOL;
+        APP.Global_State.Current_Project_State.EKCaseworkSymbols = temp_ekFamilySymbols;
 
         //Debug.WriteLine(ekFamilySymbols.Count);
     }
 
-
-    // Clear the Project's State When document is closing
     public void HandleDocumentClosingEvent(object sender, DocumentClosingEventArgs e)
     {
         // Grab the Document
@@ -104,7 +106,7 @@ public class EKEventsUtility
 
         // Remove Project State inside the Global State
         string project_name = doc.Title;
-        APP.global_state.RemoveProjectState(project_name);
+        APP.Global_State.RemoveProjectState(project_name);
     }
 
     public void HandleDocumentClosedEvent(object sender, DocumentClosedEventArgs e)
@@ -117,41 +119,6 @@ public class EKEventsUtility
             ProjectCabinetFamilies.CabinetFamilies.Clear();
         }
         */
-    }
-
-
-    /// <summary>
-    /// This event is added as revit api's 'SelectionChanged' event, and performs
-    /// logic when ever 'SelectionChanged' event on Revit triggers
-    /// </summary>
-    public void HandleSelectionChangedEvent(object sender, SelectionChangedEventArgs e)
-    {
-        UIApplication app = sender as UIApplication;
-        UIDocument uiDoc = app?.ActiveUIDocument;
-        Document doc = uiDoc?.Document;
-        if (doc == null) return;
-
-        string project_name = doc?.Title;
-
-        Selection currentSelection = uiDoc.Selection;
-
-        //EK_Project_State project_state = APP.global_state.current_project_state;
-        //project_state.EKProjectsCurrentSelection = currentSelection;
-        //project_state.EKSelectionCount = currentSelection.GetElementIds().Count;
-
-        APP.global_state.EKSelectionCount = currentSelection.GetElementIds().Count;
-        APP.global_state.Current_Project_State.EKProjectsCurrentSelection = currentSelection;
-
-        Debug.WriteLine("hi");
-
-        // Update the ViewModel with the new selection
-
-        // moving this to SelectionService
-        //SelectionService.SyncSelectionWithRevit(currentSelection, doc);
-
-        // :: Update ViewModels ::
-        TypeParamsViewModel.SyncCurrentSelectionWithTypeParamsViewModel(currentSelection, doc);
-        InstanceParamsViewModel.SyncCurrentSelectionWithInstanceParamsViewModel(currentSelection, doc);
     }
 
     /// <summary>
@@ -174,8 +141,8 @@ public class EKEventsUtility
         // Create Project State inside the Global State
         string project_name = doc.Title;
         // Update current project
-        var project_state = APP.global_state.GetProjectState(project_name);
-        APP.global_state.Current_Project_State = project_state;
+        var project_state = APP.Global_State.GetProjectState(project_name);
+        APP.Global_State.Current_Project_State = project_state;
 
         // TODO: Move these to Project_State
         var collector = new FilteredElementCollector(doc);
@@ -212,6 +179,33 @@ public class EKEventsUtility
         }
     }
 
+    /// <summary>
+    /// This event is added as revit api's 'SelectionChanged' event, and performs
+    /// logic when ever 'SelectionChanged' event on Revit triggers
+    /// </summary>
+    public void HandleSelectionChangedEvent(object sender, SelectionChangedEventArgs e)
+    {
+        UIApplication app = sender as UIApplication;
+        UIDocument uiDoc = app?.ActiveUIDocument;
+        Document doc = uiDoc?.Document;
+        if (doc == null) return;
+
+        string project_name = doc?.Title;
+
+        Selection currentSelection = uiDoc.Selection;
+
+        APP.Global_State.Current_Project_State.EKCurrentProjectSelection = currentSelection;
+        APP.Global_State.Current_Project_State.EKSelectionCount = currentSelection.GetElementIds().Count;
+
+        // Update the ViewModel with the new selection
+
+        // moving this to SelectionService
+        //SelectionService.SyncSelectionWithRevit(currentSelection, doc);
+
+        // :: Update ViewModels ::
+        //TypeParamsViewModel.SyncCurrentSelectionWithTypeParamsViewModel(currentSelection, doc);
+        //InstanceParamsViewModel.SyncCurrentSelectionWithInstanceParamsViewModel(currentSelection, doc);
+    }
 }
 
 /*

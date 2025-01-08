@@ -2,7 +2,6 @@
 using Autodesk.Revit.UI.Selection;
 using ek24.Dtos;
 using ek24.UI.Commands;
-using ek24.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -24,20 +23,6 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     private static void OnStaticPropertyChanged(string propertyName)
     {
         StaticPropertyChanged?.Invoke(null, new PropertyChangedEventArgs(propertyName));
-    }
-    #endregion
-
-    #region TEMPORARY DELETE LATER
-    public string _latestProjectName { get; set; }
-    public string LatestProjectName
-    {
-        get => _latestProjectName;
-        set
-        {
-            if (_latestProjectName == value) return;
-            _latestProjectName = value;
-            OnPropertyChanged(nameof(LatestProjectName));
-        }
     }
     #endregion
 
@@ -83,7 +68,9 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     {
         List<string> newEktypeItems = new List<string>(); // Reset the Category Items
 
-        var ekCaseworkSymbols = EKEventsUtility.EKCaseworkSymbols;   // Gets created when document loads
+        //var ekCaseworkSymbols = EKEventsUtility.EKCaseworkSymbols;   // Gets created when document loads
+        var ekCaseworkSymbols = APP.Global_State.Current_Project_State.EKCaseworkSymbols; // Gets created when document loads
+
         foreach (var ekSymbol in ekCaseworkSymbols)
         {
             if (ekSymbol.EKBrand != SelectedBrand) continue;
@@ -99,7 +86,8 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     {
         var temp_EKCategoryItems = new List<string>(); // Reset the Configuration Items
 
-        var ekCaseworkSymbols = EKEventsUtility.EKCaseworkSymbols;   // Gets created when document loads
+        //var ekCaseworkSymbols = EKEventsUtility.EKCaseworkSymbols;   // Gets created when document loads
+        var ekCaseworkSymbols = APP.Global_State.Current_Project_State.EKCaseworkSymbols; // Gets created when document loads
 
         // Chosen:: Type
         if (SelectedEKType != null && SelectedEKType != "")
@@ -132,7 +120,8 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     {
         var temp_EKSKUItems = new List<EK_SKU>(); // Reset the SKU_Items list
 
-        var ekCaseworkSymbols = EKEventsUtility.EKCaseworkSymbols;   // Gets created when document loads
+        //var ekCaseworkSymbols = EKEventsUtility.EKCaseworkSymbols;   // Gets created when document loads
+        var ekCaseworkSymbols = APP.Global_State.Current_Project_State.EKCaseworkSymbols; // Gets created when document loads
 
         // Chosen:: Type & Category 
         if (SelectedEKType != null && SelectedEKType != "" && SelectedEKCategory != null && SelectedEKCategory != "")
@@ -297,55 +286,235 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     }
     #endregion
 
-    // MAIN THING
-    private readonly EK_Global_State _ek_Global_State;
+    private EK_Project_State _currentProjectState;
 
     public int EK_Selection_Count
     {
         get
         {
-            if (APP.global_state.Current_Project_State == null || APP.global_state.Current_Project_State.EKProjectsCurrentSelection == null) return 0;
-
-            return APP.global_state.Current_Project_State.EKProjectsCurrentSelection.GetElementIds().Count;
+            if (APP.Global_State.Current_Project_State == null) return 0;
+            return APP.Global_State.Current_Project_State.EKSelectionCount;
+        }
+        set
+        {
+            APP.Global_State.Current_Project_State.EKSelectionCount = value;
         }
     }
 
     public Selection Current_Project_Revit_Selection
     {
-        get => APP.global_state.Current_Project_State.EKProjectsCurrentSelection;
-        set => APP.global_state.Current_Project_State.EKProjectsCurrentSelection = value;
+        get => APP.Global_State.Current_Project_State.EKCurrentProjectSelection;
+        set => APP.Global_State.Current_Project_State.EKCurrentProjectSelection = value;
     }
 
     // Handle the ppties that change on Global State
+    /*
+    private void CurrentProjectState_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(EK_Project_State.EKSelectionCount))
+        {
+            OnPropertyChanged(nameof(EK_Selection_Count));
+        }
+        if (e.PropertyName == nameof(EK_Project_State.EKCurrentProjectSelection))
+        {
+            OnPropertyChanged(nameof(Current_Project_Revit_Selection));
+        }
+    }
+
+    // Don't forget to unsubscribe in a Dispose method
+    public void Dispose()
+    {
+        if (_currentProjectState != null)
+        {
+            _currentProjectState.PropertyChanged -= CurrentProjectState_PropertyChanged;
+        }
+    }
+    */
+
+    /// <summary>
+    /// Fires whenever any property on the Global_State changes,
+    /// e.g., Current_Project_State is replaced with a new one.
+    /// </summary>
     private void GlobalState_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(EK_Global_State.Current_Project_State.EKProjectsCurrentSelection))
+        if (e.PropertyName == nameof(EK_Global_State.Current_Project_State))
+        {
+            // Unsubscribe from the old project state
+            if (_currentProjectState != null)
+            {
+                _currentProjectState.PropertyChanged -= CurrentProjectState_PropertyChanged;
+            }
+
+            // Subscribe to the new project state
+            _currentProjectState = APP.Global_State.Current_Project_State;
+            if (_currentProjectState != null)
+            {
+                _currentProjectState.PropertyChanged += CurrentProjectState_PropertyChanged;
+            }
+
+            // Force the UI to reevaluate these properties, 
+            // in case the new project state is entirely different
+            OnPropertyChanged(nameof(EK_Selection_Count));
+            OnPropertyChanged(nameof(Current_Project_Revit_Selection));
+        }
+    }
+
+    /// <summary>
+    /// Fires whenever a property *within* the Current_Project_State changes,
+    /// e.g., EKSelectionCount or EKCurrentProjectSelection.
+    /// </summary>
+    private void CurrentProjectState_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(EK_Project_State.EKSelectionCount))
+        {
+            OnPropertyChanged(nameof(EK_Selection_Count));
+        }
+        else if (e.PropertyName == nameof(EK_Project_State.EKCurrentProjectSelection))
+        {
+            OnPropertyChanged(nameof(Current_Project_Revit_Selection));
+            // Update/Modify UI based on current selection
+            update_modify_ui_based_on_selection();
+        }
+    }
+
+
+    /*
+    private void CurrentProjectState_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        // `Current_Project_State` is changed | this has to be notified from where it is coming from
+        if (e.PropertyName == nameof(EK_Global_State.Current_Project_State))
+        {
+            OnPropertyChanged(nameof(EK_Selection_Count));
+        }
+        // `Current_Project_State.EKSelectionCount` is changed
+        if (e.PropertyName == nameof(EK_Global_State.Current_Project_State.EKSelectionCount))
+        {
+            OnPropertyChanged(nameof(EK_Selection_Count));
+        }
+        if (e.PropertyName == nameof(EK_Global_State.Current_Project_State.EKCurrentProjectSelection))
         {
             OnPropertyChanged(nameof(Current_Project_Revit_Selection));
             update_modify_ui_based_on_selection();
         }
-        if (e.PropertyName == nameof(EK_Global_State.EKSelectionCount))
-        {
-            OnPropertyChanged(nameof(EK_Selection_Count));
-        }
     }
+    */
 
-    void update_modify_ui_based_on_selection()
+    void update_modify_ui_based_on_selection()  // Runs when Current-Selection is updated
     {
         // When selection is empty, clear the UI
         if (Current_Project_Revit_Selection.GetElementIds().Count == 0)
         {
             SelectedBrand = null;
+            return;
         }
+
+        // Get current documents Family Symbols
+        var map_RevitFamilySymbol_EKFamilySymbol = APP.Global_State.Current_Project_State.Map_RevitFamilySymbol_EKFamilySymbol;
+        var ekCaseworkSymbols = APP.Global_State.Current_Project_State.EKCaseworkSymbols;
+
+        // Get the current Document & Selection
+        Document document = APP.Global_State.Current_Project_State.Document;
+        Selection selection = APP.Global_State.Current_Project_State.EKCurrentProjectSelection;
+
+        // Get the selected element IDs
+        ICollection<ElementId> selectedIds = selection.GetElementIds();
+
+        // 1. Filter for FamilyInstance elements from the selected IDs
+        List<FamilyInstance> familyInstances = selectedIds
+            .Select(id => document.GetElement(id))
+            .OfType<FamilyInstance>()   // Only FamilyInstances
+            .ToList();
+
+        // 2. Map each FamilyInstance's symbol to its EKFamilySymbol
+        //List<EKFamilySymbol> eKFamilySymbols = familyInstances
+        //    .Select(fi => fi.Symbol)  // get the FamilySymbol from the FamilyInstance
+        //    .Where(symbol => map_RevitFamilySymbol_EKFamilySymbol.ContainsKey(symbol))
+        //    .Select(symbol => map_RevitFamilySymbol_EKFamilySymbol[symbol])
+        //    .Distinct()   // avoid duplicates
+        //    .ToList();
+
+        List<EKFamilySymbol> ekFamilySymbols = new List<EKFamilySymbol>();
+        foreach (var familyInstance in familyInstances)
+        {
+            EKFamilySymbol ekFamilySymbol;
+            //map_RevitFamilySymbol_EKFamilySymbol.TryGetValue(familyInstance.Symbol, out ekFamilySymbol);
+            map_RevitFamilySymbol_EKFamilySymbol.TryGetValue(familyInstance.Symbol.ToString(), out ekFamilySymbol);
+            if (ekFamilySymbol != null)
+            {
+                ekFamilySymbols.Add(ekFamilySymbol);
+            }
+        }
+
+        bool all_selected_elements_are_same_ekbrand = false;
+        bool all_selected_elements_are_same_ektype = false;
+        bool all_selected_elements_are_same_ekcategory = false;
+        bool all_selected_elements_are_same_sku = false;
+
+        // Fill up all boolean values based on the 'ekFamilySymbols'
+        // Only run checks if the list is not empty
+        if (ekFamilySymbols.Any())
+        {
+            all_selected_elements_are_same_ekbrand =
+                ekFamilySymbols.Select(x => x.EKBrand).Distinct().Count() == 1;
+
+            all_selected_elements_are_same_ektype =
+                ekFamilySymbols.Select(x => x.EKType).Distinct().Count() == 1;
+
+            all_selected_elements_are_same_ekcategory =
+                ekFamilySymbols.Select(x => x.EKCategory).Distinct().Count() == 1;
+
+            all_selected_elements_are_same_sku =
+                ekFamilySymbols.Select(x => x.EKSKU).Distinct().Count() == 1;
+        }
+
+        if (!all_selected_elements_are_same_ekbrand)
+        {
+            SelectedBrand = null;
+            return;
+        }
+        SelectedBrand = ekCaseworkSymbols.First().EKBrand;
+
+        if (!all_selected_elements_are_same_ektype)
+        {
+            SelectedEKType = null;
+            return;
+        }
+        SelectedEKType = ekCaseworkSymbols.First().EKType;
+
+        if (!all_selected_elements_are_same_ekcategory)
+        {
+            SelectedEKCategory = null;
+            return;
+        }
+        SelectedEKCategory = ekCaseworkSymbols.First().EKCategory;
+
+        if (!all_selected_elements_are_same_sku)
+        {
+            SelectedSKU = null;
+            return;
+        }
+        SelectedSKU = ekCaseworkSymbols.First().EKSKU;
+
+        Debug.WriteLine("Here");
+
+        // Unpack the get the equivalent ek-family-symbol
+
+        //  Set UI selected fields: SelectedBrand, SelectedEKType, SelectedEKCategory, SelectedSKU
+        return;
     }
 
     #region Constructor
     public EK24Modify_ViewModel()
     {
-        _ek_Global_State = APP.global_state;
-        _ek_Global_State.PropertyChanged += GlobalState_PropertyChanged;
-
-        //_current_project_state = APP.global_state.current_project_state;
+        // THESE 2 THINGS ARE ACTUALLY TRIGGERING THE ONPROPERTY CHANGE CALLS
+        // 1) Listen to changes on the Global State itself (especially Current_Project_State)
+        APP.Global_State.PropertyChanged += GlobalState_PropertyChanged;
+        // 2) Subscribe to the *current* project state's changes
+        _currentProjectState = APP.Global_State.Current_Project_State;
+        if (_currentProjectState != null)
+        {
+            _currentProjectState.PropertyChanged += CurrentProjectState_PropertyChanged;
+        }
 
         SelectedBrand = null;
         SelectedEKType = null;
