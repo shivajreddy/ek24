@@ -64,6 +64,23 @@ public class EK_SKU
     }
 }
 
+public class Vendor_Style_With_Id
+{
+    public string Vendor_Style_Value { get; set; }
+    public ElementId Revit_ElementId { get; set; }
+
+    public override string ToString()
+    {
+        return Vendor_Style_Value;
+    }
+
+    public Vendor_Style_With_Id(string vendor_Style_Value, ElementId revit_ElementId)
+    {
+        Vendor_Style_Value = vendor_Style_Value;
+        Revit_ElementId = revit_ElementId;
+    }
+}
+
 
 // Specifically Cabinet
 public class EKCabinetFamily
@@ -78,4 +95,6 @@ public class EKCabinetType
     public string TypeName { get; set; }
     public string Note { get; set; }     // Parameter-value of "Vendor-Notes"
 }
+
+
 

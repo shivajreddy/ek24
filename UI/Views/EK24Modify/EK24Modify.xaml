@@ -7,6 +7,7 @@
              d:DesignHeight="850" d:DesignWidth="800"
 
 	         x:Class="ek24.UI.EK24Modify_View"
+             xmlns:projectbrowserview="clr-namespace:ek24.UI.Views.ProjectBrowser"
 
              xmlns:convertors="clr-namespace:ek24.UI.Convertors"
 	>
@@ -24,8 +25,14 @@
 	</UserControl.Resources>
 
 	<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
 		<!-- Creation Panel: Second way -->
-		<StackPanel Width="300"
+		<StackPanel 
+				Grid.Row="0"
+			    Width="300"
                 Margin="0 10"
                 Orientation="Vertical"
                 VerticalAlignment="Center" 
@@ -196,34 +203,43 @@
 			</StackPanel>
 
 
-			<StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
-				<StackPanel Margin="5 0" Width="200" HorizontalAlignment="Center">
+			<StackPanel 
+				MinWidth="300"
+				Orientation="Vertical"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center" >
+				<StackPanel Margin="0" HorizontalAlignment="Center" MinWidth="300">
 					<TextBlock Text="Vendor Style" TextAlignment="Center"/>
 					<ComboBox x:Name="VendorStyleOptions" Margin="10 2"
-                            ItemsSource="{Binding AvailableVendorStyles }"
-                            SelectedItem="{Binding ChosenVendorStyleInstance}"
-                    />
-				</StackPanel>
-
-				<StackPanel Margin="5 0" Width="200" HorizontalAlignment="Center">
-					<TextBlock Text="Vendor Finish" TextAlignment="Center"/>
-					<ComboBox x:Name="VendorMaterialOptions" Margin="10 2"
-                    ItemsSource="{Binding AvailableVendorStyles }"
-                    IsEnabled="{Binding ChosenVendorStyleInstance, Converter={StaticResource BoolToVisibilityConverter}}"
-                    SelectedItem="{Binding ChosenCabinetType}"
+                            ItemsSource="{Binding VendorStyleWithIdItems }"
+                            SelectedItem="{Binding SelectedVendorFinish}"
+							IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
                     />
 				</StackPanel>
 
 				<Button x:Name="CabinetInstanceParams" 
 						Content="Update Style" 
-                        Width="100" Height="30" Margin="20 10 0 0"
+                        Width="100" Height="30" Margin="0"
 						Style="{StaticResource ModernButton2}" 
                         Command="{Binding Command_UpdateVendorStyleVendorFinish}"
                 />
 			</StackPanel>
 
-
 		</StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="0" >
+            <projectbrowserview:SelectCaseWorkView/>
+        </StackPanel>
 	</Grid>
 
 </UserControl>
+
+	
+				<!--<StackPanel Margin="5 0" HorizontalAlignment="Center" MinWidth="300" >
+					<TextBlock Text="Vendor Finish" TextAlignment="Center"/>
+					<ComboBox x:Name="VendorMaterialOptions" Margin="10 2"
+                    ItemsSource="{Binding AvailableVendorFinishes }"
+                    IsEnabled="{Binding ChosenVendorStyleInstance, Converter={StaticResource BoolToVisibilityConverter}}"
+                    SelectedItem="{Binding ChosenCabinetType}"
+                    />
+				</StackPanel>-->

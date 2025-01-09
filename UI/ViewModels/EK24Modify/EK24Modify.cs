@@ -1,8 +1,10 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using ek24.Dtos;
 using ek24.RequestHandling;
 using ek24.UI.Commands;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -27,7 +29,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     }
     #endregion
 
-    #region All 4 Combo Box Values
+    #region All 6 Combo Box Values
     public List<string> BrandItems { get; } = EKBrands.all_brand_names;
     public List<string> _ekTypeItems { get; set; } = [];
     public List<string> EKTypeItems
@@ -60,6 +62,31 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (_ekSKUItems == value) return;
             _ekSKUItems = value;
             OnPropertyChanged(nameof(EKSKUItems));
+        }
+    }
+
+    // HARD CODED FOR NOW
+    private List<string> hardcoded_vendorStyleNames = [
+            "Aristokraft - Sinclair",
+            "Aristokraft - Benton",
+            "Aristokraft - Brellin",
+            "Aristokraft - Winstead",
+            "Yorktowne Classic - Henning",
+            "Yorktowne Classic - Stillwater",
+            "Yorktowne Classic - Fillmore",
+            "Eclipse - Metropolitan",
+            "Yorktowne Historic - Corsica",
+            "Yorktowne Historic - Langdon"
+        ];
+    private List<string> _vendorStyleNames { get; set; }
+    public List<string> VendorStyleWithIdItems
+    {
+        get => _vendorStyleNames;
+        set
+        {
+            if (_vendorStyleNames == value) return;
+            _vendorStyleNames = value;
+            OnPropertyChanged(nameof(VendorStyleWithIdItems));
         }
     }
     #endregion
@@ -190,6 +217,29 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         EKSKUItems = temp_EKSKUItems;   // Now it triggers the binding ppty
         return;
     }
+
+    public void filter_vendor_styles()
+    {
+        // Grab your entire hardcoded list
+        List<string> all_names = hardcoded_vendorStyleNames;
+
+        // Check if the user has selected a brand
+        if (string.IsNullOrWhiteSpace(SelectedBrand)) return;
+
+        List<string> temp_filteredVendorStyles = new List<string>();
+
+        // Filter for names that start with "<brand> - "
+        temp_filteredVendorStyles = all_names
+            .Where(name => name.StartsWith(SelectedBrand + " - ", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        // If no matches, handle it gracefully (optional)
+        if (temp_filteredVendorStyles.Count == 0)
+        {
+            TaskDialog.Show("INFO", $"No vendor styles found for brand '{SelectedBrand}'.");
+        }
+        VendorStyleWithIdItems = temp_filteredVendorStyles; // set the ppty that triggers UI
+    }
     #endregion
 
     #region Chosen Revit Family Symbol & CURRENT SELECTION FROM REVIT UI
@@ -229,7 +279,6 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             filter_ekType_items();
             filter_ekCategory_items();
             filter_sku_items();
-
         }
     }
 
@@ -309,6 +358,19 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             OnStaticPropertyChanged(nameof(SelectedVendorFinish));
         }
     }
+    /*
+    private static Vendor_Style_With_Id _selectedVendorStyleWithId { get; set; }
+    public static Vendor_Style_With_Id SelectedVendorStyleWithId
+    {
+        get => _selectedVendorStyleWithId;
+        set
+        {
+            if (_selectedVendorStyleWithId == value) return;
+            _selectedVendorStyleWithId = value;
+            OnStaticPropertyChanged(nameof(SelectedVendorStyleWithId));
+        }
+    }
+    */
 
     #endregion
 
@@ -402,6 +464,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(Current_Project_Revit_Selection));
             // Update/Modify UI based on current selection
             update_modify_ui_based_on_selection();
+            filter_vendor_styles();
         }
     }
 
@@ -597,6 +660,12 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     public ICommand Command_UpdateVendorStyleVendorFinish { get; }
     public void Handle_Command_UpdateVendorStyleVendorFinish()
     {
+        if (SelectedBrand == null)
+        {
+            TaskDialog.Show("ERROR", "All instances must belong to same Brand");
+            return;
+        }
+
         Debug.WriteLine("UPDATE Instance Param Value");
         APP.RequestHandler.RequestType = RequestType.Modify_UpdateVendoryStyleFinish;
         APP.ExternalEvent?.Raise();
