@@ -32,6 +32,13 @@
                 HorizontalAlignment="Center">
 
 			<StackPanel Margin="0 5" MinWidth="300">
+
+				<StackPanel Orientation="Horizontal" Background="White" Margin="0 30">
+					<TextBlock Text="Selection Count: " />
+					<TextBlock Text="{Binding EK_Selection_Count}"/>
+				</StackPanel>
+				
+				
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 2">
 					<TextBlock Text="BRAND" TextAlignment="Center" FontSize="16"/>
 					<Button Content="X"
@@ -166,14 +173,6 @@
                       Focusable="True"/>
 			</StackPanel>
 
-			<StackPanel Orientation="Horizontal" Background="White">
-				<TextBlock Text="Latest Opened Project Name: " />
-				<TextBlock Text="{Binding LatestProjectName}"/>
-			</StackPanel>
-			<StackPanel Orientation="Horizontal" Background="White">
-				<TextBlock Text="Selection Count: " />
-				<TextBlock Text="{Binding EK_Selection_Count}"/>
-			</StackPanel>
 
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10">
 				<Button Content="UPDATE" 
@@ -183,7 +182,7 @@
                     Command="{Binding Command_UpdateFamily}"
                     Style="{StaticResource ModernButton2}" 
                     TabIndex="4"
-                    IsEnabled="{Binding SelectedSKU, Converter={StaticResource NullToBooleanConverter}}"
+                    IsEnabled="{Binding CanUpdate}"
                     Focusable="True"/>
 				<Button Content="CREATE" 
                     Width="100" 
@@ -199,7 +198,7 @@
 
 			<StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
 				<StackPanel Margin="5 0" Width="200" HorizontalAlignment="Center">
-					<TextBlock Text="Set Vendor Style" TextAlignment="Center"/>
+					<TextBlock Text="Vendor Style" TextAlignment="Center"/>
 					<ComboBox x:Name="VendorStyleOptions" Margin="10 2"
                             ItemsSource="{Binding AvailableVendorStyles }"
                             SelectedItem="{Binding ChosenVendorStyleInstance}"
@@ -207,7 +206,7 @@
 				</StackPanel>
 
 				<StackPanel Margin="5 0" Width="200" HorizontalAlignment="Center">
-					<TextBlock Text="Set Material Style" TextAlignment="Center"/>
+					<TextBlock Text="Vendor Finish" TextAlignment="Center"/>
 					<ComboBox x:Name="VendorMaterialOptions" Margin="10 2"
                     ItemsSource="{Binding AvailableVendorStyles }"
                     IsEnabled="{Binding ChosenVendorStyleInstance, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -215,11 +214,11 @@
                     />
 				</StackPanel>
 
-				<Button x:Name="FamilyTypeSettingsUpdate" 
+				<Button x:Name="CabinetInstanceParams" 
 						Content="Update Style" 
                         Width="100" Height="30" Margin="20 10 0 0"
-                        Style="{StaticResource ModernButton}"
-                        Command="{Binding UpdateTypeCommand}"
+						Style="{StaticResource ModernButton2}" 
+                        Command="{Binding Command_UpdateVendorStyleVendorFinish}"
                 />
 			</StackPanel>
 

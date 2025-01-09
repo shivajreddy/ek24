@@ -1,16 +1,8 @@
-﻿using System;
+﻿using ek24.UI.Commands;
+using ek24.UI.Models.Revit;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Windows.Input;
-using ek24.RequestHandling;
-using ek24.UI.Commands;
-using ek24.UI.Models.Properties;
-using ek24.UI.Models.Revit;
 
 
 
@@ -140,8 +132,8 @@ public class CreateFamilyTypeViewModel : INotifyPropertyChanged
     private void HandleCreateNewFamilyCommand()
     {
         //GoToViewName = view.Name;
-        APP.RequestHandler.RequestType = RequestType.Properties_CreateNewFamilyAndType;
-        APP.ExternalEvent?.Raise();
+        //APP.RequestHandler.RequestType = RequestType.Properties_CreateNewFamilyAndType;
+        //APP.ExternalEvent?.Raise();
     }
 
     public CreateFamilyTypeViewModel()

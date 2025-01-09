@@ -103,7 +103,6 @@ public static class Create
         }
     }
 
-
     public static FamilySymbol FindFamilySymbolWithTypeName(string typeName, Document doc)
     {
         var collector = new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Casework)

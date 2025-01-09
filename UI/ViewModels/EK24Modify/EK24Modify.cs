@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
 using ek24.Dtos;
+using ek24.RequestHandling;
 using ek24.UI.Commands;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -193,15 +194,15 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
 
     #region Chosen Revit Family Symbol & CURRENT SELECTION FROM REVIT UI
 
-    public FamilySymbol _chosenRevitFamilySymbol { get; set; }
-    public FamilySymbol ChosenRevitFamilySymbol
+    private static FamilySymbol _chosenRevitFamilySymbol { get; set; }
+    public static FamilySymbol ChosenRevitFamilySymbol
     {
         get => _chosenRevitFamilySymbol;
         set
         {
             if (_chosenRevitFamilySymbol == value) return;
             _chosenRevitFamilySymbol = value;
-            OnPropertyChanged(nameof(EKFamilySymbol));
+            OnStaticPropertyChanged(nameof(EKFamilySymbol));
         }
     }
 
@@ -209,7 +210,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
     #endregion
 
     #region Selected Item for ComboBoxes
-    public string _selectedBrand { get; set; }
+    private string _selectedBrand { get; set; }
     public string SelectedBrand
     {
         get => _selectedBrand;
@@ -232,7 +233,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         }
     }
 
-    public string _selectedEKType { get; set; }
+    private string _selectedEKType { get; set; }
     public string SelectedEKType
     {
         get => _selectedEKType;
@@ -252,7 +253,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         }
     }
 
-    public string _selectedEKCategory { get; set; }
+    private string _selectedEKCategory { get; set; }
     public string SelectedEKCategory
     {
         get => _selectedEKCategory;
@@ -270,7 +271,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         }
     }
 
-    public EK_SKU _selectedSKU { get; set; }
+    private EK_SKU _selectedSKU { get; set; }
     public EK_SKU SelectedSKU
     {
         get => _selectedSKU;
@@ -280,10 +281,35 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             {
                 _selectedSKU = value;
                 OnPropertyChanged(nameof(SelectedSKU));
+                OnPropertyChanged(nameof(CanUpdate));
                 ChosenRevitFamilySymbol = SelectedSKU?.RevitFamilySymbol;
             }
         }
     }
+
+    private static string _selectedVendorStyle { get; set; }
+    public static string SelectedVendorStyle
+    {
+        get => _selectedVendorStyle;
+        set
+        {
+            if (_selectedVendorStyle == value) return;
+            _selectedVendorStyle = value;
+            OnStaticPropertyChanged(nameof(SelectedVendorStyle));
+        }
+    }
+    private static string _selectedVendorFinish { get; set; }
+    public static string SelectedVendorFinish
+    {
+        get => _selectedVendorFinish;
+        set
+        {
+            if (_selectedVendorFinish == value) return;
+            _selectedVendorFinish = value;
+            OnStaticPropertyChanged(nameof(SelectedVendorFinish));
+        }
+    }
+
     #endregion
 
     private EK_Project_State _currentProjectState;
@@ -298,8 +324,10 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         set
         {
             APP.Global_State.Current_Project_State.EKSelectionCount = value;
+            OnPropertyChanged(nameof(CanUpdate));
         }
     }
+    public bool CanUpdate => SelectedSKU != null && EK_Selection_Count > 0;
 
     public Selection Current_Project_Revit_Selection
     {
@@ -465,6 +493,9 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (ekFamilySymbols.Select(x => x.EKBrand).Distinct().Count() != 1)
             {
                 SelectedBrand = null;
+                SelectedEKType = null;
+                SelectedEKCategory = null;
+                SelectedSKU = null;
                 return;
             }
             SelectedBrand = ekFamilySymbols.First().EKBrand;
@@ -472,6 +503,8 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (ekFamilySymbols.Select(x => x.EKType).Distinct().Count() != 1)
             {
                 SelectedEKType = null;
+                SelectedEKCategory = null;
+                SelectedSKU = null;
                 return;
             }
             SelectedEKType = ekFamilySymbols.First().EKType;
@@ -479,6 +512,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (ekFamilySymbols.Select(x => x.EKCategory).Distinct().Count() != 1)
             {
                 SelectedEKCategory = null;
+                SelectedSKU = null;
                 return;
             }
             SelectedEKCategory = ekFamilySymbols.First().EKCategory;
@@ -516,6 +550,8 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         Command_Reset_SelectedSKU = new RelayCommand(Handle_Command_Reset_SelectedSKU);
         Command_UpdateFamily = new RelayCommand(Handle_Command_UpdateFamily);
         Command_CreateNewFamily = new RelayCommand(Handle_Command_CreateNewFamily);
+
+        Command_UpdateVendorStyleVendorFinish = new RelayCommand(Handle_Command_UpdateVendorStyleVendorFinish);
     }
     #endregion
 
@@ -544,14 +580,26 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
 
     #region Relay Commands for UPDATE & CREATE
     public ICommand Command_UpdateFamily { get; }
-    public void Handle_Command_UpdateFamily()
-    {
-        Debug.WriteLine("Hello Update existing family");
-    }
     public ICommand Command_CreateNewFamily { get; }
     public void Handle_Command_CreateNewFamily()
     {
         Debug.WriteLine("Chosen symbol is", ChosenRevitFamilySymbol);
+        APP.RequestHandler.RequestType = RequestType.Modify_CreateNewFamilyType;
+        APP.ExternalEvent?.Raise();
+    }
+    public void Handle_Command_UpdateFamily()
+    {
+        Debug.WriteLine("Update Current selected family instances to new family symbol");
+        APP.RequestHandler.RequestType = RequestType.Modify_UpdateNewFamilyType;
+        APP.ExternalEvent?.Raise();
+    }
+
+    public ICommand Command_UpdateVendorStyleVendorFinish { get; }
+    public void Handle_Command_UpdateVendorStyleVendorFinish()
+    {
+        Debug.WriteLine("UPDATE Instance Param Value");
+        APP.RequestHandler.RequestType = RequestType.Modify_UpdateVendoryStyleFinish;
+        APP.ExternalEvent?.Raise();
     }
     #endregion
 

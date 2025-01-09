@@ -43,8 +43,13 @@ public enum RequestType
     RevitUI_UpdateActiveView,
     RevitUI_SelectCaseWork,
 
+    // 'Modify' related Requests
+    Modify_CreateNewFamilyType,
+    Modify_UpdateNewFamilyType,
+    Modify_UpdateVendoryStyleFinish,
+
     // 'Properties' related Requests
-    Properties_CreateNewFamilyAndType,
+    //Properties_CreateNewFamilyAndType,
     Properties_CreateNewFamilyAndTypeV2,
     Properties_UpdateCabinetFamilyType,
     Properties_UpdateCabinetType,
@@ -82,9 +87,20 @@ public class RequestHandler : IExternalEventHandler
             case RequestType.RevitUI_SelectCaseWork:
                 SelectionUpdates.SelectCaseWorkElements(app);
                 break;
-            case RequestType.Properties_CreateNewFamilyAndType:
-                Create.CreateNewFamilyInstanceUsingPanel1(app);
+
+            case RequestType.Modify_CreateNewFamilyType:
+                CreateAndModifyFamilyInstance.CreateNewFamilyInstance(app);
                 break;
+            case RequestType.Modify_UpdateNewFamilyType:
+                CreateAndModifyFamilyInstance.UpdateFamilySymbolsTypeForSelectedInstance(app);
+                break;
+            case RequestType.Modify_UpdateVendoryStyleFinish:
+                UpdateParamValue.UpdateInstanceParam(app);
+                break;
+
+            //case RequestType.Properties_CreateNewFamilyAndType:
+            //    Create.CreateNewFamilyInstanceUsingPanel1(app);
+            //    break;
             case RequestType.Properties_CreateNewFamilyAndTypeV2:
                 Create.CreateNewFamilyInstanceUsingPanel2(app);
                 break;
