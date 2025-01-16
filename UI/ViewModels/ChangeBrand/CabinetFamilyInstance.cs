@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-using System;
 using System.Collections.Generic;
 
 namespace ek24.UI.ViewModels.ChangeBrand;
@@ -163,24 +162,12 @@ public class BrandMapper
     // Utility method to extract FamilyInstanceInfo from FamilyInstance objects
     public static List<CabinetFamilyInstance> ConvertFamilyInstaceIntoCabinetFamilyInstance(List<FamilyInstance> familyInstances)
     {
-        // Dictionary to map received "Vendor_Name" values to the correct target brand names
-        Dictionary<string, string> vendorNameMapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-        {
-            { "YORKTOWNE-CLASSIC", "Yorktowne Classic" },
-            { "YORKTOWNE-HISTORIC", "Yorktowne Historic" },
-            { "ECLIPSE", "Eclipse by Shiloh" },
-            { "ARISTOKRAFT", "Aristokraft" }
-        };
-
         List<CabinetFamilyInstance> familyInstanceInfos = new List<CabinetFamilyInstance>();
 
         foreach (FamilyInstance familyInstance in familyInstances)
         {
-            // Extract brand name from the "Vendor_Name" parameter
-            string vendorName = GetTypeParameterValue(familyInstance, "Vendor_Name");
-
-            // Map the vendor name to the target brand name using the dictionary
-            string brandName = vendorNameMapping.ContainsKey(vendorName) ? vendorNameMapping[vendorName] : vendorName;
+            // Extract brand name from the "Manufacturer" parameter
+            string brandName = familyInstance.Symbol.LookupParameter("Manufacturer").AsValueString();
 
             // Extract type name (SKU)
             string typeName = familyInstance.Symbol?.Name ?? "Unknown Type";

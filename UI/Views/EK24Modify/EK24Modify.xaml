@@ -203,30 +203,6 @@
 			</StackPanel>
 
 
-			<StackPanel 
-				MinWidth="300"
-				Orientation="Vertical"
-				Margin="0 60"
-				VerticalAlignment="Center"
-				HorizontalAlignment="Center" >
-				<StackPanel Margin="0" HorizontalAlignment="Left" MinWidth="300">
-					<TextBlock Text="VENDOR STYLE" TextAlignment="Left"/>
-					<ComboBox x:Name="VendorStyleOptions" Margin="0 2"
-                            ItemsSource="{Binding VendorStyleWithIdItems }"
-                            SelectedItem="{Binding SelectedVendorFinish}"
-							IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
-                    />
-				</StackPanel>
-
-				<Button x:Name="CabinetInstanceParams" 
-						Content="UPDATE STYLE" 
-						Margin="0 10"
-                        Width="130" Height="30"
-						Style="{StaticResource ModernButton2}" 
-						IsEnabled="{Binding CanUpdateVendorStyleButton}"
-                        Command="{Binding Command_UpdateVendorStyleVendorFinish}"
-                />
-			</StackPanel>
 
 		</StackPanel>
 
@@ -249,3 +225,27 @@
 
 	
 	
+			<!--<StackPanel 
+				MinWidth="300"
+				Orientation="Vertical"
+				Margin="0 60"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center" >
+				<StackPanel Margin="0" HorizontalAlignment="Left" MinWidth="300">
+					<TextBlock Text="VENDOR STYLE" TextAlignment="Left"/>
+					<ComboBox x:Name="VendorStyleOptions" Margin="0 2"
+                            ItemsSource="{Binding VendorStyleWithIdItems }"
+                            SelectedItem="{Binding SelectedVendorFinish}"
+							IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
+                    />
+				</StackPanel>
+
+				<Button x:Name="CabinetInstanceParams" 
+						Content="UPDATE STYLE" 
+						Margin="0 10"
+                        Width="130" Height="30"
+						Style="{StaticResource ModernButton2}" 
+						IsEnabled="{Binding CanUpdateVendorStyleButton}"
+                        Command="{Binding Command_UpdateVendorStyleVendorFinish}"
+                />
+			</StackPanel>-->

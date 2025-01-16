@@ -62,6 +62,67 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
             APP.Global_State.Current_Project_State.EKProjectKitchenBrand = value;
         }
     }
+
+    // HARD CODED FOR NOW
+    private List<string> hardcoded_vendorStyleNames = [
+            "Aristokraft - Sinclair",
+            "Aristokraft - Benton",
+            "Aristokraft - Brellin",
+            "Aristokraft - Winstead",
+            "Yorktowne Classic - Henning",
+            "Yorktowne Classic - Stillwater",
+            "Yorktowne Classic - Fillmore",
+            "Eclipse - Metropolitan",
+            "Yorktowne Historic - Corsica",
+            "Yorktowne Historic - Langdon"
+        ];
+    private List<string> _vendorStyleNames { get; set; }
+    public List<string> VendorStyleWithIdItems
+    {
+        get => _vendorStyleNames;
+        set
+        {
+            if (_vendorStyleNames == value) return;
+            _vendorStyleNames = value;
+            OnPropertyChanged(nameof(VendorStyleWithIdItems));
+        }
+    }
+
+    private static string _selectedVendorStyle { get; set; }
+    public static string SelectedVendorStyle
+    {
+        get => _selectedVendorStyle;
+        set
+        {
+            if (_selectedVendorStyle == value) return;
+            _selectedVendorStyle = value;
+            OnStaticPropertyChanged(nameof(SelectedVendorStyle));
+        }
+    }
+    private static Vendor_Style_With_Id _selectedVendorStyleWithId { get; set; }
+    public static Vendor_Style_With_Id SelectedVendorStyleWithId
+    {
+        get => _selectedVendorStyleWithId;
+        set
+        {
+            if (_selectedVendorStyleWithId == value) return;
+            _selectedVendorStyleWithId = value;
+            OnStaticPropertyChanged(nameof(SelectedVendorStyleWithId));
+        }
+    }
+
+    private static string _selectedVendorFinish { get; set; }
+    public static string SelectedVendorFinish
+    {
+        get => _selectedVendorFinish;
+        set
+        {
+            if (_selectedVendorFinish == value) return;
+            _selectedVendorFinish = value;
+            OnStaticPropertyChanged(nameof(SelectedVendorFinish));
+        }
+    }
+
     #endregion
 
     #region Selected Item for ComboBoxes
@@ -116,11 +177,24 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
     public ICommand Command_UpdateKitchenBrand { get; }
     public void Handle_Command_UpdateKitchenBrand()
     {
-        Update_ProjectKitchenBrand.target_project_kitchenBrand = SelectedBrand;
+        Update_ProjectKitchenBrand_Utility.target_project_kitchenBrand = SelectedBrand;
 
         Debug.WriteLine("UPDATE Instance Param Value");
-        APP.RequestHandler.RequestType = RequestType.ProjectProperties_UpdaateKitchenBrand;
+        APP.RequestHandler.RequestType = RequestType.ProjectProperties_UpdateKitchenBrand;
         APP.ExternalEvent?.Raise();
+
+    }
+    public ICommand Command_UpdateVendorStyleFinish { get; }
+    public void Handle_Command_UpdateVendorStyleFinish()
+    {
+        string chosen_style = "NEW STYLE";
+        string chosen_finish = "NEW FINISH";
+        Update_Project_Style_Finish_Utility.target_project_style = chosen_style;
+        Update_Project_Style_Finish_Utility.target_project_style = chosen_finish;
+
+        Debug.WriteLine("UPDATE STYLE & FINISH");
+        APP.RequestHandler.RequestType = RequestType.ProjectProperties_UpdateStyleAndFinish;
+        APP.ExternalEvent?.Raise();     // invokes Update_Project_Style_Finish_Utility.change_style_finish(app);
 
     }
     #endregion
@@ -138,14 +212,160 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
             _currentProjectState.PropertyChanged += CurrentProjectState_PropertyChanged;
         }
 
-
         Command_UpdateKitchenBrand = new RelayCommand(Handle_Command_UpdateKitchenBrand);
+        Command_UpdateVendorStyleFinish = new RelayCommand(Handle_Command_UpdateVendorStyleFinish);
     }
     #endregion
 }
 
+public static class Update_Project_Style_Finish_Utility
+{
+    public static string target_project_style { get; set; }
+    public static string target_project_finish { get; set; }
 
-public static class Update_ProjectKitchenBrand
+    public static void change_style_finish(UIApplication app)
+    {
+        Document doc = app.ActiveUIDocument.Document;
+
+        // Get all cabinet instances
+        List<FamilyInstance> cabinet_instances = FilterAllCabinets.FilterProjectForEagleCabinets(doc);
+        /*
+"Aristokraft - Sinclair"
+"Aristokraft - Benton"
+"Aristokraft - Brellin"
+"Aristokraft - Winstead"
+"Yorktowne Classic - Henning"
+"Yorktowne Classic - Stillwater"
+"Yorktowne Classic - Fillmore"
+"Eclipse - Metropolitan"
+"Yorktowne Historic - Corsica"
+"Yorktowne Historic - Langdon"
+        */
+        using (Transaction trans = new Transaction(doc, "Update Vendor-Style & Vendor-Finish"))
+        {
+            trans.Start();
+
+            // go over each instance and set the Style & Finish parameters
+            foreach (var family_instance in cabinet_instances)
+            {
+                bool paramUpdateResult = UpdateStyleParam(doc, family_instance, "Yorktowne Classic - Henning");
+                //UpdateFinishParam(family_instance);
+                if (paramUpdateResult == false)
+                {
+                    trans.RollBack();
+                    TaskDialog.Show("ERROR", "FAILED TO UPDATE THE VENDOR-STYLE PARAM");
+                    return;
+                }
+            }
+
+            // TEST instance
+            // ElementId test_id = new ElementId(9560558);
+            //ElementId test_id = new ElementId(9560565);
+            //FamilyInstance test_instance = doc.GetElement(test_id) as FamilyInstance;
+            //UpdateStyleParam(doc, test_instance, "");
+            //UpdateFinishParam(test_instance);
+            trans.Commit();
+        }
+
+        TaskDialog.Show("SUCCESS", "UPDATED THE VENDOR-STYLE PARAM");
+        return;
+    }
+
+    public static bool UpdateStyleParam(Document doc, FamilyInstance familyInstance, string selected_vendor_style)
+    {
+        Debug.WriteLine("hi");
+
+        // Chosen Vendor-Style & Vendor-Finish
+        // string selected_vendor_finish = EK24Modify_ViewModel.SelectedVendorFinish;
+
+        // By this point, we know all family-instances belong to same brand
+
+        // TESTING, with just 1 item for now
+
+        // Get the Parameters
+        Parameter vendor_style_param = familyInstance.LookupParameter("Vendor_Style");
+
+        ////// API: go to Autodesk.DB.NestedFamilyTypeReference Class, and there is the following note that expalins that these types can't be filtered like normal filtering. The note says:
+        ///// ** These elements are very low-level and thus bypassed by standard element filters. However, 
+        /////  it is possible to obtain a set of applicable elements of this class for a FamilyType parameter of a family by calling [!:Autodesk::Revit::DB::Family::GetFamilyTypeParameterValues] **
+        /////  Revitapi > Family Class > Family Methods > GetFamilyTypeParameterValues method
+        ////// API: go to Revitapi > Family Class > Family Methods > GetFamilyTypeParameterValues method
+
+        // Some error handling fn's just to be sure
+        if (!Category.IsBuiltInCategory(vendor_style_param.Definition.GetDataType()))
+        {
+            TaskDialog.Show("ERROR", "Vendor_Style's data type is not a built in category");
+            return false;
+        }
+
+        // This the main working api, that will give the allowed values (of type ElementId) that can be set to the parameter
+        // Though our parameter is an instance parameter, we have to still look at Symbol.Family as if it was a type parameter, because
+        // the `GetFamilyTypeParameterValues` method is definded under 'Family', and 'Family' can be accessed from a family-instance through
+        // it's `Symbol`
+        ISet<ElementId> all_possible_familytype_parameter_values_set = familyInstance.Symbol.Family.GetFamilyTypeParameterValues(vendor_style_param.Id);
+        if (all_possible_familytype_parameter_values_set.Count == 0)
+        {
+            TaskDialog.Show("ERROR", "One of the chosen istance doesnt have Vendor-Style param or Vendor-Finish Param");
+            return false;
+        }
+
+        Dictionary<string, ElementId> map_name_eid = new Dictionary<string, ElementId>();
+
+        HashSet<string> names = [];
+        foreach (var eid in all_possible_familytype_parameter_values_set)
+        {
+            Element e = doc.GetElement(eid);
+            names.Add(e.Name);
+            map_name_eid[e.Name] = eid;
+        }
+        if (names.Count <= 0)
+        {
+            TaskDialog.Show("ERROR", "No Vendor-Style nested families found");
+            return false;
+        }
+
+        // The CHOSEN STYLE & it's ID by the USER
+        //string chosen_vendory_style = EK24ProjectProperties_ViewModel.SelectedVendorStyle;
+        ///////////////////////// TODO: FOR NOW, setting this manually
+
+        Debug.WriteLine("now update in trasaction");
+
+        // TODO, for now deal with just style, later create a string in this format "style_name:style_finish"
+        // then split this string based on ':'
+
+        ElementId chosen_vendorstyle_eid = map_name_eid[selected_vendor_style];
+
+        Debug.WriteLine("now update in trasaction");
+
+        bool updatedParamResult = false;
+
+
+        //foreach (var familyInstance in current_selected_familyInstances)
+        //{
+        //    Parameter current_vendor_style_param = familyInstance.LookupParameter("Vendor_Style");
+        //    // Finaly: set with the 'ElementId' since that is the storage type of this param, and setting with string won't work
+        //    updatedParamResult = current_vendor_style_param.Set(chosen_vendorstyle_eid);
+        //    if (updatedParamResult == false)
+        //    {
+        //        trans.RollBack();
+        //        TaskDialog.Show("ERROR", "FAILED TO UPDATE THE VENDOR-STYLE PARAM");
+        //        return;
+        //    }
+        //}
+        Parameter current_vendor_style_param = familyInstance.LookupParameter("Vendor_Style");
+        // Finaly: set with the 'ElementId' since that is the storage type of this param, and setting with string won't work
+        updatedParamResult = current_vendor_style_param.Set(chosen_vendorstyle_eid);
+        return updatedParamResult;
+    }
+
+    public static void UpdateFinishParam(FamilyInstance familyInstance)
+    {
+        Debug.WriteLine("hi");
+    }
+}
+
+
+public static class Update_ProjectKitchenBrand_Utility
 {
     public static string target_project_kitchenBrand { get; set; }
 
@@ -255,6 +475,8 @@ public static class Update_ProjectKitchenBrand
 
         // Create an instance of BrandMapper
         BrandMapper mapper = new BrandMapper();
+
+        Debug.WriteLine("Check all the cabinetFamilyInstances");
 
         // Iterate over the cabinet family instances and map the SKUs
         foreach (var cabinetFamilyInstance in cabinetFaimlyInstances)

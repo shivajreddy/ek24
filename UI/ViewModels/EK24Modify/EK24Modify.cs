@@ -362,18 +362,9 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         }
     }
     /*
-    private static Vendor_Style_With_Id _selectedVendorStyleWithId { get; set; }
-    public static Vendor_Style_With_Id SelectedVendorStyleWithId
-    {
-        get => _selectedVendorStyleWithId;
-        set
-        {
-            if (_selectedVendorStyleWithId == value) return;
-            _selectedVendorStyleWithId = value;
-            OnStaticPropertyChanged(nameof(SelectedVendorStyleWithId));
-        }
-    }
     */
+
+
 
     #endregion
 

@@ -49,7 +49,8 @@ public enum RequestType
     Modify_UpdateNewFamilyType,
     Modify_UpdateVendoryStyleFinish,
 
-    ProjectProperties_UpdaateKitchenBrand,
+    ProjectProperties_UpdateKitchenBrand,
+    ProjectProperties_UpdateStyleAndFinish,
 
     // 'Properties' related Requests
     //Properties_CreateNewFamilyAndType,
@@ -103,8 +104,11 @@ public class RequestHandler : IExternalEventHandler
                 break;
 
 
-            case RequestType.ProjectProperties_UpdaateKitchenBrand:
-                Update_ProjectKitchenBrand.change_ekKitchenBrand(app);
+            case RequestType.ProjectProperties_UpdateKitchenBrand:
+                Update_ProjectKitchenBrand_Utility.change_ekKitchenBrand(app);
+                break;
+            case RequestType.ProjectProperties_UpdateStyleAndFinish:
+                Update_Project_Style_Finish_Utility.change_style_finish(app);
                 break;
 
 
