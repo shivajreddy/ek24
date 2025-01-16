@@ -269,6 +269,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (_selectedBrand == value) return;
             _selectedBrand = value;
             OnPropertyChanged(nameof(SelectedBrand));
+            OnPropertyChanged(nameof(CanUpdateVendorStyleButton));
 
             // Reset dependent dropdowns
             //SelectedEKType = null;
@@ -299,6 +300,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             filter_ekCategory_items();
             filter_sku_items();
             OnPropertyChanged(nameof(SelectedEKType));
+            OnPropertyChanged(nameof(CanUpdateVendorStyleButton));
         }
     }
 
@@ -311,6 +313,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             if (_selectedEKCategory == value) return;
             _selectedEKCategory = value;
             OnPropertyChanged(nameof(SelectedEKCategory));
+            OnPropertyChanged(nameof(CanUpdateVendorStyleButton));
 
             // Reset dependent dropdowns
             //SelectedSKU = null;
@@ -330,7 +333,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             {
                 _selectedSKU = value;
                 OnPropertyChanged(nameof(SelectedSKU));
-                OnPropertyChanged(nameof(CanUpdate));
+                OnPropertyChanged(nameof(CanUpdateButton));
                 ChosenRevitFamilySymbol = SelectedSKU?.RevitFamilySymbol;
             }
         }
@@ -386,10 +389,13 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         set
         {
             APP.Global_State.Current_Project_State.EKSelectionCount = value;
-            OnPropertyChanged(nameof(CanUpdate));
+            OnPropertyChanged(nameof(CanUpdateButton));
+            OnPropertyChanged(nameof(CanUpdateVendorStyleButton));
         }
     }
-    public bool CanUpdate => SelectedSKU != null && EK_Selection_Count > 0;
+    public bool CanUpdateButton => SelectedSKU != null && EK_Selection_Count > 0;
+    public bool CanUpdateVendorStyleButton => SelectedBrand != null && SelectedEKCategory != null;
+    //public bool CanUpdateVendorStyleButton => SelectedBrand != null && SelectedEKCategory != null && SelectedEKType != null && EK_Selection_Count > 0;
 
     public Selection Current_Project_Revit_Selection
     {
@@ -467,7 +473,6 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             filter_vendor_styles();
         }
     }
-
 
     /*
     private void CurrentProjectState_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -1091,4 +1096,5 @@ public class OLDCODE
     }
 }
 // */
+
 

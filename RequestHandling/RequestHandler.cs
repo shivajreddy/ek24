@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.UI;
 
 using ek24.Commands;
+using ek24.UI;
 using ek24.UI.ViewModels.ProjectBrowser;
 
 
@@ -48,6 +49,8 @@ public enum RequestType
     Modify_UpdateNewFamilyType,
     Modify_UpdateVendoryStyleFinish,
 
+    ProjectProperties_UpdaateKitchenBrand,
+
     // 'Properties' related Requests
     //Properties_CreateNewFamilyAndType,
     Properties_CreateNewFamilyAndTypeV2,
@@ -88,6 +91,7 @@ public class RequestHandler : IExternalEventHandler
                 SelectionUpdates.SelectCaseWorkElements(app);
                 break;
 
+
             case RequestType.Modify_CreateNewFamilyType:
                 CreateAndModifyFamilyInstance.CreateNewFamilyInstance(app);
                 break;
@@ -97,6 +101,12 @@ public class RequestHandler : IExternalEventHandler
             case RequestType.Modify_UpdateVendoryStyleFinish:
                 UpdateParamValue.UpdateInstanceParam(app);
                 break;
+
+
+            case RequestType.ProjectProperties_UpdaateKitchenBrand:
+                Update_ProjectKitchenBrand.change_ekKitchenBrand(app);
+                break;
+
 
             //case RequestType.Properties_CreateNewFamilyAndType:
             //    Create.CreateNewFamilyInstanceUsingPanel1(app);

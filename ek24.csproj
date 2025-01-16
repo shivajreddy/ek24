@@ -108,6 +108,7 @@
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
     <Compile Include="UI\ViewModels\Manage\ManageViewModel.cs" />
     <Compile Include="UI\ViewModels\NewItem\NewItemViewModel.cs" />
+    <Compile Include="UI\ViewModels\EK24Project Properties\EK24ProjectProperties.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\ProjectBrowserViewModel.cs" />
     <Compile Include="UI\ViewModels\ProjectBrowser\SelectCaseWorkViewModel.cs" />
     <Compile Include="UI\ViewModels\Properties\ChangeBrandViewModel.cs" />
@@ -143,6 +144,9 @@
     </Compile>
     <Compile Include="UI\Views\New Item\CreateFamilyTypeView.xaml.cs">
       <DependentUpon>CreateFamilyTypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Views\Project Properties\ProjectProperties.xaml.cs">
+      <DependentUpon>ProjectProperties.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Views\Properties\PropertiesPanelView.xaml.cs">
       <DependentUpon>PropertiesPanelView.xaml</DependentUpon>
@@ -464,6 +468,10 @@
     <Page Include="UI\Views\New Item\CreateFamilyTypeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Views\Project Properties\ProjectProperties.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UI\Views\Properties\PropertiesPanelView.xaml">
       <Generator>MSBuild:Compile</Generator>

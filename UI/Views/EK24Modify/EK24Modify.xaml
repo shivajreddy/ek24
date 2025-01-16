@@ -41,12 +41,12 @@
 			<StackPanel Margin="0 5" MinWidth="300">
 
 				<StackPanel Orientation="Horizontal" Background="White" Margin="0 30">
-					<TextBlock Text="Selection Count: " />
-					<TextBlock Text="{Binding EK_Selection_Count}"/>
+					<TextBlock Text="SELECTION COUNT" FontSize="16px"/>
+					<TextBlock Text="{Binding EK_Selection_Count}" FontSize="16" Margin="14 0"/>
 				</StackPanel>
 				
 				
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 2">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
 					<TextBlock Text="BRAND" TextAlignment="Center" FontSize="16"/>
 					<Button Content="X"
 							Command="{Binding Command_Reset_SelectedBrand}"
@@ -79,7 +79,7 @@
 			</StackPanel>
 
 			<StackPanel Margin="0 5" MinWidth="300">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 2">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
 					<TextBlock Text="TYPE" TextAlignment="Center" FontSize="16"/>
 					<Button Content="X"
 							Command="{Binding Command_Reset_SelectedEKType}"
@@ -113,7 +113,7 @@
 			</StackPanel>
 
 			<StackPanel Margin="0 5" MinWidth="300">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 2">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
 					<TextBlock Text="CATEGORY" TextAlignment="Center" FontSize="16"/>
 					<Button Content="X"
 							Command="{Binding Command_Reset_SelectedEKCategory}"
@@ -147,7 +147,7 @@
 			</StackPanel>
 
 			<StackPanel Margin="0 5" MinWidth="300">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 2">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
 					<TextBlock Text="SKU" TextAlignment="Center" FontSize="16"/>
 					<Button Content="X"
 							Command="{Binding Command_Reset_SelectedSKU}"
@@ -189,7 +189,7 @@
                     Command="{Binding Command_UpdateFamily}"
                     Style="{StaticResource ModernButton2}" 
                     TabIndex="4"
-                    IsEnabled="{Binding CanUpdate}"
+                    IsEnabled="{Binding CanUpdateButton}"
                     Focusable="True"/>
 				<Button Content="CREATE" 
                     Width="100" 
@@ -206,11 +206,12 @@
 			<StackPanel 
 				MinWidth="300"
 				Orientation="Vertical"
+				Margin="0 60"
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center" >
-				<StackPanel Margin="0" HorizontalAlignment="Center" MinWidth="300">
-					<TextBlock Text="Vendor Style" TextAlignment="Center"/>
-					<ComboBox x:Name="VendorStyleOptions" Margin="10 2"
+				<StackPanel Margin="0" HorizontalAlignment="Left" MinWidth="300">
+					<TextBlock Text="VENDOR STYLE" TextAlignment="Left"/>
+					<ComboBox x:Name="VendorStyleOptions" Margin="0 2"
                             ItemsSource="{Binding VendorStyleWithIdItems }"
                             SelectedItem="{Binding SelectedVendorFinish}"
 							IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
@@ -218,9 +219,11 @@
 				</StackPanel>
 
 				<Button x:Name="CabinetInstanceParams" 
-						Content="Update Style" 
-                        Width="100" Height="30" Margin="0"
+						Content="UPDATE STYLE" 
+						Margin="0 10"
+                        Width="130" Height="30"
 						Style="{StaticResource ModernButton2}" 
+						IsEnabled="{Binding CanUpdateVendorStyleButton}"
                         Command="{Binding Command_UpdateVendorStyleVendorFinish}"
                 />
 			</StackPanel>
@@ -243,3 +246,6 @@
                     SelectedItem="{Binding ChosenCabinetType}"
                     />
 				</StackPanel>-->
+
+	
+	

@@ -1,0 +1,70 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+
+			 x:Class="ek24.UI.EK24ProjectProperties_View"
+
+             xmlns:convertors="clr-namespace:ek24.UI.Convertors" 
+
+             mc:Ignorable="d" 
+             d:DesignHeight="350" d:DesignWidth="800"
+             >
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<convertors:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
+			<convertors:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/ComboStyles2.xaml" />
+				<ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/MainViewResources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+
+	<StackPanel VerticalAlignment="Center" Background="White" MinHeight="150">
+		<StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+			<TextBlock Text="PROJECT'S KITCHEN BRAND" Padding="5" VerticalAlignment="Center"/>
+			<TextBlock Padding="5 0" Text="{Binding EKProjectKitchenBrand, UpdateSourceTrigger=PropertyChanged}"
+					   VerticalAlignment="Center"
+					   FontSize="16px" FontWeight="SemiBold"/>
+		</StackPanel>
+
+		<StackPanel Margin="0 10"
+			Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+			<TextBlock Text="CHOOSE BRAND" Padding="10 0" VerticalAlignment="Center"/>
+				<ComboBox x:Name="Brands"
+                      Style="{StaticResource ModernComboBox2}"
+					  Width="200"
+                      ItemsSource="{Binding BrandItems}"
+                      SelectedItem="{Binding SelectedBrand, Mode=TwoWay}"
+                      TabIndex="0"
+                      Focusable="True"/>
+		</StackPanel>
+			<Button
+			Width="140"
+				Content="UPDATE"
+				Command="{Binding Command_UpdateKitchenBrand}"
+				IsEnabled="{Binding canUpdateKitchenBrandButton}"
+				/>
+	</StackPanel>
+</UserControl>
+
+<!--IsEnabled="{Binding ChosenCabinetType, Converter={StaticResource NullToBooleanConverter}}"-->
+
+	
+
+	
+			<!--<ComboBox x:Name="Brands" Width="180"
+                      Style="{StaticResource ModernComboBox2}"
+                      ItemsSource="{Binding KitchenBrands}"
+                      DisplayMemberPath="BrandName"
+                      SelectedItem="{Binding ChosenBrandFromDropdown, Mode=TwoWay}"
+                    />-->
+	
+
+			<!--<Button Content="UPDATE" MinWidth="80" Margin="20 0" Padding="14 0"
+                        IsEnabled="{Binding ChosenBrand, Converter={StaticResource NullToBooleanConverter}}"
+                        Style="{StaticResource ModernButton}"
+                        Command="{Binding ChangeKitchenBrandCommand}"
+					/>-->

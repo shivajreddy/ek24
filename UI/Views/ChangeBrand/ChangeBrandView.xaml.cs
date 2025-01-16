@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using ek24.UI.ViewModels.ChangeBrand;
+﻿using ek24.UI.ViewModels.ChangeBrand;
+using System.Windows;
 
 
 namespace ek24.UI.Views.ChangeBrand;

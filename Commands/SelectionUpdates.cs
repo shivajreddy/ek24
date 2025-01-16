@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-
 using ek24.UI.Models.ProjectBrowser;
 using ek24.UI.ViewModels.ProjectBrowser;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 
 namespace ek24.Commands;
@@ -47,14 +45,23 @@ public class SelectionUpdates
                     .ToList();
                 uiDoc.Selection.SetElementIds(filteredElementIds);
                 break;
-            case CaseWorkGroup.AllCabinets:
-                // Select all casework instances
+
+            case CaseWorkGroup.AllLowersAndUppers:
                 filteredElementIds = familyInstances
-                    .Where(x => (x as FamilyInstance)?.Symbol.Family.FamilyCategory.Name == "Casework")
+                    .Where(x => (x as FamilyInstance)?.Symbol.Family.Name.Contains("-B-") == true
+                                || (x as FamilyInstance)?.Symbol.Family.Name.Contains("-W-") == true)
                     .Select(x => x.Id)
                     .ToList();
                 uiDoc.Selection.SetElementIds(filteredElementIds);
                 break;
+                //case CaseWorkGroup.AllCabinets:
+                //    // Select all casework instances
+                //    filteredElementIds = familyInstances
+                //        .Where(x => (x as FamilyInstance)?.Symbol.Family.FamilyCategory.Name == "Casework")
+                //        .Select(x => x.Id)
+                //        .ToList();
+                //    uiDoc.Selection.SetElementIds(filteredElementIds);
+                //    break;
         }
 
         Cursor.Current = Cursors.Default;

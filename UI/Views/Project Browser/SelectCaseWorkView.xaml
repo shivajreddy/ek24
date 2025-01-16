@@ -72,7 +72,7 @@
                                     Command="{Binding SelectAllUpperCabinetsCommand}"
                                     Style="{StaticResource ModernButton}"
                                     />
-                            <Button Content="ALL CABINETS" 
+                            <Button Content="BASE &amp; WALL" 
                                     Width="130" Margin="5 0" Padding="5 0" 
                                     Command="{Binding SelectAllCabinetsCommand}"
                                     Style="{StaticResource ModernButton}"

@@ -1,9 +1,8 @@
-﻿using System.Windows.Input;
-using System.ComponentModel;
-
+﻿using ek24.RequestHandling;
 using ek24.UI.Commands;
 using ek24.UI.Models.ProjectBrowser;
-using ek24.RequestHandling;
+using System.ComponentModel;
+using System.Windows.Input;
 
 
 namespace ek24.UI.ViewModels.ProjectBrowser;
@@ -75,7 +74,7 @@ public class SelectCaseWorkViewModel : INotifyPropertyChanged
         // 1. Set the request type on APP's request handler
         APP.RequestHandler.RequestType = RequestType.RevitUI_SelectCaseWork;
         // 2. Update static property of ViewModel
-        CurrentCaseWorkGroup = CaseWorkGroup.AllCabinets;
+        CurrentCaseWorkGroup = CaseWorkGroup.AllLowersAndUppers;
         // 3. Raise the Event
         APP.ExternalEvent.Raise();
     }

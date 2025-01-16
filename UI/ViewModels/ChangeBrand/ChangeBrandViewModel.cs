@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using ek24.Commands.Utils;
 using ek24.UI.Commands;
 using ek24.UI.Models.Revit;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Windows.Input;
 
 namespace ek24.UI.ViewModels.ChangeBrand;
 
@@ -395,6 +395,10 @@ public class ChangeBrandViewModel : INotifyPropertyChanged
     // Set the value of the Graphics Filter to the current chosen brand
     // BUG: for some reason this wouldn't work, no errors but the filters are not getting created
 
+    public ChangeBrandViewModel()
+    {
+        Debug.WriteLine("");
+    }
     // Constructor
     //public ChangeBrandViewModel(Document doc)
     public ChangeBrandViewModel(UIApplication uiApp)

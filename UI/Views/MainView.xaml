@@ -29,20 +29,24 @@
 
         <TabControl>
 
-            <TabItem Header="EK24-VIEWS" FontSize="14">
+            <TabItem Header="VIEWS" FontSize="14">
                  <views_projectbrowser:ProjectBrowserView/>
             </TabItem>
 
             <!--<TabItem Header="EK24-MODIFY" FontSize="14">
 				<views_newitem:NewItemView/>
 			</TabItem>-->
-            <TabItem Header="EK24-MODIFY" FontSize="14">
+            <TabItem Header="MODIFY" FontSize="14">
 				<ui:EK24Modify_View/>
             </TabItem>
 
-            <TabItem Header="EK24-Properties" FontSize="14">
+            <TabItem Header="PROJECT PROPERTIES" FontSize="14">
+				<ui:EK24ProjectProperties_View/>
+			</TabItem>
+
+            <!--<TabItem Header="EK24-Properties" FontSize="14">
                 <views_properties:PropertiesView/>
-            </TabItem>
+            </TabItem>-->
 
             <!--<TabItem Header="EK24-Manage" FontSize="14">
                 <views_manage:ManageView/>

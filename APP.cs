@@ -7,7 +7,9 @@ using ek24.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
 
+
 namespace ek24;
+
 
 /// <summary>
 /// This Object will hold the state of the plugin, in the current revit instance
@@ -77,6 +79,7 @@ public class EK_Global_State : INotifyPropertyChanged
 
 }
 
+
 /// <summary>
 /// This is the state of the Project that is opened inside the current Revit Instance
 /// </summary>
@@ -124,6 +127,18 @@ public class EK_Project_State : INotifyPropertyChanged
             //if (value == null || value == _EKProjectsCurrentSelection) return;
             _ekCurrentProjectSelection = value;
             OnPropertyChanged(nameof(EKCurrentProjectSelection));
+        }
+    }
+
+    private string _ekProjectKitchenBrand { get; set; }
+    public string EKProjectKitchenBrand
+    {
+        get { return _ekProjectKitchenBrand; }
+        set
+        {
+            //if (value == _ekProjectKitchenBrand) return;
+            _ekProjectKitchenBrand = value;
+            OnPropertyChanged(nameof(EKProjectKitchenBrand));
         }
     }
 
@@ -189,7 +204,7 @@ public class APP : IExternalApplication
         PluginUtils.RegisterDockablePanel(application);
         PluginUtils.CreatePushButtonAndAddToPanel(_ribbonPanel);
 
-        PluginUtils.CreateButton2AndAddToPanel(_ribbonPanel);
+        //PluginUtils.CreateButton2AndAddToPanel(_ribbonPanel);
 
         //PluginUtils.CreateButton3AndAddToPanel(_ribbonPanel);
         //PluginUtils.CreateButton4AndAddToPanel(_ribbonPanel);

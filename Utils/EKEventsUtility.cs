@@ -6,6 +6,7 @@ using ek24.Dtos;
 using ek24.UI.ViewModels.ProjectBrowser;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SelectionChangedEventArgs = Autodesk.Revit.UI.Events.SelectionChangedEventArgs;
 using View = Autodesk.Revit.DB.View;
 
@@ -102,6 +103,15 @@ public class EKEventsUtility
         APP.Global_State.Current_Project_State.Map_RevitFamilySymbolId_EKFamilySymbol = temp_revitFamilySymbolIdEKFamilySymbol;
         APP.Global_State.Current_Project_State.EKCaseworkSymbols = temp_ekFamilySymbols;
         //Debug.WriteLine(ekFamilySymbols.Count);
+
+        // Get KitchenBrand - Project Param
+        string currentProject_projectBrand = "";
+        ProjectInfo projectInfo = doc.ProjectInformation;
+        Parameter kitchenBrandParam = projectInfo.LookupParameter("KitchenBrand");
+        currentProject_projectBrand = kitchenBrandParam?.AsString();
+
+        set_project_view_filter(doc);
+        APP.Global_State.Current_Project_State.EKProjectKitchenBrand = currentProject_projectBrand;
     }
 
     public void HandleDocumentClosingEvent(object sender, DocumentClosingEventArgs e)
@@ -211,6 +221,87 @@ public class EKEventsUtility
         //TypeParamsViewModel.SyncCurrentSelectionWithTypeParamsViewModel(currentSelection, doc);
         //InstanceParamsViewModel.SyncCurrentSelectionWithInstanceParamsViewModel(currentSelection, doc);
     }
+
+    // Helper Function: Set View Filter
+    void set_project_view_filter(Document doc)
+    {
+        using (Transaction t = new Transaction(doc, "Add view filter"))
+        {
+            try
+            {
+                t.Start();
+
+                // Define the filter name
+                string filterName = "Vendor Name Filter";
+
+                // Get Active View
+                View active_view = doc.ActiveView;
+
+                // Create a list of categories that will be used for the filter
+                IList<ElementId> categories = new List<ElementId> { new ElementId(BuiltInCategory.OST_Casework) };
+
+                // Get the ElementId for the "Manufacturer" built-in parameter
+                ElementId manufacturerParamId = new ElementId(BuiltInParameter.ALL_MODEL_MANUFACTURER);
+
+                // Create a filter rule where "Manufacturer" equals "MY VALUE" (case-insensitive)
+
+                // Get the Project Information element
+                ProjectInfo projectInfo = doc.ProjectInformation;
+                Parameter kitchenBrandParam = projectInfo.LookupParameter("KitchenBrand");
+                string currentKitchenBrandParamValue = kitchenBrandParam.AsString();
+
+                //FilterRule manufacturerRule = ParameterFilterRuleFactory.CreateEqualsRule(manufacturerParamId, currentKitchenBrandParamValue);
+                FilterRule manufacturerRule = ParameterFilterRuleFactory.CreateNotEqualsRule(manufacturerParamId, currentKitchenBrandParamValue);
+
+                // Create an ElementParameterFilter with the rule
+                ElementParameterFilter parameterFilter = new ElementParameterFilter(manufacturerRule);
+
+                // Attempt to find an existing filter with the same name
+                ParameterFilterElement paramFilter = new FilteredElementCollector(doc)
+                    .OfClass(typeof(ParameterFilterElement))
+                    .Cast<ParameterFilterElement>()
+                    .FirstOrDefault(f => f.Name.Equals(filterName, StringComparison.OrdinalIgnoreCase));
+
+                if (paramFilter == null)
+                {
+                    // Create the ParameterFilterElement since it doesn't exist
+                    paramFilter = ParameterFilterElement.Create(doc, filterName, categories, parameterFilter);
+                }
+                else
+                {
+                    // Update the existing filter's element filter
+                    paramFilter.SetElementFilter(parameterFilter);
+                }
+
+                // Add the filter to the active view if it's not already added
+                if (!active_view.GetFilters().Contains(paramFilter.Id))
+                {
+                    active_view.AddFilter(paramFilter.Id);
+                }
+
+                // Set the filter's visibility to true in the view
+                active_view.SetFilterVisibility(paramFilter.Id, true);
+
+                // Create graphic overrides
+                OverrideGraphicSettings overrides = new OverrideGraphicSettings()
+                    .SetProjectionLineColor(new Autodesk.Revit.DB.Color(255, 0, 0))
+                    .SetProjectionLineWeight(5);
+
+                // Apply the graphic overrides to the filter in the view
+                active_view.SetFilterOverrides(paramFilter.Id, overrides);
+
+                t.Commit();
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("ERROR", $"Failed to GET/SET Kitchen Brand {ex.Message}");
+                t.RollBack();
+                return;
+            }
+        }
+
+    }
+
 }
 
 /*
