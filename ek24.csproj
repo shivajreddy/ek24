@@ -82,7 +82,6 @@
     <Compile Include="Commands\UiUpdates.cs" />
     <Compile Include="Commands\ShowDockCommand.cs" />
     <Compile Include="Commands\TestCommand.cs" />
-    <Compile Include="Commands\UpdateParamValue.cs" />
     <Compile Include="Commands\UpdateViewFilter.cs" />
     <Compile Include="Commands\Utils\FilterAllCabinets.cs" />
     <Compile Include="APP.cs" />

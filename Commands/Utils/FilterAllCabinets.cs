@@ -1,15 +1,6 @@
 ﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using ek24.UI.Models.Revit;
-using ek24.UI.Views.Manage;
-using ek24.Utils;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 
 namespace ek24.Commands.Utils;
@@ -17,22 +8,7 @@ namespace ek24.Commands.Utils;
 
 public class FilterAllCabinets
 {
-    public static List<FamilyInstance> FilterProjectForEagleCabinets(Document doc)
-    {
-
-        FilteredElementCollector caseworkCollector = new FilteredElementCollector(doc);
-        FilteredElementCollector designOptionsCollector = new FilteredElementCollector(doc);
-
-        // Filter all the cabinet instances
-        FilteredElementCollector caseWorkCollector = caseworkCollector.OfCategory(BuiltInCategory.OST_Casework);
-
-        // Filter for FamilyInstance elements of 'Casework' category
-        ICollection<Element> caseworkFamilyInstances = caseWorkCollector
-            .OfClass(typeof(FamilyInstance))
-            .WhereElementIsNotElementType()
-            .ToElements();
-
-        string[] ekCabinetFamilyNamePrefixes = {
+    private static string[] ekCabinetFamilyNamePrefixes = {
             "Aristokraft-W-",
             "Aristokraft-B-",
             "Aristokraft-T-",
@@ -46,8 +22,21 @@ public class FilterAllCabinets
             "YTH-W-",
             "YTH-B-",
             "YTH-T-"
-        };
+    };
 
+    public static List<FamilyInstance> FilterProjectForEagleCabinets(Document doc)
+    {
+        FilteredElementCollector caseworkCollector = new FilteredElementCollector(doc);
+        FilteredElementCollector designOptionsCollector = new FilteredElementCollector(doc);
+
+        // Filter all the cabinet instances
+        FilteredElementCollector caseWorkCollector = caseworkCollector.OfCategory(BuiltInCategory.OST_Casework);
+
+        // Filter for FamilyInstance elements of 'Casework' category
+        ICollection<Element> caseworkFamilyInstances = caseWorkCollector
+            .OfClass(typeof(FamilyInstance))
+            .WhereElementIsNotElementType()
+            .ToElements();
 
         // Filter for cabinet instances with the prefixes
         List<FamilyInstance> ekCabinetInstances = new List<FamilyInstance>();
@@ -69,7 +58,20 @@ public class FilterAllCabinets
         }
 
         return ekCabinetInstances;
+    }
 
+    public static bool IsInstanceAEagleCabinet(FamilyInstance familyInstance)
+    {
+        if (familyInstance == null) return false;
+        // Get the family and type names
+        string familyName = familyInstance.Symbol.Family.Name;
+
+        if (string.IsNullOrEmpty(familyName)) return false;
+
+        // Has family name as one of the Predefined(hardcoded) value
+        if (ekCabinetFamilyNamePrefixes.Any(familyName.StartsWith)) return true;
+
+        return false;
     }
 
 }

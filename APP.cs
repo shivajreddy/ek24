@@ -141,6 +141,28 @@ public class EK_Project_State : INotifyPropertyChanged
             OnPropertyChanged(nameof(EKProjectKitchenBrand));
         }
     }
+    private string _ekProjectKitchenStyle { get; set; }
+    public string EKProjectKitchenStyle
+    {
+        get { return _ekProjectKitchenStyle; }
+        set
+        {
+            _ekProjectKitchenStyle = value;
+            OnPropertyChanged(nameof(EKProjectKitchenStyle));
+        }
+
+    }
+    private string _ekProjectKitchenFinish { get; set; }
+    public string EKProjectKitchenFinish
+    {
+        get { return _ekProjectKitchenFinish; }
+        set
+        {
+            _ekProjectKitchenFinish = value;
+            OnPropertyChanged(nameof(EKProjectKitchenFinish));
+        }
+
+    }
 
     // Constructor
     public EK_Project_State() { } // default

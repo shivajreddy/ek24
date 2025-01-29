@@ -27,7 +27,7 @@
 
     <Grid Background="#f2e9e1">
 
-        <TabControl>
+        <TabControl TabStripPlacement="Bottom">
 
             <TabItem Header="VIEWS" FontSize="14">
                  <views_projectbrowser:ProjectBrowserView/>

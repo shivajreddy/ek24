@@ -49,8 +49,12 @@ public enum RequestType
     Modify_UpdateNewFamilyType,
     Modify_UpdateVendoryStyleFinish,
 
+    Modify_UpdateVendoryModifications,
+
     ProjectProperties_UpdateKitchenBrand,
     ProjectProperties_UpdateStyleAndFinish,
+    ProjectProperties_ExportDrawingsToPDF,
+    ProjectProperties_ExportToExcel,
 
     // 'Properties' related Requests
     //Properties_CreateNewFamilyAndType,
@@ -100,7 +104,10 @@ public class RequestHandler : IExternalEventHandler
                 CreateAndModifyFamilyInstance.UpdateFamilySymbolsTypeForSelectedInstance(app);
                 break;
             case RequestType.Modify_UpdateVendoryStyleFinish:
-                UpdateParamValue.UpdateInstanceParam(app);
+                Update_Instance_VendorStyle_And_VendorFinish_Utility.UpdateVendorStyleVendorFinishForSelectedInstance(app);
+                break;
+            case RequestType.Modify_UpdateVendoryModifications:
+                Update_Instance_Vendor_Modifications_Utility.UpdateVendorModificationsForSelectedInstance(app);
                 break;
 
 
@@ -109,6 +116,13 @@ public class RequestHandler : IExternalEventHandler
                 break;
             case RequestType.ProjectProperties_UpdateStyleAndFinish:
                 Update_Project_Style_Finish_Utility.change_style_finish(app);
+                break;
+            case RequestType.ProjectProperties_ExportDrawingsToPDF:
+                Export_Drawings_To_PDF_Utility.PrintDocument(app);
+                //Export_Drawings_To_PDF_Utility.PrintDocumentAsync(app);
+                break;
+            case RequestType.ProjectProperties_ExportToExcel:
+                Export_To_Excel_Utility.ExportQuantitiesToExcel(app);
                 break;
 
 
@@ -128,9 +142,7 @@ public class RequestHandler : IExternalEventHandler
             // 'Manage' related
             case RequestType.Manage_PrintDrawings:
                 PrintToPdf.PrintDocument(app);
-
                 PrintToPdf.PrintDocumentAsync(app);
-
                 break;
             case RequestType.Manage_ExportQuantitiesToExcel:
                 ExportToExcel.ExportQuantitiesToExcel(app);

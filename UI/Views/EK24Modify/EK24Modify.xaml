@@ -40,9 +40,9 @@
 
 			<StackPanel Margin="0 5" MinWidth="300">
 
-				<StackPanel Orientation="Horizontal" Background="White" Margin="0 30">
+				<StackPanel Orientation="Horizontal" Background="White" Margin="0 30" HorizontalAlignment="Center">
 					<TextBlock Text="SELECTION COUNT" FontSize="16px"/>
-					<TextBlock Text="{Binding EK_Selection_Count}" FontSize="16" Margin="14 0"/>
+					<TextBlock Text="{Binding EK_Selection_Count}" FontSize="16" Margin="14 0" />
 				</StackPanel>
 				
 				
@@ -202,6 +202,62 @@
                     Focusable="True"/>
 			</StackPanel>
 
+			<StackPanel 
+				MinWidth="300"
+				Orientation="Vertical"
+				Margin="0 60"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center"
+				>
+				<TextBlock Text="MODIFY INDIVIDUAL STYLE &amp; FINISH" VerticalAlignment="Center" TextAlignment="Center"/>
+				<StackPanel Margin="0 20" HorizontalAlignment="Left" MinWidth="300">
+					<TextBlock Text="VENDOR STYLE" TextAlignment="Left"/>
+					<ComboBox x:Name="VendorStyleOptions" Margin="0 2"
+						    Style="{StaticResource ModernComboBox2}"
+                            ItemsSource="{Binding FilteredVendorStyles}"
+							DisplayMemberPath="Vendor_Style_Name"
+                            SelectedItem="{Binding SelectedVendorStyle}"
+							IsEnabled="{Binding CanUpdateStyleDropDown}"
+                    />
+					<TextBlock Text="VENDOR FINISH" TextAlignment="Left"/>
+					<ComboBox x:Name="VendorFinishOptions" 
+							  Margin="0 2"
+							  Style="{StaticResource ModernComboBox2}"
+							  ItemsSource="{Binding FilteredVendorFinishes}"
+                              SelectedItem="{Binding SelectedVendorFinish}"
+							  IsEnabled="{Binding CanUpdateFinishDropDown}"
+                    />
+				<Button x:Name="CabinetInstanceParams" 
+						Content="UPDATE STYLE &amp; FINISH" 
+						Margin="0 10"
+                        Width="180" Height="30"
+						Style="{StaticResource ModernButton2}" 
+						IsEnabled="{Binding CanUpdateStyleFinishButton}"
+                        Command="{Binding Command_UpdateVendorStyleVendorFinish}"
+                />
+				</StackPanel>
+			</StackPanel>
+
+			<StackPanel 
+				MinWidth="300"
+				Orientation="Vertical"
+				Margin="0 60"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center"
+				IsEnabled="{Binding CanUpdateModifications}"
+				>
+				<TextBlock Text="VENDOR-MODIFICATIONS" VerticalAlignment="Center" TextAlignment="Center"/>
+				<ListBox MinHeight="200" MaxHeight="400" ScrollViewer.VerticalScrollBarVisibility="Auto" 
+						 ItemsSource="{Binding AvailableModifications}"
+				>
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+				<Button Content="UPDATE" Command="{Binding Command_UpdateModifications}"/>
+			</StackPanel>
 
 
 		</StackPanel>
@@ -223,8 +279,6 @@
                     />
 				</StackPanel>-->
 
-	
-	
 			<!--<StackPanel 
 				MinWidth="300"
 				Orientation="Vertical"

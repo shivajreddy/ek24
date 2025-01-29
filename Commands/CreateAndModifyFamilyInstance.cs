@@ -1,9 +1,11 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using ek24.Dtos;
 using ek24.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ek24.Commands;
@@ -101,8 +103,7 @@ public static class CreateAndModifyFamilyInstance
 
             trans.Commit();
         }
-
-
     }
+
 
 }
