@@ -34,43 +34,44 @@
 		<StackPanel Margin="0 10" MinWidth="300"
 			HorizontalAlignment="Center" VerticalAlignment="Center">
 			<TextBlock Text="BRAND" VerticalAlignment="Center"/>
-				<ComboBox x:Name="Brands" Margin="0 2"
+			<ComboBox x:Name="Brands" Margin="0 2"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding BrandItems}"
                       SelectedItem="{Binding SelectedBrand, Mode=TwoWay}"
                       TabIndex="0"
                       Focusable="True"/>
 		</StackPanel>
-			<Button Width="180"
+		<Button Width="180"
 				Content="UPDATE BRAND"
 				Style="{StaticResource ModernButton2}" 
 				Command="{Binding Command_UpdateKitchenBrand}"
 				IsEnabled="{Binding canUpdateKitchenBrandButton}"
 				/>
 
-			<StackPanel 
+		<StackPanel 
 				MinWidth="300"
 				Orientation="Vertical"
-				Margin="0 60"
+				Margin="0 20"
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center" >
+			<StackPanel Orientation="Horizontal" Margin="0 10" HorizontalAlignment="Center">
 				<TextBlock Text="CURRENT STYLE &amp; FINISH" VerticalAlignment="Center"/>
 				<TextBlock Padding="5 0"
 					   Text="{Binding EKProjectKitchenStyleFinish, UpdateSourceTrigger=PropertyChanged}"
 					   VerticalAlignment="Center"
 					   FontSize="16px" FontWeight="SemiBold"/>
-				<StackPanel Margin="0 20" HorizontalAlignment="Left" MinWidth="300">
-					<TextBlock Text="VENDOR STYLE" TextAlignment="Left"/>
-					<ComboBox x:Name="VendorStyleOptions" Margin="0 2"
-						    Style="{StaticResource ModernComboBox2}"
+			</StackPanel>
+			<StackPanel Margin="0" HorizontalAlignment="Left" MinWidth="300">
+				<TextBlock Text="VENDOR STYLE" TextAlignment="Left"/>
+				<ComboBox Margin="0 2"
                             ItemsSource="{Binding VendorStyles}"
-							DisplayMemberPath="Vendor_Style_Name"
+						    Style="{StaticResource ModernComboBox2}"
                             SelectedItem="{Binding SelectedVendorStyle}"
                     />
-					<TextBlock Text="VENDOR FINISH" TextAlignment="Left"/>
-					<ComboBox x:Name="VendorFinishOptions" Margin="0 2"
+				<TextBlock Text="VENDOR FINISH" TextAlignment="Left"/>
+				<ComboBox Margin="0 2"
+                            ItemsSource="{Binding VendorFinishes}"
 						    Style="{StaticResource ModernComboBox2}"
-                            ItemsSource="{Binding VendorStyles }"
                             SelectedItem="{Binding SelectedVendorFinish}"
 							IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
                     />
@@ -79,11 +80,11 @@
 						Margin="0 10"
                         Width="180" Height="30"
 						Style="{StaticResource ModernButton2}" 
-						IsEnabled="{Binding CanUpdateVendorStyleButton}"
+						IsEnabled="{Binding SelectedVendorFinish, Converter={StaticResource NullToBooleanConverter}}"
                         Command="{Binding Command_UpdateVendorStyleFinish}"
                 />
-				</StackPanel>
 			</StackPanel>
+		</StackPanel>
 
 		<StackPanel Width="300">
 			<!--<Button 
@@ -99,8 +100,8 @@
                 Command="{Binding Command_ExportToExcel}"
 					/>
 		</StackPanel>
-		
-		
+
+
 	</StackPanel>
 </UserControl>
 

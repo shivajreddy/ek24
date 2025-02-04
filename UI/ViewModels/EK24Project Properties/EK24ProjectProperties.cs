@@ -1,5 +1,4 @@
-﻿namespace ek24.UI;
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using ek24.Commands.Utils;
 using ek24.Dtos;
@@ -22,6 +21,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
+namespace ek24.UI;
 
 public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
 {
@@ -39,6 +39,7 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
     #endregion
 
     #region Properties to bind to UI
+    // BRAND SECTION RELATED
     public List<string> BrandItems { get; } = EKBrands.all_brand_names;
     public bool canUpdateKitchenBrandButton => EKProjectKitchenBrand != "" && SelectedBrand != "" && SelectedBrand != EKProjectKitchenBrand;
 
@@ -57,20 +58,48 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
         }
     }
 
+    private string _ekProjectKitchBrand;
     public string EKProjectKitchenBrand
     {
         get
         {
             if (APP.Global_State.Current_Project_State == null || APP.Global_State.Current_Project_State.EKProjectKitchenBrand == null) return "";
+            filter_vendor_styles();
             return APP.Global_State.Current_Project_State.EKProjectKitchenBrand;
         }
         set
         {
             APP.Global_State.Current_Project_State.EKProjectKitchenBrand = value;
+            //filter_vendor_styles();
         }
     }
 
-    // HARD CODED FOR NOW
+    private string _ekProjectKitchenStyleFinish;
+    public string EKProjectKitchenStyleFinish
+    {
+        get => _ekProjectKitchenStyleFinish;
+        set
+        {
+            if (_ekProjectKitchenStyleFinish == value) return;
+            _ekProjectKitchenStyleFinish = value;
+            OnPropertyChanged(nameof(EKProjectKitchenStyleFinish));
+        }
+    }
+
+    // STYLE&FINISH SECTION RELATED
+    /*
+    private List<string> _vendorStyleNameForKitchenBrand { get; set; }
+    public List<string> VendorStyleNamesForKitchenBrand
+    {
+        get => _vendorStyleNameForKitchenBrand;
+        set
+        {
+            if (_vendorStyleNameForKitchenBrand == value) return;
+            _vendorStyleNameForKitchenBrand = value;
+            OnPropertyChanged(nameof(VendorStyleNamesForKitchenBrand));
+        }
+    }
+    */
     private List<string> hardcoded_vendorStyleNames = [
             "Aristokraft - Sinclair",
             "Aristokraft - Benton",
@@ -83,20 +112,10 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
             "Yorktowne Historic - Corsica",
             "Yorktowne Historic - Langdon"
         ];
-    private List<string> _vendorStyleNameForKitchenBrand { get; set; }
-    public List<string> VendorStyleNamesForKitchenBrand
-    {
-        get => _vendorStyleNameForKitchenBrand;
-        set
-        {
-            if (_vendorStyleNameForKitchenBrand == value) return;
-            _vendorStyleNameForKitchenBrand = value;
-            OnPropertyChanged(nameof(VendorStyleNamesForKitchenBrand));
-        }
-    }
-
-    private ObservableCollection<Vendor_Style_With_Id> _VendorStyles;
-    public ObservableCollection<Vendor_Style_With_Id> VendorStyles
+    //private ObservableCollection<Vendor_Style_With_Id> _VendorStyles;
+    //public ObservableCollection<Vendor_Style_With_Id> VendorStyles  // Used to bind to Combobox-VENDOR STYLE
+    private ObservableCollection<string> _VendorStyles;
+    public ObservableCollection<string> VendorStyles  // Used to bind to Combobox-VENDOR STYLE
     {
         get => _VendorStyles;
         set
@@ -132,8 +151,31 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
     }
     */
 
-    public static Vendor_Style_With_Id ChosenVendorStyle;
+    //public static Vendor_Style_With_Id ChosenVendorStyle;
+    public static string ChosenVendorStyle;
     public static string ChosenVendorFinish;
+    private string _selectedVendorStyle;
+    public string SelectedVendorStyle
+    {
+        get => _selectedVendorStyle;
+        set
+        {
+            _selectedVendorStyle = value;
+            OnPropertyChanged(nameof(SelectedVendorStyle));
+            OnPropertyChanged(nameof(SelectedVendorFinish));
+
+            // TODO: Based on this VendorStyle filter VendorFinishes
+            ObservableCollection<string> temp_vendor_finishes = [];
+            for (int i = 0; i < 3; i++)
+            {
+                temp_vendor_finishes.Add(SelectedVendorStyle + "::Finish-" + i.ToString());
+            }
+            VendorFinishes = temp_vendor_finishes;
+
+            ChosenVendorStyle = SelectedVendorStyle;
+        }
+    }
+    /*
     private Vendor_Style_With_Id _selectedVendorStyle;
     public Vendor_Style_With_Id SelectedVendorStyle
     {
@@ -147,6 +189,7 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
             ChosenVendorStyle = SelectedVendorStyle;
         }
     }
+    */
 
     private string _selectedVendorFinish { get; set; }
     public string SelectedVendorFinish
@@ -161,20 +204,45 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
         }
     }
 
+    private ObservableCollection<string> _VendorFinishes;
+    public ObservableCollection<string> VendorFinishes  // Used to bind to Combobox-VENDOR FINISH
+    {
+        get => _VendorFinishes;
+        set
+        {
+            if (value == _VendorFinishes) return;
+            _VendorFinishes = value;
+            OnPropertyChanged(nameof(VendorFinishes));
+        }
+    }
+
     #endregion
 
     #region HELPER Function to filter item sources
+
+    // 'EKProjectKitchenBrand' will be set before this fn is called. use the 'EKProjectKitchenBrand' to filter for VendorStyles
     public void filter_vendor_styles()
+    {
+        string brand_name = APP.Global_State.Current_Project_State.EKProjectKitchenBrand;
+        // Use LINQ to filter the list of vendor styles that contain the brand name
+        List<string> temp_filteredStyles = hardcoded_vendorStyleNames
+            .Where(style => style.Contains(brand_name))
+            .ToList();
+
+        VendorStyles = new ObservableCollection<string>(temp_filteredStyles);
+    }
+
+    /*
+    public void filter_vendor_styles_old()
     {
         // Grab your entire hardcoded list
         List<string> all_names = hardcoded_vendorStyleNames;
 
         // Check if the user has selected a brand
-        if (string.IsNullOrWhiteSpace(EKProjectKitchenBrand)) return;
+        //if (string.IsNullOrWhiteSpace(EKProjectKitchenBrand)) return;
 
         // Get one of the cabinet family instance for the current project, and use that family-instance
         // for getting the VendorStyle param, which in turn gives the Element Id's
-        // Get all cabinet instances
         Document doc = APP.Global_State.Current_Project_State.Document;
         List<FamilyInstance> cabinet_instances = FilterAllCabinets.FilterProjectForEagleCabinets(doc);
         FamilyInstance familyInstance = cabinet_instances.First();  // Grab just one of the EKCabinets(this is not supposed to be glass cabinet)
@@ -233,26 +301,25 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
                     filteredMap.Select(kvp => new Vendor_Style_With_Id(kvp.Key, kvp.Value))
                 );
 
-        // Set the available styles & finishes that user can apply to the singly selected cabinet
-        VendorStyles = temp_filtered_vendor_styles;
+        //// Set the available styles & finishes that user can apply to the singly selected cabinet
+        //VendorStyles = temp_filtered_vendor_styles;
 
-        /*
-        List<string> temp_filteredVendorStyles = new List<string>();
-        List<Vendor_Style_With_Id> temp_filtered_vendor_styles = new List<Vendor_Style_With_Id>();
+        //List<string> temp_filteredVendorStyles = new List<string>();
+        //List<Vendor_Style_With_Id> temp_filtered_vendor_styles = new List<Vendor_Style_With_Id>();
 
-        // Filter for names that start with "<brand> - "
-        temp_filteredVendorStyles = all_names
-            .Where(name => name.StartsWith(EKProjectKitchenBrand + " - ", StringComparison.OrdinalIgnoreCase))
-            .ToList();
+        //// Filter for names that start with "<brand> - "
+        //temp_filteredVendorStyles = all_names
+        //    .Where(name => name.StartsWith(EKProjectKitchenBrand + " - ", StringComparison.OrdinalIgnoreCase))
+        //    .ToList();
 
-        // If no matches, handle it gracefully (optional)
-        if (temp_filteredVendorStyles.Count == 0)
-        {
-            TaskDialog.Show("INFO", $"No vendor styles found for brand '{SelectedBrand}'.");
-        }
-        VendorStyleNamesForKitchenBrand = temp_filteredVendorStyles; // set the ppty that triggers UI
-        */
+        //// If no matches, handle it gracefully (optional)
+        //if (temp_filteredVendorStyles.Count == 0)
+        //{
+        //    TaskDialog.Show("INFO", $"No vendor styles found for brand '{SelectedBrand}'.");
+        //}
+        //VendorStyleNamesForKitchenBrand = temp_filteredVendorStyles; // set the ppty that triggers UI
     }
+    */
     #endregion
 
     #region Selected Item for ComboBoxes
@@ -299,7 +366,7 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
         if (e.PropertyName == nameof(EK_Project_State.EKProjectKitchenBrand))
         {
             OnPropertyChanged(nameof(EKProjectKitchenBrand));
-            filter_vendor_styles();
+            // filter_vendor_styles(); // TODO: I just commented this, bcs it runs when opening a project, and actually we don't need it when propect opens
         }
     }
     #endregion
@@ -319,7 +386,7 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
     public void Handle_Command_UpdateVendorStyleFinish()
     {
         Debug.WriteLine("UPDATE STYLE & FINISH");
-        APP.RequestHandler.RequestType = RequestType.ProjectProperties_UpdateStyleAndFinish;
+        APP.RequestHandler.RequestType = RequestType.ProjectProperties_UpdateStyleAndFinish;        // BUG: Sometimes this fails to invoke the Request Handler why?
         APP.ExternalEvent?.Raise();     // invokes Update_Project_Style_Finish_Utility.change_style_finish(app);
     }
     public ICommand Command_ExportDrawingsToPdf { get; }
@@ -335,9 +402,6 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
         Debug.WriteLine("Export Drawings to PDF");
         APP.RequestHandler.RequestType = RequestType.ProjectProperties_ExportToExcel;
         APP.ExternalEvent?.Raise();     // invokes Export_To_Excel_Utility.ExportQuantitiesToExcel(app);
-
-
-
     }
     #endregion
 
@@ -651,7 +715,9 @@ public static class Update_Project_Style_Finish_Utility
         // Get all cabinet instances
         List<FamilyInstance> cabinet_instances = FilterAllCabinets.FilterProjectForEagleCabinets(doc);
 
-        Vendor_Style_With_Id chosen_vendor_style = EK24ProjectProperties_ViewModel.ChosenVendorStyle;
+        //Vendor_Style_With_Id chosen_vendor_style = EK24ProjectProperties_ViewModel.ChosenVendorStyle;
+        string chosen_vendor_style = EK24ProjectProperties_ViewModel.ChosenVendorStyle;
+        string chosen_vendor_finish = EK24ProjectProperties_ViewModel.ChosenVendorFinish;
 
         /*
             "Aristokraft        - Sinclair"
@@ -681,8 +747,10 @@ public static class Update_Project_Style_Finish_Utility
                 Parameter current_vendor_style_param = family_instance.LookupParameter("Vendor_Style");
 
                 // Determine the Element Id based on the chosen vendor style name
-                string selected_style_name = chosen_vendor_style.Vendor_Style_Name;
+                //string selected_style_name = chosen_vendor_style.Vendor_Style_Name;
+                string selected_style_name = chosen_vendor_style;
                 ElementId vendor_style_id = Get_VendorStyle_ElementId(doc, family_instance, selected_style_name);
+                Debug.WriteLine("hi");
                 if (vendor_style_id == null)
                 {
                     trans.RollBack();
@@ -706,6 +774,8 @@ public static class Update_Project_Style_Finish_Utility
             //UpdateFinishParam(test_instance);
             trans.Commit();
         }
+        APP.Global_State.Current_Project_State.EKProjectKitchenStyle = chosen_vendor_style;
+        APP.Global_State.Current_Project_State.EKProjectKitchenFinish = chosen_vendor_finish;
 
         TaskDialog.Show("SUCCESS", "UPDATED THE VENDOR-STYLE PARAM");
         return;
@@ -922,7 +992,6 @@ public static class Export_Drawings_To_PDF_Utility
     }
 
 }
-
 
 /// <summary>
 /// UTILITY CLASS: EXPORT TO EXCEL
