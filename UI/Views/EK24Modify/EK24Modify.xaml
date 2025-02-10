@@ -14,9 +14,7 @@
 	<UserControl.Resources>
 		<ResourceDictionary>
 			<convertors:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
-
-            <convertors:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-
+			<convertors:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/ComboStyles2.xaml" />
 				<ResourceDictionary Source="pack://application:,,,/ek24;component/UI/Resources/MainViewResources.xaml" />
@@ -25,30 +23,34 @@
 	</UserControl.Resources>
 
 	<Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="80"/>
-        </Grid.RowDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="60"/>
+		</Grid.RowDefinitions>
 		<!-- Creation Panel: Second way -->
-		<StackPanel 
+		<ScrollViewer>
+			<StackPanel 
 				Grid.Row="0"
-			    Width="300"
-                Margin="0 10"
+                Margin="0"
                 Orientation="Vertical"
-                VerticalAlignment="Center" 
-                HorizontalAlignment="Center">
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+				ScrollViewer.VerticalScrollBarVisibility="Auto"
+				ScrollViewer.CanContentScroll="True"
+			>
 
-			<StackPanel Margin="0 5" MinWidth="300">
+				<Border Width="400" Padding="30 0"  BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 5">
+					<StackPanel>
+						<StackPanel Margin="0" MinWidth="300">
 
-				<StackPanel Orientation="Horizontal" Background="White" Margin="0 30" HorizontalAlignment="Center">
-					<TextBlock Text="SELECTION COUNT" FontSize="16px"/>
-					<TextBlock Text="{Binding EK_Selection_Count}" FontSize="16" Margin="14 0" />
-				</StackPanel>
-				
-				
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
-					<TextBlock Text="BRAND" TextAlignment="Center" FontSize="16"/>
-					<Button Content="X"
+							<StackPanel Orientation="Horizontal" Background="White" Margin="0 10" HorizontalAlignment="Center">
+								<TextBlock Text="SELECTION COUNT" FontSize="16px"/>
+								<TextBlock Text="{Binding EK_Selection_Count}" FontSize="16" Margin="14 0" />
+							</StackPanel>
+
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
+								<TextBlock Text="BRAND" TextAlignment="Center" FontSize="16"/>
+								<Button Content="X"
 							Command="{Binding Command_Reset_SelectedBrand}"
 							Width="20"
 							Height="20"
@@ -58,30 +60,30 @@
 							BorderThickness="1"
 							HorizontalAlignment="Center"
 							VerticalAlignment="Center">
-						<Button.Template>
-							<ControlTemplate TargetType="Button">
-								<Border CornerRadius="20" 
+									<Button.Template>
+										<ControlTemplate TargetType="Button">
+											<Border CornerRadius="20" 
 											Background="{TemplateBinding Background}" 
 											BorderBrush="{TemplateBinding BorderBrush}" 
 											BorderThickness="{TemplateBinding BorderThickness}">
-									<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-								</Border>
-							</ControlTemplate>
-						</Button.Template>
-					</Button>
-				</StackPanel>
-				<ComboBox x:Name="Brands"
+												<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+											</Border>
+										</ControlTemplate>
+									</Button.Template>
+								</Button>
+							</StackPanel>
+							<ComboBox x:Name="Brands"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding BrandItems}"
                       SelectedItem="{Binding SelectedBrand, Mode=TwoWay}"
                       TabIndex="0"
                       Focusable="True"/>
-			</StackPanel>
+						</StackPanel>
 
-			<StackPanel Margin="0 5" MinWidth="300">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
-					<TextBlock Text="TYPE" TextAlignment="Center" FontSize="16"/>
-					<Button Content="X"
+						<StackPanel Margin="0 5" MinWidth="300">
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
+								<TextBlock Text="TYPE" TextAlignment="Center" FontSize="16"/>
+								<Button Content="X"
 							Command="{Binding Command_Reset_SelectedEKType}"
 							Width="20"
 							Height="20"
@@ -91,31 +93,31 @@
 							BorderThickness="1"
 							HorizontalAlignment="Center"
 							VerticalAlignment="Center">
-						<Button.Template>
-							<ControlTemplate TargetType="Button">
-								<Border CornerRadius="20" 
+									<Button.Template>
+										<ControlTemplate TargetType="Button">
+											<Border CornerRadius="20" 
 											Background="{TemplateBinding Background}" 
 											BorderBrush="{TemplateBinding BorderBrush}" 
 											BorderThickness="{TemplateBinding BorderThickness}">
-									<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-								</Border>
-							</ControlTemplate>
-						</Button.Template>
-					</Button>
-				</StackPanel>
-				<ComboBox x:Name="EKType"
+												<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+											</Border>
+										</ControlTemplate>
+									</Button.Template>
+								</Button>
+							</StackPanel>
+							<ComboBox x:Name="EKType"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding EKTypeItems}"
                       SelectedItem="{Binding SelectedEKType, Mode=TwoWay}"
                       TabIndex="1"
                       IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
                       Focusable="True"/>
-			</StackPanel>
+						</StackPanel>
 
-			<StackPanel Margin="0 5" MinWidth="300">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
-					<TextBlock Text="CATEGORY" TextAlignment="Center" FontSize="16"/>
-					<Button Content="X"
+						<StackPanel Margin="0 5" MinWidth="300">
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
+								<TextBlock Text="CATEGORY" TextAlignment="Center" FontSize="16"/>
+								<Button Content="X"
 							Command="{Binding Command_Reset_SelectedEKCategory}"
 							Width="20"
 							Height="20"
@@ -125,31 +127,31 @@
 							BorderThickness="1"
 							HorizontalAlignment="Center"
 							VerticalAlignment="Center">
-						<Button.Template>
-							<ControlTemplate TargetType="Button">
-								<Border CornerRadius="20" 
+									<Button.Template>
+										<ControlTemplate TargetType="Button">
+											<Border CornerRadius="20" 
 											Background="{TemplateBinding Background}" 
 											BorderBrush="{TemplateBinding BorderBrush}" 
 											BorderThickness="{TemplateBinding BorderThickness}">
-									<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-								</Border>
-							</ControlTemplate>
-						</Button.Template>
-					</Button>
-				</StackPanel>
-				<ComboBox x:Name="EKCategory"
+												<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+											</Border>
+										</ControlTemplate>
+									</Button.Template>
+								</Button>
+							</StackPanel>
+							<ComboBox x:Name="EKCategory"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding EKCategoryItems}"
                       SelectedItem="{Binding SelectedEKCategory, Mode=TwoWay}"
                       TabIndex="2"
                       IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
                       Focusable="True"/>
-			</StackPanel>
+						</StackPanel>
 
-			<StackPanel Margin="0 5" MinWidth="300">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
-					<TextBlock Text="SKU" TextAlignment="Center" FontSize="16"/>
-					<Button Content="X"
+						<StackPanel Margin="0 5" MinWidth="300">
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 2">
+								<TextBlock Text="SKU" TextAlignment="Center" FontSize="16"/>
+								<Button Content="X"
 							Command="{Binding Command_Reset_SelectedSKU}"
 							Width="20"
 							Height="20"
@@ -159,30 +161,29 @@
 							BorderThickness="1"
 							HorizontalAlignment="Center"
 							VerticalAlignment="Center">
-						<Button.Template>
-							<ControlTemplate TargetType="Button">
-								<Border CornerRadius="20" 
+									<Button.Template>
+										<ControlTemplate TargetType="Button">
+											<Border CornerRadius="20" 
 											Background="{TemplateBinding Background}" 
 											BorderBrush="{TemplateBinding BorderBrush}" 
 											BorderThickness="{TemplateBinding BorderThickness}">
-									<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-								</Border>
-							</ControlTemplate>
-						</Button.Template>
-					</Button>
-				</StackPanel>
-				<ComboBox x:Name="SKU"
+												<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+											</Border>
+										</ControlTemplate>
+									</Button.Template>
+								</Button>
+							</StackPanel>
+							<ComboBox x:Name="SKU"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding EKSKUItems}"
                       SelectedItem="{Binding SelectedSKU, Mode=TwoWay}"
                       TabIndex="3"
                       IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
                       Focusable="True"/>
-			</StackPanel>
+						</StackPanel>
 
-
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10">
-				<Button Content="UPDATE" 
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 10">
+							<Button Content="UPDATE" 
                     Width="100" 
                     Height="35" 
                     Margin="10 0"
@@ -191,7 +192,7 @@
                     TabIndex="4"
                     IsEnabled="{Binding CanUpdateButton}"
                     Focusable="True"/>
-				<Button Content="CREATE" 
+							<Button Content="CREATE" 
                     Width="100" 
                     Height="35" 
                     Margin="10 0"
@@ -200,34 +201,35 @@
                     TabIndex="5"
                     IsEnabled="{Binding SelectedSKU, Converter={StaticResource NullToBooleanConverter}}"
                     Focusable="True"/>
-			</StackPanel>
+						</StackPanel>
 
-			<StackPanel 
-				MinWidth="300"
-				Orientation="Vertical"
-				Margin="0 30 0 0"
-				VerticalAlignment="Center"
-				HorizontalAlignment="Center"
+					</StackPanel>
+				</Border>
+
+				<Border Width="400" Padding="30 0" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 5">
+					<StackPanel 
+						MinWidth="300"
+						Orientation="Vertical"
+						Margin="0 0 0 0"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
 				>
-				<TextBlock Text="MODIFY INDIVIDUAL STYLE &amp; FINISH" VerticalAlignment="Center" TextAlignment="Center"/>
-				<StackPanel Margin="0 20" HorizontalAlignment="Left" MinWidth="300">
-					<TextBlock Text="VENDOR STYLE" TextAlignment="Left"/>
-					<ComboBox x:Name="VendorStyleOptions" Margin="0 2"
+						<TextBlock Margin="0 10 0 0" Text="MODIFY INDIVIDUAL STYLE &amp; FINISH" VerticalAlignment="Center" TextAlignment="Center"/>
+						<StackPanel Margin="0 10" HorizontalAlignment="Left" MinWidth="300">
+							<TextBlock Text="VENDOR STYLE" TextAlignment="Left"/>
+							<ComboBox Margin="0 2"
 						    Style="{StaticResource ModernComboBox2}"
-                            ItemsSource="{Binding FilteredVendorStyles}"
+                            ItemsSource="{Binding VendorStylesFilteredByBrand}"
 							DisplayMemberPath="Vendor_Style_Name"
                             SelectedItem="{Binding SelectedVendorStyle}"
-							IsEnabled="{Binding CanUpdateStyleDropDown}"
                     />
-					<TextBlock Text="VENDOR FINISH" TextAlignment="Left"/>
-					<ComboBox x:Name="VendorFinishOptions" 
-							  Margin="0 2"
+							<TextBlock Text="VENDOR FINISH" TextAlignment="Left"/>
+							<ComboBox Margin="0 2"
 							  Style="{StaticResource ModernComboBox2}"
-							  ItemsSource="{Binding FilteredVendorFinishes}"
+							  ItemsSource="{Binding VendorFinishesFilteredByBrand}"
                               SelectedItem="{Binding SelectedVendorFinish}"
-							  IsEnabled="{Binding CanUpdateFinishDropDown}"
                     />
-				<Button x:Name="CabinetInstanceParams" 
+							<Button x:Name="CabinetInstanceParams" 
 						Content="UPDATE STYLE &amp; FINISH" 
 						Margin="0 10"
                         Width="180" Height="30"
@@ -235,71 +237,53 @@
 						IsEnabled="{Binding CanUpdateStyleFinishButton}"
                         Command="{Binding Command_UpdateVendorStyleVendorFinish}"
                 />
-				</StackPanel>
-			</StackPanel>
+						</StackPanel>
+					</StackPanel>
+				</Border>
 
-			<StackPanel 
-				MinWidth="300"
-				Orientation="Vertical"
-				Margin="0"
-				VerticalAlignment="Center"
-				HorizontalAlignment="Center"
-				IsEnabled="{Binding CanUpdateModifications}"
+				<Border Width="400" Padding="30 0" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 5">
+					<StackPanel 
+						MinWidth="300"
+						Orientation="Vertical"
+						Margin="0"
+						VerticalAlignment="Center"
+						HorizontalAlignment="Center"
+						IsEnabled="{Binding CanUpdateModifications}"
 				>
-				<TextBlock Text="VENDOR-MODIFICATIONS" VerticalAlignment="Center" TextAlignment="Center"/>
-				<ListBox MinHeight="200" MaxHeight="400" ScrollViewer.VerticalScrollBarVisibility="Auto" 
-						 ItemsSource="{Binding AvailableModifications}"
-				>
-					<ListBox.ItemTemplate>
-						<DataTemplate>
-							<CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
-						</DataTemplate>
-					</ListBox.ItemTemplate>
-				</ListBox>
-				<Button Content="UPDATE" Command="{Binding Command_UpdateModifications}"/>
+						<TextBlock Text="VENDOR MODIFICATIONS" Margin="0 10" VerticalAlignment="Center" TextAlignment="Center"/>
+						<ListBox MaxHeight="200" ScrollViewer.VerticalScrollBarVisibility="Auto"
+							ItemsSource="{Binding AvailableModificationItemsCollectionView}">
+							<ListBox.GroupStyle>
+								<GroupStyle>
+									<GroupStyle.HeaderTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding Name}" FontWeight="Bold" />
+										</DataTemplate>
+									</GroupStyle.HeaderTemplate>
+								</GroupStyle>
+							</ListBox.GroupStyle>
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+										<CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+
+						<Button 
+							Content="UPDATE"
+							Margin="0 10"
+							Width="100"
+							Style="{StaticResource ModernButton2}" 
+							Command="{Binding Command_UpdateModifications}"/>
+					</StackPanel>
+				</Border>
+
 			</StackPanel>
+		</ScrollViewer>
 
-
+		<StackPanel Grid.Row="1" Margin="0" >
+			<projectbrowserview:SelectCaseWorkView/>
 		</StackPanel>
-
-        <StackPanel Grid.Row="1" Margin="0" >
-            <projectbrowserview:SelectCaseWorkView/>
-        </StackPanel>
 	</Grid>
 
 </UserControl>
-
-	
-				<!--<StackPanel Margin="5 0" HorizontalAlignment="Center" MinWidth="300" >
-					<TextBlock Text="Vendor Finish" TextAlignment="Center"/>
-					<ComboBox x:Name="VendorMaterialOptions" Margin="10 2"
-                    ItemsSource="{Binding AvailableVendorFinishes }"
-                    IsEnabled="{Binding ChosenVendorStyleInstance, Converter={StaticResource BoolToVisibilityConverter}}"
-                    SelectedItem="{Binding ChosenCabinetType}"
-                    />
-				</StackPanel>-->
-
-			<!--<StackPanel 
-				MinWidth="300"
-				Orientation="Vertical"
-				Margin="0 60"
-				VerticalAlignment="Center"
-				HorizontalAlignment="Center" >
-				<StackPanel Margin="0" HorizontalAlignment="Left" MinWidth="300">
-					<TextBlock Text="VENDOR STYLE" TextAlignment="Left"/>
-					<ComboBox x:Name="VendorStyleOptions" Margin="0 2"
-                            ItemsSource="{Binding VendorStyleWithIdItems }"
-                            SelectedItem="{Binding SelectedVendorFinish}"
-							IsEnabled="{Binding SelectedBrand, Converter={StaticResource NullToBooleanConverter}}"
-                    />
-				</StackPanel>
-
-				<Button x:Name="CabinetInstanceParams" 
-						Content="UPDATE STYLE" 
-						Margin="0 10"
-                        Width="130" Height="30"
-						Style="{StaticResource ModernButton2}" 
-						IsEnabled="{Binding CanUpdateVendorStyleButton}"
-                        Command="{Binding Command_UpdateVendorStyleVendorFinish}"
-                />
-			</StackPanel>-->

@@ -112,6 +112,20 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
             "Yorktowne Historic - Corsica",
             "Yorktowne Historic - Langdon"
         ];
+    // Dictionary to hold vendor styles and their corresponding finishes
+    private Dictionary<string, List<string>> hardcoded_vendorFinishNames = new Dictionary<string, List<string>>
+    {
+        { "Aristokraft - Sinclair", new List<string> { "Birch" } },
+        { "Aristokraft - Benton", new List<string> { "Birch" } },
+        { "Aristokraft - Brellin", new List<string> { "Purestyle" } },
+        { "Aristokraft - Winstead", new List<string> { "Birch", "Paint" } },
+        { "Yorktowne Classic - Henning", new List<string> { "Maple Stain", "Maple Paint" } },
+        { "Yorktowne Classic - Stillwater", new List<string> { "Maple Stain", "Maple Paint" } },
+        { "Yorktowne Classic - Fillmore", new List<string> { "Maple Stain", "Maple Paint" } },
+        { "Yorktowne Historic - Corsica", new List<string> { "Maple Stain", "Maple Paint", "Maple Appaloosa" } },
+        { "Yorktowne Historic - Langdon", new List<string> { "Maple Stain", "Maple Paint", "Maple Appaloosa" } },
+        { "Eclipse - Metropolitan", new List<string> { "Thermally Fused Laminates", "Matte Acrylic", "High Gloss Acrylic" } }
+    };
     //private ObservableCollection<Vendor_Style_With_Id> _VendorStyles;
     //public ObservableCollection<Vendor_Style_With_Id> VendorStyles  // Used to bind to Combobox-VENDOR STYLE
     private ObservableCollection<string> _VendorStyles;
@@ -126,35 +140,9 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
         }
     }
 
-    /*
-    private static string _selectedVendorStyle { get; set; }
-    public static string SelectedVendorStyle
-    {
-        get => _selectedVendorStyle;
-        set
-        {
-            if (_selectedVendorStyle == value) return;
-            _selectedVendorStyle = value;
-            OnStaticPropertyChanged(nameof(SelectedVendorStyle));
-        }
-    }
-    private static string _selectedVendorFinish { get; set; }
-    public static string SelectedVendorFinish
-    {
-        get => _selectedVendorFinish;
-        set
-        {
-            if (_selectedVendorFinish == value) return;
-            _selectedVendorFinish = value;
-            OnStaticPropertyChanged(nameof(SelectedVendorFinish));
-        }
-    }
-    */
-
     //public static Vendor_Style_With_Id ChosenVendorStyle;
     public static string ChosenVendorStyle;
-    public static string ChosenVendorFinish;
-    private string _selectedVendorStyle;
+    private string _selectedVendorStyle { get; set; }
     public string SelectedVendorStyle
     {
         get => _selectedVendorStyle;
@@ -164,43 +152,17 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(SelectedVendorStyle));
             OnPropertyChanged(nameof(SelectedVendorFinish));
 
-            // TODO: Based on this VendorStyle filter VendorFinishes
-            ObservableCollection<string> temp_vendor_finishes = [];
-            for (int i = 0; i < 3; i++)
+            // Filter VendorFinishes based on the selected vendor style
+            if (hardcoded_vendorFinishNames.TryGetValue(value, out var temp_vendor_finishes))
             {
-                temp_vendor_finishes.Add(SelectedVendorStyle + "::Finish-" + i.ToString());
+                VendorFinishes = new ObservableCollection<string>(temp_vendor_finishes);
             }
-            VendorFinishes = temp_vendor_finishes;
+            else
+            {
+                VendorFinishes = new ObservableCollection<string>(); // No finishes found for the selected style
+            }
 
-            ChosenVendorStyle = SelectedVendorStyle;
-        }
-    }
-    /*
-    private Vendor_Style_With_Id _selectedVendorStyle;
-    public Vendor_Style_With_Id SelectedVendorStyle
-    {
-        get => _selectedVendorStyle;
-        set
-        {
-            _selectedVendorStyle = value;
-            OnPropertyChanged(nameof(SelectedVendorStyle));
-            OnPropertyChanged(nameof(SelectedVendorFinish));
-
-            ChosenVendorStyle = SelectedVendorStyle;
-        }
-    }
-    */
-
-    private string _selectedVendorFinish { get; set; }
-    public string SelectedVendorFinish
-    {
-        get => _selectedVendorFinish;
-        set
-        {
-            if (_selectedVendorFinish == value) return;
-            _selectedVendorFinish = value;
-            OnPropertyChanged(nameof(SelectedVendorFinish));
-            ChosenVendorFinish = SelectedVendorFinish;
+            ChosenVendorStyle = value;
         }
     }
 
@@ -213,6 +175,20 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
             if (value == _VendorFinishes) return;
             _VendorFinishes = value;
             OnPropertyChanged(nameof(VendorFinishes));
+        }
+    }
+
+    public static string ChosenVendorFinish;
+    private string _selectedVendorFinish { get; set; }
+    public string SelectedVendorFinish
+    {
+        get => _selectedVendorFinish;
+        set
+        {
+            if (_selectedVendorFinish == value) return;
+            _selectedVendorFinish = value;
+            OnPropertyChanged(nameof(SelectedVendorFinish));
+            ChosenVendorFinish = value;
         }
     }
 
@@ -230,6 +206,18 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
             .ToList();
 
         VendorStyles = new ObservableCollection<string>(temp_filteredStyles);
+    }
+
+    public void filter_vendor_finishes(string chosen_vendor_style)
+    {
+        if (hardcoded_vendorFinishNames.TryGetValue(chosen_vendor_style, out var temp_finishes))
+        {
+            VendorFinishes = new ObservableCollection<string>(temp_finishes);
+        }
+        else
+        {
+            VendorFinishes = new ObservableCollection<string>(); // No finishes found for the chosen style
+        }
     }
 
     /*
@@ -744,6 +732,7 @@ public static class Update_Project_Style_Finish_Utility
                 //bool paramUpdateResult = UpdateStyleParam(doc, family_instance, "Yorktowne Classic - Fillmore");
                 //bool paramUpdateResult = UpdateStyleParam(doc, family_instance, EK24ProjectProperties_ViewModel.ChosenVendorStyle.Revit_ElementId);
 
+                // :: Set Vendor_Style :: 
                 Parameter current_vendor_style_param = family_instance.LookupParameter("Vendor_Style");
 
                 // Determine the Element Id based on the chosen vendor style name
@@ -764,6 +753,39 @@ public static class Update_Project_Style_Finish_Utility
                     TaskDialog.Show("ERROR", "FAILED TO UPDATE THE VENDOR-STYLE PARAM");
                     return;
                 }
+
+                // :: Set Material Finish :: 
+                // Get the material
+                //string target_material_name = "Yorktowne Classic - Stillwater-Maple Stain";
+                string target_material_name = EK24ProjectProperties_ViewModel.ChosenVendorFinish;
+                Material newMaterial = new FilteredElementCollector(doc)
+                    .OfClass(typeof(Material))
+                    .Cast<Material>()
+                    .FirstOrDefault(m => m.Name == target_material_name);
+                if (newMaterial == null)
+                {
+                    TaskDialog.Show("Error", $"Material: {target_material_name} not found.");
+                    return;
+                }
+
+                // Find material parameter
+                Parameter matParam = family_instance
+                    .Parameters
+                    .Cast<Parameter>()
+                    .FirstOrDefault(p => p.Definition.Name == "Vendor_Finish");
+
+                if (matParam != null && matParam.StorageType == StorageType.ElementId)
+                {
+                    matParam.Set(newMaterial.Id);
+                }
+                else
+                {
+                    TaskDialog.Show("Error", "No material parameter found.");
+                    trans.RollBack();
+                    return;
+                }
+
+
             }
 
             // TEST instance
@@ -774,6 +796,38 @@ public static class Update_Project_Style_Finish_Utility
             //UpdateFinishParam(test_instance);
             trans.Commit();
         }
+
+        // Project Param
+        // Get the Project Information element
+        ProjectInfo projectInfo = doc.ProjectInformation;
+        Parameter kitchenStyleFinishParam = projectInfo.LookupParameter("KitchenStyleFinish");
+
+        if (kitchenStyleFinishParam == null)
+        {
+            TaskDialog.Show("ERROR", "Project Parameter with name - 'KitchenStyleFinish' not found");
+            return;
+        }
+
+        string target_project_stylefinish = chosen_vendor_style + "-" + chosen_vendor_finish;
+
+        using (Transaction t = new Transaction(doc, "Change Kitchen Brand"))
+        {
+            try
+            {
+                t.Start();
+                // Update ProjectInformation parameter
+                kitchenStyleFinishParam.Set(target_project_stylefinish);
+                t.Commit();
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("ERROR", $"Failed to change Project Param 'KitchenStyleFinish' {ex.Message}");
+                t.RollBack();
+                return;
+            }
+        }
+
+        // Update the global state
         APP.Global_State.Current_Project_State.EKProjectKitchenStyle = chosen_vendor_style;
         APP.Global_State.Current_Project_State.EKProjectKitchenFinish = chosen_vendor_finish;
 

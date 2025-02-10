@@ -31,52 +31,52 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Row="0">
-            <TextBlock DockPanel.Dock="Top" Text="Views" Margin="0" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
-            <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 5">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel Name="ListOfEK24Views" Margin="40 0" VerticalAlignment="Stretch">
-                        <ItemsControl ItemsSource="{Binding ChosenViews}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Button Content="{Binding Name}" 
-                                        Command="{Binding DataContext.ViewSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        Style="{StaticResource ModernButton}"
-                                        Margin="0,2"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                        <!--<TextBlock Text="no views" 
-                               Visibility="{Binding Source={x:Static view_models:ProjectBrowserViewModel.ChosenViews}, Path=Count, Converter={StaticResource EmptyListToVisibilityConverter}}" />-->
-                    </StackPanel>
-                </ScrollViewer>
+            <Border Width="430" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 5">
+				<StackPanel>
+					<TextBlock DockPanel.Dock="Top" Text="Views" Margin="0 10" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
+					<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+						<StackPanel Name="ListOfEK24Views" Margin="40 0" VerticalAlignment="Stretch">
+							<ItemsControl ItemsSource="{Binding ChosenViews}">
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Button Content="{Binding Name}" 
+											Command="{Binding DataContext.ViewSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+											CommandParameter="{Binding}"
+											Style="{StaticResource ModernButton}"
+											Margin="0,2"/>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+							<!--<TextBlock Text="no views" 
+								   Visibility="{Binding Source={x:Static view_models:ProjectBrowserViewModel.ChosenViews}, Path=Count, Converter={StaticResource EmptyListToVisibilityConverter}}" />-->
+						</StackPanel>
+					</ScrollViewer>
+				</StackPanel>
             </Border>
         </DockPanel>
 
         <DockPanel Grid.Row="1">
-            <TextBlock DockPanel.Dock="Top" Text="Sheets" Margin="0" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
-            <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 5">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel Name="ListOfEK24Sheets" Margin="40 0" VerticalAlignment="Center">
-                        <ItemsControl ItemsSource="{Binding ChosenViewSheets}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Button Content="{Binding Name}" 
-                                    Command="{Binding DataContext.SheetSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    CommandParameter="{Binding}"
-                                    Style="{StaticResource ModernButton}"
-                                    Margin="0,2"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </ScrollViewer>
+            <Border Width="430" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 5">
+				<StackPanel>
+					<TextBlock DockPanel.Dock="Top" Text="Sheets" Margin="0 10" TextAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
+					<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+						<StackPanel Name="ListOfEK24Sheets" Margin="40 0" VerticalAlignment="Center">
+							<ItemsControl ItemsSource="{Binding ChosenViewSheets}">
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Button Content="{Binding Name}" 
+										Command="{Binding DataContext.SheetSelectedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+										CommandParameter="{Binding}"
+										Style="{StaticResource ModernButton}"
+										Margin="0,2"/>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</StackPanel>
+					</ScrollViewer>
+				</StackPanel>
             </Border>
         </DockPanel>
-
-        <StackPanel Grid.Row="2" Margin="0" >
-            <views:SelectCaseWorkView/>
-        </StackPanel>
 
     </Grid>
 
