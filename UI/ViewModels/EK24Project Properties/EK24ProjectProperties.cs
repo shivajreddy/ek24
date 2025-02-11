@@ -738,7 +738,8 @@ public static class Update_Project_Style_Finish_Utility
                 // Determine the Element Id based on the chosen vendor style name
                 //string selected_style_name = chosen_vendor_style.Vendor_Style_Name;
                 string selected_style_name = chosen_vendor_style;
-                ElementId vendor_style_id = Get_VendorStyle_ElementId(doc, family_instance, selected_style_name);
+                //TODO: The following function might be causing this function to stop working, because the execution is not reaching outside the foreach loop
+                ElementId vendor_style_id = Get_ElementId_Of_VendorStyle(doc, family_instance, selected_style_name);
                 Debug.WriteLine("hi");
                 if (vendor_style_id == null)
                 {
@@ -784,8 +785,6 @@ public static class Update_Project_Style_Finish_Utility
                     trans.RollBack();
                     return;
                 }
-
-
             }
 
             // TEST instance
@@ -835,7 +834,7 @@ public static class Update_Project_Style_Finish_Utility
         return;
     }
 
-    public static ElementId Get_VendorStyle_ElementId(Document doc, FamilyInstance familyInstance, string selected_vendor_style)
+    public static ElementId Get_ElementId_Of_VendorStyle(Document doc, FamilyInstance familyInstance, string selected_vendor_style)
     {
         Debug.WriteLine("hi");
 
