@@ -589,7 +589,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         FamilyInstance familyInstance = document.GetElement(selection.GetElementIds().First()) as FamilyInstance;
 
         // Check if the singly selected family instance is a eagle cabinet
-        if (!FilterAllCabinets.IsInstanceAEagleCabinet(familyInstance))
+        if (!FilterAllCabinets.IsInstanceAEagleCasework(familyInstance))
         {
             AvailableModifications?.Clear();
             VendorStylesFilteredByBrand?.Clear();
@@ -866,7 +866,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         FamilyInstance familyInstance = document.GetElement(selection.GetElementIds().First()) as FamilyInstance;
 
         // Validate that the selected family instance is an Eagle cabinet.
-        if (!FilterAllCabinets.IsInstanceAEagleCabinet(familyInstance))
+        if (!FilterAllCabinets.IsInstanceAEagleCasework(familyInstance))
         {
             // If the selected instance is not an Eagle cabinet, reset the Style and Finish properties and disable the Style dropdown.
             SelectedVendorStyle = null;
@@ -980,6 +980,78 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         current_style = filteredStyles.FirstOrDefault(style => style.Vendor_Style_Name == vendorStyleName);
     }
 
+
+    public static void Get_VendorFinishes_Filtered_By_Brand_And_CurrentFinish(
+    Document doc,
+    FamilyInstance familyInstance,
+    string current_style_name,
+    out ObservableCollection<string> available_filtered_finishes,
+    out string current_finish)
+    {
+        // Initialize out parameters
+        available_filtered_finishes = new ObservableCollection<string>();
+        current_finish = null;
+
+        Dictionary<string, string[]> brandToPrefixes = new Dictionary<string, string[]>
+    {
+        { "Aristokraft",         new[] { "Aristokraft" } },
+        { "Yorktowne Classic",   new[] { "YTC", "Yorktowne Classic" } },
+        { "Yorktowne Historic",  new[] { "YTH", "Yorktowne Historic" } },
+        { "Eclipse",             new[] { "Eclipse" } }
+    };
+
+        string brand_name = "";
+        string normalized_style_name = null;
+        string normalized_brand_style_name = null;
+
+        // Split the style name into parts
+        string[] parts = current_style_name.Split(new[] { " - " }, StringSplitOptions.None);
+
+        if (parts.Length >= 2)
+        {
+            // Determine brand name based on known prefixes
+            foreach (var kvp in brandToPrefixes)
+            {
+                if (kvp.Value.Any(prefix => parts[0].Equals(prefix, StringComparison.OrdinalIgnoreCase)))
+                {
+                    brand_name = kvp.Key;
+                    break;
+                }
+            }
+
+            // Ensure a valid brand name is found
+            if (!string.IsNullOrEmpty(brand_name))
+            {
+                // Extract the style name and ignore anything after the second dash
+                string style_name = parts[1];
+                normalized_style_name = $"{brand_name} - {style_name}";
+                normalized_brand_style_name = $"{brand_name.Split(' ')[0]} - {style_name}";
+            }
+        }
+
+        if (normalized_style_name == null)
+        {
+            normalized_style_name = current_style_name;
+            normalized_brand_style_name = current_style_name;
+        }
+
+        // Retrieve available finishes based on normalized style name
+        if (hardcoded_vendorFinishNames.TryGetValue(normalized_style_name, out var temp_finishes))
+        {
+            available_filtered_finishes = new ObservableCollection<string>(temp_finishes);
+        }
+
+        // Retrieve the current finish from the family instance
+        Parameter vendor_finish_param = familyInstance.LookupParameter("Vendor_Finish");
+        if (vendor_finish_param != null && vendor_finish_param.AsValueString() != null)
+        {
+            current_finish = vendor_finish_param.AsValueString() == "<By Category>" ? null : vendor_finish_param.AsValueString();
+        }
+        Debug.WriteLine("end");
+    }
+
+
+    /*
     public static void Get_VendorFinishes_Filtered_By_Brand_And_CurrentFinish(
     Document doc,
     FamilyInstance familyInstance,
@@ -991,8 +1063,21 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         available_filtered_finishes = new ObservableCollection<string>();
         current_finish = null;
 
+        Dictionary<string, string[]> brandToPrefixes = new Dictionary<string, string[]>
+        {
+            { "Aristokraft",         new[] { "Aristokraft" } },
+            { "Yorktowne Classic",   new[] { "YTC", "Yorktowne Classic" } },
+            { "Yorktowne Historic",  new[] { "YTH", "Yorktowne Historic" } },
+            { "Eclipse",             new[] { "Eclipse" } }
+        };
+
+        // 1. Get the Brand Name
+        string brand_name = null;
+
+        // 2. Get the Normalized Style Name
         // Normalize the current_style_name to match the dictionary keys
         string normalized_style_name = null;
+
         string[] parts = current_style_name.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length >= 3)
@@ -1004,19 +1089,26 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
             // Construct the normalized key
             normalized_style_name = $"{brand} - {style}";
         }
+        else
+        {
+            normalized_style_name = current_style_name;
+        }
 
+        // 3. Get all available Finishes
         // Try to get the finishes for the normalized style name
         if (normalized_style_name != null && hardcoded_vendorFinishNames.TryGetValue(normalized_style_name, out var temp_finishes))
         {
             available_filtered_finishes = new ObservableCollection<string>(temp_finishes);
         }
 
+        // 4. Get the Current Finish
         // Get the current finish from the family instance
         Parameter vendor_finish_param = familyInstance.LookupParameter("Vendor_Finish");
-        if (vendor_finish_param == null) return;
-
+        if (vendor_finish_param == null || vendor_finish_param.AsValueString() == null) return;
+        // Set to null if no finish is set
         current_finish = vendor_finish_param.AsValueString() == "<By Category>" ? null : vendor_finish_param.AsValueString();
     }
+    */
 
     #endregion
 

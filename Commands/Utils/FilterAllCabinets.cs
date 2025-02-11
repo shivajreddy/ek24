@@ -8,7 +8,7 @@ namespace ek24.Commands.Utils;
 
 public class FilterAllCabinets
 {
-    private static string[] ekCabinetFamilyNamePrefixes = {
+    private static string[] ekCaseworkFamilyNamePrefixes = {
             "Aristokraft-W-",
             "Aristokraft-B-",
             "Aristokraft-T-",
@@ -50,7 +50,7 @@ public class FilterAllCabinets
             string familyName = instance.Symbol.Family.Name;
 
             // Check if the family name starts with any of the prefixes
-            if (ekCabinetFamilyNamePrefixes.Any(familyName.StartsWith))
+            if (ekCaseworkFamilyNamePrefixes.Any(familyName.StartsWith))
             {
                 // Add the matching instance to the list
                 ekCabinetInstances.Add(instance);
@@ -60,7 +60,7 @@ public class FilterAllCabinets
         return ekCabinetInstances;
     }
 
-    public static bool IsInstanceAEagleCabinet(FamilyInstance familyInstance)
+    public static bool IsInstanceAEagleCasework(FamilyInstance familyInstance)
     {
         if (familyInstance == null) return false;
         // Get the family and type names
@@ -69,7 +69,7 @@ public class FilterAllCabinets
         if (string.IsNullOrEmpty(familyName)) return false;
 
         // Has family name as one of the Predefined(hardcoded) value
-        if (ekCabinetFamilyNamePrefixes.Any(familyName.StartsWith)) return true;
+        if (ekCaseworkFamilyNamePrefixes.Any(familyName.StartsWith)) return true;
 
         return false;
     }
