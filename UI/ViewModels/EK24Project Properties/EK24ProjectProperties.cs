@@ -74,15 +74,15 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
         }
     }
 
-    private string _ekProjectKitchenStyleFinish;
-    public string EKProjectKitchenStyleFinish
+    private static string _ekProjectKitchenStyleFinish;
+    public static string EKProjectKitchenStyleFinish
     {
         get => _ekProjectKitchenStyleFinish;
         set
         {
             if (_ekProjectKitchenStyleFinish == value) return;
             _ekProjectKitchenStyleFinish = value;
-            OnPropertyChanged(nameof(EKProjectKitchenStyleFinish));
+            OnStaticPropertyChanged(nameof(EKProjectKitchenStyleFinish));
         }
     }
 
@@ -148,6 +148,7 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
         get => _selectedVendorStyle;
         set
         {
+            if (value == null || value == _selectedVendorStyle) return;
             _selectedVendorStyle = value;
             OnPropertyChanged(nameof(SelectedVendorStyle));
             OnPropertyChanged(nameof(SelectedVendorFinish));
@@ -728,7 +729,7 @@ public static class Update_Project_Style_Finish_Utility
             // go over each instance and set the Style & Finish parameters
             foreach (var family_instance in cabinet_instances)
             {
-                count++;
+                count++; // should equal to the length of cabinet_instances
                 //bool paramUpdateResult = UpdateStyleParam(doc, family_instance, "Yorktowne Classic - Fillmore");
                 //bool paramUpdateResult = UpdateStyleParam(doc, family_instance, EK24ProjectProperties_ViewModel.ChosenVendorStyle.Revit_ElementId);
 
@@ -738,20 +739,22 @@ public static class Update_Project_Style_Finish_Utility
                 // Determine the Element Id based on the chosen vendor style name
                 //string selected_style_name = chosen_vendor_style.Vendor_Style_Name;
                 string selected_style_name = chosen_vendor_style;
-                //TODO: The following function might be causing this function to stop working, because the execution is not reaching outside the foreach loop
+                //BUG: The following function might be causing this function to stop working, because the execution is not reaching outside the foreach loop
+                // It works sometimes, but sometimes it doesn't
                 ElementId vendor_style_id = Get_ElementId_Of_VendorStyle(doc, family_instance, selected_style_name);
                 Debug.WriteLine("hi");
                 if (vendor_style_id == null)
                 {
-                    trans.RollBack();
-                    TaskDialog.Show("ERROR", "FAILED TO UPDATE THE VENDOR-STYLE PARAM");
-                    return;
+                    continue;
+                    //TaskDialog.Show("ERROR", "FAILED TO UPDATE THE VENDOR-STYLE PARAM");
+                    //trans.RollBack();
+                    //return;
                 }
                 bool paramUpdateResult = current_vendor_style_param.Set(vendor_style_id);
                 if (paramUpdateResult == false)
                 {
-                    trans.RollBack();
                     TaskDialog.Show("ERROR", "FAILED TO UPDATE THE VENDOR-STYLE PARAM");
+                    trans.RollBack();
                     return;
                 }
 
@@ -786,6 +789,7 @@ public static class Update_Project_Style_Finish_Utility
                     return;
                 }
             }
+            Debug.WriteLine("end loop");
 
             // TEST instance
             // ElementId test_id = new ElementId(9560558);
@@ -796,31 +800,53 @@ public static class Update_Project_Style_Finish_Utility
             trans.Commit();
         }
 
+
         // Project Param
         // Get the Project Information element
         ProjectInfo projectInfo = doc.ProjectInformation;
-        Parameter kitchenStyleFinishParam = projectInfo.LookupParameter("KitchenStyleFinish");
+        Parameter kitchenStyleParam = projectInfo.LookupParameter("KitchenStyle");
 
-        if (kitchenStyleFinishParam == null)
+        if (kitchenStyleParam == null)
         {
-            TaskDialog.Show("ERROR", "Project Parameter with name - 'KitchenStyleFinish' not found");
+            TaskDialog.Show("ERROR", "Project Parameter with name - 'KitchenStyle' not found");
             return;
         }
 
-        string target_project_stylefinish = chosen_vendor_style + "-" + chosen_vendor_finish;
+        Parameter kitchenFinishParam = projectInfo.LookupParameter("KitchenFinish");
+        if (kitchenFinishParam == null)
+        {
+            TaskDialog.Show("ERROR", "Project Parameter with name - 'KitchenStyle' not found");
+            return;
+        }
 
-        using (Transaction t = new Transaction(doc, "Change Kitchen Brand"))
+        using (Transaction t = new Transaction(doc, "Set Kitchen Brand & Kitch Style Project Params"))
         {
             try
             {
                 t.Start();
-                // Update ProjectInformation parameter
-                kitchenStyleFinishParam.Set(target_project_stylefinish);
+                // Update ProjectInformation parameters
+                // 1. Update 'KitchenStyle' Parameter
+                kitchenStyleParam.Set(chosen_vendor_style);
+
+                // 2. Update 'KitchenFinish' Parameter
+                Material newMaterial = new FilteredElementCollector(doc)
+                    .OfClass(typeof(Material))
+                    .Cast<Material>()
+                    .FirstOrDefault(m => m.Name == chosen_vendor_finish);
+                if (newMaterial == null)
+                {
+                    TaskDialog.Show("Error", $"Material: {chosen_vendor_finish} not found.");
+                    return;
+                }
+                if (kitchenFinishParam != null && kitchenFinishParam.StorageType == StorageType.ElementId)
+                {
+                    kitchenFinishParam.Set(newMaterial.Id);
+                }
                 t.Commit();
             }
             catch (Exception ex)
             {
-                TaskDialog.Show("ERROR", $"Failed to change Project Param 'KitchenStyleFinish' {ex.Message}");
+                TaskDialog.Show("ERROR", $"Failed to change Project Param 'KitchenStyle' & 'KitchenFinish' {ex.Message}");
                 t.RollBack();
                 return;
             }
@@ -829,9 +855,11 @@ public static class Update_Project_Style_Finish_Utility
         // Update the global state
         APP.Global_State.Current_Project_State.EKProjectKitchenStyle = chosen_vendor_style;
         APP.Global_State.Current_Project_State.EKProjectKitchenFinish = chosen_vendor_finish;
+        EK24ProjectProperties_ViewModel.EKProjectKitchenStyleFinish = chosen_vendor_style + " - " + chosen_vendor_finish;
 
-        TaskDialog.Show("SUCCESS", "UPDATED THE VENDOR-STYLE PARAM");
-        return;
+        string title = "UPDATED Kitchen-Style & Kitchen-Finish";
+        string message = $"KitchenStyle: {chosen_vendor_style}\nKitchenFinish: {chosen_vendor_finish}\n";
+        TaskDialog.Show(title, message);
     }
 
     public static ElementId Get_ElementId_Of_VendorStyle(Document doc, FamilyInstance familyInstance, string selected_vendor_style)
@@ -853,11 +881,13 @@ public static class Update_Project_Style_Finish_Utility
         /////  it is possible to obtain a set of applicable elements of this class for a FamilyType parameter of a family by calling [!:Autodesk::Revit::DB::Family::GetFamilyTypeParameterValues] **
         /////  Revitapi > Family Class > Family Methods > GetFamilyTypeParameterValues method
         ////// API: go to Revitapi > Family Class > Family Methods > GetFamilyTypeParameterValues method
+        if (vendor_style_param == null) return null;
 
         // Some error handling fn's just to be sure
         if (!Category.IsBuiltInCategory(vendor_style_param.Definition.GetDataType()))
         {
-            TaskDialog.Show("ERROR", "Vendor_Style's data type is not a built in category");
+            //TaskDialog.Show("ERROR", "Vendor_Style's data type is not a built in category");
+            Debug.WriteLine("ERROR Vendor_Style's data type is not a built in category");
             return null;
         }
 

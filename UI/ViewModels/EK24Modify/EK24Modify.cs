@@ -447,10 +447,70 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
                 return;
             }
             _selectedVendorStyle = value;
-            //OnPropertyChanged(nameof(SelectedVendorFinish));
-            //OnPropertyChanged(nameof(CanUpdateFinishDropDown));
+            ChosenVendorStyle = value;
+            OnPropertyChanged(nameof(SelectedVendorStyle));
 
-            // 5. Based on the SelectedVendor Style set the available finishes
+            // Based on the SelectedVendor Style set the available finishes
+            // Got the below logic from 
+            // ------ start ------------------------------------------
+            // Initialize out parameters
+            ObservableCollection<string> available_filtered_finishes = new ObservableCollection<string>();
+
+            Dictionary<string, string[]> brandToPrefixes = new Dictionary<string, string[]>
+            {
+                { "Aristokraft",         new[] { "Aristokraft" } },
+                { "Yorktowne Classic",   new[] { "YTC", "Yorktowne Classic" } },
+                { "Yorktowne Historic",  new[] { "YTH", "Yorktowne Historic" } },
+                { "Eclipse",             new[] { "Eclipse" } }
+            };
+
+            string brand_name = "";
+            string normalized_style_name = null;
+            string normalized_brand_style_name = null;
+
+            // Split the style name into parts
+            string current_style_name = value.Vendor_Style_Name;
+            string[] parts = current_style_name.Split(new[] { " - " }, StringSplitOptions.None);
+
+            if (parts.Length >= 2)
+            {
+                // Determine brand name based on known prefixes
+                foreach (var kvp in brandToPrefixes)
+                {
+                    if (kvp.Value.Any(prefix => parts[0].Equals(prefix, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        brand_name = kvp.Key;
+                        break;
+                    }
+                }
+
+                // Ensure a valid brand name is found
+                if (!string.IsNullOrEmpty(brand_name))
+                {
+                    // Extract the style name and ignore anything after the second dash
+                    string style_name = parts[1];
+                    normalized_style_name = $"{brand_name} - {style_name}";
+                    normalized_brand_style_name = $"{brand_name.Split(' ')[0]} - {style_name}";
+                }
+            }
+
+            if (normalized_style_name == null)
+            {
+                normalized_style_name = current_style_name;
+                normalized_brand_style_name = current_style_name;
+            }
+
+            // Retrieve available finishes based on normalized style name
+            if (hardcoded_vendorFinishNames.TryGetValue(normalized_style_name, out var temp_finishes))
+            {
+                available_filtered_finishes = new ObservableCollection<string>(temp_finishes);
+            }
+            // ------ end --------------------------------------------
+            VendorFinishesFilteredByBrand = available_filtered_finishes;
+            CanUpdateFinishDropDown = true;
+
+
+            /*
             // Filter VendorFinishes based on the selected vendor style
             if (hardcoded_vendorFinishNames.TryGetValue(value.Vendor_Style_Name, out var temp_vendor_finishes))
             {
@@ -464,10 +524,8 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
                 CanUpdateFinishDropDown = false;
                 //OnPropertyChanged(nameof(CanUpdateFinishDropDown));
             }
+            */
 
-            ChosenVendorStyle = value;
-
-            OnPropertyChanged(nameof(SelectedVendorStyle));
         }
     }
 
@@ -687,52 +745,6 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
 
         return availableModifications;
     }
-    ObservableCollection<ModificationItem> get_cabinet_modifications_OLD(FamilyInstance familyInstance)
-    {
-        Document doc = APP.Global_State.Current_Project_State.Document;
-
-        // This is a type param
-        Parameter available_modifications_param = familyInstance.Symbol.LookupParameter("Vendor_Available_Modifications");
-        if (available_modifications_param == null) return null;
-
-        string available_modifications_value = available_modifications_param.AsValueString();
-        if (string.IsNullOrEmpty(available_modifications_value)) return null;
-
-        // Split available modifications
-        List<string> available_modifications_strings = new List<string>(
-            available_modifications_value.Split(',', (char)StringSplitOptions.RemoveEmptyEntries)
-        );
-
-        var availableModifications = new ObservableCollection<ModificationItem>();
-
-        // Parse availalbe modifications
-        foreach (var mod_string in available_modifications_strings)
-        {
-            availableModifications.Add(new ModificationItem { Name = mod_string.Trim(), IsChecked = false });
-        }
-
-        // Retrieve selected modifications
-        Parameter param = familyInstance.LookupParameter("Vendor_Modifications"); // This is a instance param, that is set a project param, set using global param
-        if (param == null) return availableModifications; // No selected mods, return available list
-
-        string value_string = param.AsValueString();
-        if (string.IsNullOrEmpty(value_string)) return availableModifications;
-
-        List<string> chosen_modification_strings = new List<string>(
-            value_string.Split(',', (char)StringSplitOptions.RemoveEmptyEntries)
-        );
-
-        // Mark available modifications that are selected
-        foreach (var mod in availableModifications)
-        {
-            if (chosen_modification_strings.Contains(mod.Name))
-            {
-                mod.IsChecked = true;
-            }
-        }
-
-        return availableModifications;
-    }
 
     void update_modify_tab_cabinet_based_on_current_selection()  // Runs when Current-Selection is updated
     {
@@ -882,6 +894,8 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         Vendor_Style_With_Id current_style = null;
         Get_VendorStyles_Filtered_By_Brand_And_CurrentStyle(document, familyInstance, out temp_filteredVendorStyles, out current_style);
 
+        // TODO: WHAT IF THE current_style is NULL???
+
         // 1.1: Set the filtered vendor styles as the data source for the Style dropdown.
         VendorStylesFilteredByBrand = temp_filteredVendorStyles;
 
@@ -993,12 +1007,12 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         current_finish = null;
 
         Dictionary<string, string[]> brandToPrefixes = new Dictionary<string, string[]>
-    {
-        { "Aristokraft",         new[] { "Aristokraft" } },
-        { "Yorktowne Classic",   new[] { "YTC", "Yorktowne Classic" } },
-        { "Yorktowne Historic",  new[] { "YTH", "Yorktowne Historic" } },
-        { "Eclipse",             new[] { "Eclipse" } }
-    };
+            {
+                { "Aristokraft",         new[] { "Aristokraft" } },
+                { "Yorktowne Classic",   new[] { "YTC", "Yorktowne Classic" } },
+                { "Yorktowne Historic",  new[] { "YTH", "Yorktowne Historic" } },
+                { "Eclipse",             new[] { "Eclipse" } }
+            };
 
         string brand_name = "";
         string normalized_style_name = null;
@@ -1244,7 +1258,7 @@ public static class Update_Instance_VendorStyle_And_VendorFinish_Utility
         bool updatedParamResult = false;
 
         // Start a transaction to change the type
-        using (Transaction trans = new Transaction(doc, "Change Cabinet SKU"))
+        using (Transaction trans = new Transaction(doc, "Modify Style & Finish"))
         {
             trans.Start();
 

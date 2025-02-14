@@ -3,6 +3,7 @@ using Autodesk.Revit.DB.Events;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using ek24.Dtos;
+using ek24.UI;
 using ek24.UI.ViewModels.ProjectBrowser;
 using System;
 using System.Collections.Generic;
@@ -112,15 +113,16 @@ public class EKEventsUtility
         currentProject_projectBrand = kitchenBrandParam?.AsString();
 
         Parameter kitchenStyleParam = projectInfo.LookupParameter("KitchenStyle");
-        string currentProject_kitchenstyle = kitchenStyleParam != null ? kitchenStyleParam.AsString() : "Yorktowne Classic - Henning";
+        string currentProject_kitchenstyle = kitchenStyleParam != null ? kitchenStyleParam.AsValueString() : "Yorktowne Classic - Henning";
         Parameter kitchenFinishParam = projectInfo.LookupParameter("KitchenFinish");
-        string currentProject_kitchenfinish = kitchenFinishParam != null ? kitchenFinishParam.AsString() : "YTC-Henning-PAINT1";
+        string currentProject_kitchenfinish = kitchenFinishParam != null ? kitchenFinishParam.AsValueString() : "";
 
         set_project_view_filter(doc);
         APP.Global_State.Current_Project_State.EKProjectKitchenBrand = currentProject_projectBrand;
 
         APP.Global_State.Current_Project_State.EKProjectKitchenStyle = currentProject_kitchenstyle;
         APP.Global_State.Current_Project_State.EKProjectKitchenFinish = currentProject_kitchenfinish;
+        EK24ProjectProperties_ViewModel.EKProjectKitchenStyleFinish = currentProject_kitchenstyle + " - " + currentProject_kitchenfinish;
     }
 
     public void HandleDocumentClosingEvent(object sender, DocumentClosingEventArgs e)
@@ -257,6 +259,7 @@ public class EKEventsUtility
                 // Get the Project Information element
                 ProjectInfo projectInfo = doc.ProjectInformation;
                 Parameter kitchenBrandParam = projectInfo.LookupParameter("KitchenBrand");
+                if (kitchenBrandParam == null) return;
                 string currentKitchenBrandParamValue = kitchenBrandParam.AsString();
 
                 //FilterRule manufacturerRule = ParameterFilterRuleFactory.CreateEqualsRule(manufacturerParamId, currentKitchenBrandParamValue);
