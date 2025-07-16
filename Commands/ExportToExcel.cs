@@ -185,7 +185,7 @@ public class ExportToExcel
 
         // Filter for cabinet-data-models with chosen design option
         // Any element in the "Main Model" is included in every design option
-        List<EKCabinetDataModel> filteredEKCabinetDataModels = cabinetDataModels
+        List<EKCabinetTableDataModel> filteredEKCabinetDataModels = cabinetDataModels
             .Where(model => model.DesignOption == chosenDesignOptionName || model.DesignOption == "Main Model")
             .ToList();
 

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Autodesk.Revit.UI;
+﻿using Autodesk.Revit.UI;
 using ek24.UI.Models.Revit;
 using Microsoft.Office.Interop.Excel;
+using System;
+using System.Collections.Generic;
 
 
 namespace ek24.Utils;
@@ -19,7 +19,7 @@ public class ExcelExporter
         //EagleKitchenViewModel.AppendLog("created an instance of ExcelExporter with filePath: " + filePath);
     }
 
-    public void ExportCabinetDataToExcel(string worksheetName, List<EKCabinetDataModel> cabinetDataModels)
+    public void ExportCabinetDataToExcel(string worksheetName, List<EKCabinetTableDataModel> cabinetDataModels)
     {
         // Here Application is Microsoft.Office.Interop.Excel.Application
         /* Old Way
@@ -76,13 +76,13 @@ public class ExcelExporter
                 // Part 2:
                 worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 1] = cabinetDataModel.DesignOption;
                 worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 2] = cabinetDataModel.Brand;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 3] = cabinetDataModel.Shape;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 4] = cabinetDataModel.EagleSkew;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 5] = cabinetDataModel.BrandSkew;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 3] = cabinetDataModel.Configuration;
+                //worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 4] = cabinetDataModel.EagleSkew;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 5] = cabinetDataModel.BrandSKU;
                 worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 6] = cabinetDataModel.Notes;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 7] = cabinetDataModel.Style;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 8] = cabinetDataModel.Species;
-                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 9] = cabinetDataModel.Finish;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 7] = cabinetDataModel.VendorStyle;
+                //worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 8] = cabinetDataModel.Species;
+                worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 9] = cabinetDataModel.VendorFinish;
                 worksheet.Cells[cabinetDataModels.IndexOf(cabinetDataModel) + 3, 10] = cabinetDataModel.Count;
             }
             //EagleKitchenViewModel.AppendLog("Data written to 'Cabinets' workbook");

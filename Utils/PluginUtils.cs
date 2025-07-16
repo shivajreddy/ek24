@@ -65,18 +65,18 @@ public static class PluginUtils
         var declaringType = MethodBase.GetCurrentMethod()?.DeclaringType;
         if (declaringType == null) return;
         var pushButtonName = declaringType?.Name;
-        const string pushButtonTextName = "Change Brand";
+        const string pushButtonTextName = "CREATE P.O.";
         var assembly = Assembly.GetExecutingAssembly();
         var assemblyLocation = assembly.Location;
         const string iconName = "change_brand.png";
         const string toolTipInfo = "Change the Brand of Kitchen";
 
         /// Class that handles showing the UI
-        const string fullClassName = "ek24.Commands.ChangeBrandCommand";
+        const string fullClassName = "ek24.ExportToExcel";
 
         var pushButtonData = new PushButtonData(
             //name: pushButtonName,
-            name: "ChangeBrand",
+            name: "CREATE P.O.",
             text: pushButtonTextName,
             assemblyName: assemblyLocation,
             className: fullClassName

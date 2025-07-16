@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Input;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI.Selection;
-using ek24.Commands;
-using ek24.RequestHandling;
+﻿using ek24.RequestHandling;
 using ek24.UI.Commands;
-using ek24.UI.Models.Revit;
+using System.ComponentModel;
+using System.Windows.Input;
 
 
 namespace ek24.UI.ViewModels.Manage;
@@ -66,12 +59,12 @@ public class ManageViewModel : INotifyPropertyChanged
         APP.ExternalEvent?.Raise();
     }
 
-    public ICommand ExportToExcelCommand { get; }
-    private void RaiseExportToExcelEvent()
-    {
-        APP.RequestHandler.RequestType = RequestType.Manage_ExportQuantitiesToExcel;
-        APP.ExternalEvent?.Raise();
-    }
+    //public ICommand ExportToExcelCommand { get; }
+    //private void RaiseExportToExcelEvent()
+    //{
+    //    APP.RequestHandler.RequestType = RequestType.Manage_ExportQuantitiesToExcel;
+    //    APP.ExternalEvent?.Raise();
+    //}
 
 
     public ManageViewModel()
@@ -82,7 +75,7 @@ public class ManageViewModel : INotifyPropertyChanged
         //PrintToPdfCommand = new AsyncRelayCommand(RaisePrintEvent);
 
 
-        ExportToExcelCommand = new RelayCommand(RaiseExportToExcelEvent);
+        //ExportToExcelCommand = new RelayCommand(RaiseExportToExcelEvent);
     }
 
 }

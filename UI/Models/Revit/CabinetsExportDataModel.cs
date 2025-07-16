@@ -1,9 +1,6 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autodesk.Revit.DB;
 
 
 namespace ek24.UI.Models.Revit;
@@ -11,10 +8,10 @@ namespace ek24.UI.Models.Revit;
 
 public class CabinetsExportDataModel
 {
-    public static List<EKCrownMoldingDataModel> ConvertEKCrownMoldingInstancesToEKCrownMoldingDataModels(List<FamilyInstance> familyInstances)
+    public static List<EKCrownMoldingTableDataModel> ConvertEKCrownMoldingInstancesToEKCrownMoldingDataModels(List<FamilyInstance> familyInstances)
     {
         // HashMap for all unique rows
-        var crownMoldingDataModelsDictionary = new Dictionary<string, EKCrownMoldingDataModel>();
+        var crownMoldingDataModelsDictionary = new Dictionary<string, EKCrownMoldingTableDataModel>();
 
 
         foreach (var instance in familyInstances)
@@ -37,11 +34,11 @@ public class CabinetsExportDataModel
             // New row item, add a new CabinetDataModel with count set to 1
             else
             {
-                crownMoldingDataModelsDictionary[key] = new EKCrownMoldingDataModel
+                crownMoldingDataModelsDictionary[key] = new EKCrownMoldingTableDataModel
                 {
                     DesignOption = designOption,
                     Brand = brand,
-                    BrandSkew = vendorSkew,
+                    SKU = vendorSkew,
                     Count = 1
                 };
 
@@ -53,10 +50,10 @@ public class CabinetsExportDataModel
         return crownMoldingDataModelsDictionary.Values.ToList();
     }
 
-    public static List<EKSidePanelDataModel> ConvertEKSidePanelInstancesToEKCrownMoldingDataModels(List<FamilyInstance> familyInstances)
+    public static List<EKSidePanelTableDataModel> ConvertEKSidePanelInstancesToEKCrownMoldingDataModels(List<FamilyInstance> familyInstances)
     {
         // HashMap for all unique rows
-        var sidePanelDataModelsDictionary = new Dictionary<string, EKSidePanelDataModel>();
+        var sidePanelDataModelsDictionary = new Dictionary<string, EKSidePanelTableDataModel>();
 
         foreach (var instance in familyInstances)
         {
@@ -78,11 +75,11 @@ public class CabinetsExportDataModel
             // New row item, add a new CabinetDataModel with count set to 1
             else
             {
-                sidePanelDataModelsDictionary[key] = new EKSidePanelDataModel
+                sidePanelDataModelsDictionary[key] = new EKSidePanelTableDataModel
                 {
                     DesignOption = designOption,
                     Brand = brand,
-                    BrandSkew = vendorSkew,
+                    BrandSKU = vendorSkew,
                     Count = 1
                 };
 
@@ -93,10 +90,10 @@ public class CabinetsExportDataModel
         return sidePanelDataModelsDictionary.Values.ToList();
     }
 
-    public static List<EKFillerStripDataModel> ConvertEKFillerStripInstancesToEKCrownMoldingDataModels(List<FamilyInstance> familyInstances)
+    public static List<EKFillerStripTableDataModel> ConvertEKFillerStripInstancesToEKCrownMoldingDataModels(List<FamilyInstance> familyInstances)
     {
         // HashMap for all unique rows
-        var fillerStripDataModelsDictionary = new Dictionary<string, EKFillerStripDataModel>();
+        var fillerStripDataModelsDictionary = new Dictionary<string, EKFillerStripTableDataModel>();
 
         foreach (var instance in familyInstances)
         {
@@ -118,11 +115,11 @@ public class CabinetsExportDataModel
             // New row item, add a new CabinetDataModel with count set to 1
             else
             {
-                fillerStripDataModelsDictionary[key] = new EKFillerStripDataModel
+                fillerStripDataModelsDictionary[key] = new EKFillerStripTableDataModel
                 {
                     DesignOption = designOption,
                     Brand = brand,
-                    BrandSkew = vendorSkew,
+                    BrandSKU = vendorSkew,
                     Count = 1
                 };
 
@@ -133,10 +130,10 @@ public class CabinetsExportDataModel
         return fillerStripDataModelsDictionary.Values.ToList();
     }
 
-    public static List<EKCabinetDataModel> ConvertEKCabinetInstancesToEKCabinetDataModels(List<FamilyInstance> familyInstances)
+    public static List<EKCabinetTableDataModel> ConvertEKCabinetInstancesToEKCabinetDataModels(List<FamilyInstance> familyInstances)
     {
         // HashMap for all unique rows
-        var cabinetDataModels = new Dictionary<string, EKCabinetDataModel>();
+        var cabinetDataModels = new Dictionary<string, EKCabinetTableDataModel>();
 
 
         foreach (var instance in familyInstances)
@@ -168,17 +165,17 @@ public class CabinetsExportDataModel
             // New row item, add a new CabinetDataModel with count set to 1
             else
             {
-                cabinetDataModels[key] = new EKCabinetDataModel
+                cabinetDataModels[key] = new EKCabinetTableDataModel
                 {
                     DesignOption = designOption,
                     Brand = brand,
-                    Shape = shape,
-                    EagleSkew = eagleSkew,
-                    BrandSkew = vendorSkew,
+                    Configuration = shape,
+                    //EagleSkew = eagleSkew,
+                    BrandSKU = vendorSkew,
                     Notes = notes,
-                    Style = vendorStyle,
-                    Species = vendorSpecies,
-                    Finish = finish,
+                    VendorStyle = vendorStyle,
+                    //Species = vendorSpecies,
+                    VendorFinish = finish,
                     Count = 1
                 };
 
@@ -231,78 +228,60 @@ public class CabinetsExportDataModel
 }
 
 // usually you should place this in its own class file, but for convenience to look at the shape, i put it herre
-public class EKCabinetDataModel
+public class EKCabinetTableDataModel
 {
-    /*
-    // Look at headers in ExcelExporter.ExportCabinetDataToExcel() and both places should have all same headers
-
-    List of all the parameters we need on the Excel Sheet
-    Brand           Shape           Eagle-SKEW      Brand-SKEW      Notes           Style           Finish           Count
-    Vendor_Name     Family-Name     Eagle-SKEW      Brand-SKEW      Vendor_Notes    Vendor_Style    Material
-
-    Other Properties Needed
-    DesignOption
-
-    */
-
     public string DesignOption { get; set; }
+
     public string Brand { get; set; }
-    public string Shape { get; set; }
-    public string EagleSkew { get; set; }
-    public string BrandSkew { get; set; }
+    public string BrandSKU { get; set; }
+    public string Configuration { get; set; }
     public string Notes { get; set; }
-    public string Style { get; set; }
-    public string Species { get; set; }
-    public string Finish { get; set; }
+    public string VendorStyle { get; set; }
+    public string VendorSpecies { get; set; }   //new
+    public string VendorFinish { get; set; }
+    public string Features { get; set; }  // new
+    public string HingleLocation { get; set; }  // new
+    public double BaseCost { get; set; }
+    public double CostWithFeatures { get; set; }
     public int Count { get; set; }
+    //public string EagleSkew { get; set; }
+    //public string Species { get; set; }
 
-    public EKCabinetDataModel()
+    public EKCabinetTableDataModel()
     {
     }
 
-    /*
-    public CabinetDataModel(string designOption, string brand, string shape, string eagleSkew, string brandSkew, string notes, string style, string finish, int count)
-    {
-        DesignOption = designOption;
-        Brand = brand;
-        Shape = shape;
-        EagleSkew = eagleSkew;
-        BrandSkew = brandSkew;
-        Notes = notes;
-        Style = style;
-        Finish = finish;
-        Count = count;
-    }
-    */
 }
 
-public class EKCrownMoldingDataModel
+public class EKCrownMoldingTableDataModel
 {
     public string DesignOption { get; set; }
     public string Brand { get; set; }
-    public string BrandSkew { get; set; }
+    public string SKU { get; set; }
+    public string Notes { get; set; }
+    public string Length { get; set; }
     public int Count { get; set; }
 
-    public EKCrownMoldingDataModel() { }
+    public EKCrownMoldingTableDataModel() { }
 }
 
 
-public class EKSidePanelDataModel
+public class EKSidePanelTableDataModel
 {
     public string DesignOption { get; set; }
     public string Brand { get; set; }
-    public string BrandSkew { get; set; }
+    public string BrandSKU { get; set; }
     public int Count { get; set; }
 
-    public EKSidePanelDataModel() { }
+    public EKSidePanelTableDataModel() { }
 }
 
-public class EKFillerStripDataModel
+public class EKFillerStripTableDataModel
 {
     public string DesignOption { get; set; }
     public string Brand { get; set; }
-    public string BrandSkew { get; set; }
+    public string BrandSKU { get; set; }
     public int Count { get; set; }
-    public EKFillerStripDataModel() { }
+    public EKFillerStripTableDataModel() { }
 }
 

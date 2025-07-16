@@ -65,7 +65,7 @@ public enum RequestType
 
     // 'Manage' related Requests
     Manage_PrintDrawings,
-    Manage_ExportQuantitiesToExcel,
+    //Manage_ExportQuantitiesToExcel,
 
     // Misc Requests
     DevTest,
@@ -121,9 +121,10 @@ public class RequestHandler : IExternalEventHandler
                 Export_Drawings_To_PDF_Utility.PrintDocument(app);
                 //Export_Drawings_To_PDF_Utility.PrintDocumentAsync(app);
                 break;
-            case RequestType.ProjectProperties_ExportToExcel:
-                Export_To_Excel_Utility.ExportQuantitiesToExcel(app);
-                break;
+            // This is now moved to its own ExternalCommand
+            //case RequestType.ProjectProperties_ExportToExcel:
+            //    ExportToExcel.HandleExportToExcelButtonClick(app);
+            //    break;
 
 
             //case RequestType.Properties_CreateNewFamilyAndType:
@@ -144,9 +145,9 @@ public class RequestHandler : IExternalEventHandler
                 PrintToPdf.PrintDocument(app);
                 PrintToPdf.PrintDocumentAsync(app);
                 break;
-            case RequestType.Manage_ExportQuantitiesToExcel:
-                ExportToExcel.ExportQuantitiesToExcel(app);
-                break;
+            //case RequestType.Manage_ExportQuantitiesToExcel:
+            //    ExportToExcel.HandleExportToExcelButtonClick(app);
+            //    break;
 
             default:
                 break;

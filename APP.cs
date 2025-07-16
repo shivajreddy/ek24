@@ -192,6 +192,7 @@ public class EK_Project_State : INotifyPropertyChanged
 /// </summary>
 public class APP : IExternalApplication
 {
+
     // CREATE EK24 PLUGIN'S GLOBAL STATE
     public static EK_Global_State Global_State = new EK_Global_State();
 
@@ -226,7 +227,7 @@ public class APP : IExternalApplication
         PluginUtils.RegisterDockablePanel(application);
         PluginUtils.CreatePushButtonAndAddToPanel(_ribbonPanel);
 
-        //PluginUtils.CreateButton2AndAddToPanel(_ribbonPanel);
+        PluginUtils.CreateButton2AndAddToPanel(_ribbonPanel);
 
         //PluginUtils.CreateButton3AndAddToPanel(_ribbonPanel);
         //PluginUtils.CreateButton4AndAddToPanel(_ribbonPanel);

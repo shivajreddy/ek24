@@ -28,30 +28,30 @@
 		<Border Width="430" Padding="30 0" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 10">
 			<StackPanel>
 				<StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
-				<TextBlock Text="CURRENT KITCHEN BRAND:" Padding="5" VerticalAlignment="Center"/>
-				<TextBlock Padding="5 0" Text="{Binding EKProjectKitchenBrand, UpdateSourceTrigger=PropertyChanged}"
+					<TextBlock Text="CURRENT KITCHEN BRAND:" Padding="5" VerticalAlignment="Center"/>
+					<TextBlock Padding="5 0" Text="{Binding EKProjectKitchenBrand, UpdateSourceTrigger=PropertyChanged}"
 					   VerticalAlignment="Center"
 					   FontSize="16px" FontWeight="SemiBold"/>
-			</StackPanel>
+				</StackPanel>
 
-		<StackPanel Margin="0" MinWidth="300"
+				<StackPanel Margin="0" MinWidth="300"
 			HorizontalAlignment="Center" VerticalAlignment="Center">
-			<TextBlock Text="BRAND" VerticalAlignment="Center"/>
-			<ComboBox x:Name="Brands" Margin="0 2"
+					<TextBlock Text="BRAND" VerticalAlignment="Center"/>
+					<ComboBox x:Name="Brands" Margin="0 2"
                       Style="{StaticResource ModernComboBox2}"
                       ItemsSource="{Binding BrandItems}"
                       SelectedItem="{Binding SelectedBrand, Mode=TwoWay}"
                       TabIndex="0"
                       Focusable="True"/>
-		</StackPanel>
-		<Button Width="180"
+				</StackPanel>
+				<Button Width="180"
 				Margin="0 10"
 				Content="UPDATE BRAND"
 				Style="{StaticResource ModernButton2}" 
 				Command="{Binding Command_UpdateKitchenBrand}"
 				IsEnabled="{Binding canUpdateKitchenBrandButton}"
 				/>
-				</StackPanel>
+			</StackPanel>
 		</Border>
 
 		<Border Width="430" Padding="30 0" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 10">
@@ -95,14 +95,9 @@
 			</StackPanel>
 		</Border>
 
+		<!--
 		<Border Width="430" Padding="30 0" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 10">
 			<StackPanel Width="300">
-				<!--<Button 
-				Style="{StaticResource ModernButton2}" 
-				Margin="0 10"
-				Content="EXPORT DRAWINGS TO PDF"
-                Command="{Binding Command_ExportDrawingsToPdf}"
-			/>-->
 			<TextBlock Text="P.O" TextAlignment="Center"/>
 				<Button 
 				Style="{StaticResource ModernButton2}" 
@@ -113,8 +108,15 @@
 			</StackPanel>
 		</Border>
 
+-->
 
 	</StackPanel>
 </UserControl>
 
-	
+
+<!--<Button 
+		Style="{StaticResource ModernButton2}" 
+		Margin="0 10"
+		Content="EXPORT DRAWINGS TO PDF"
+		Command="{Binding Command_ExportDrawingsToPdf}"
+/>-->
