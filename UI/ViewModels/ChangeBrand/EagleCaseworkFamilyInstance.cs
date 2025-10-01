@@ -1,9 +1,11 @@
 ﻿using Autodesk.Revit.DB;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ek24.UI.ViewModels.ChangeBrand;
 
-public class CabinetFamilyInstance
+public class EagleCaseworkFamilyInstance
 {
     // Read-only properties to maintain immutability
     public ElementId ElementId { get; }
@@ -12,7 +14,7 @@ public class CabinetFamilyInstance
     public string TypeName { get; }
 
     // Constructor for FamilyInstanceInfo
-    public CabinetFamilyInstance(FamilyInstance familyInstance, string brandName, string typeName)
+    public EagleCaseworkFamilyInstance(FamilyInstance familyInstance, string brandName, string typeName)
     {
         ElementId = familyInstance.Id;
         FamilyInstance = familyInstance;
@@ -27,6 +29,8 @@ public class CabinetFamilyInstance
     }
 }
 
+/// This is the utility class that represents the file '\ek24\Resources\Excel\Cabinet Manufacturer Matrix' in
+/// the form of C# data structures
 public class BrandMapper
 {
     // Define brand names and their corresponding columns in the matrix
@@ -39,6 +43,8 @@ public class BrandMapper
     };
 
     // Define the matrix of item types and brand-specific types
+    // TODO: make the following variable to be instantiated during Revit opening(ek24 loading for first time), by
+    // using a CSV file and converting the data in csv file into this matrix.
     static string[,] matrix = new string[,]
     {
         { "W3024B", "W3024B", "W3024B", "W3024" },
@@ -125,6 +131,101 @@ public class BrandMapper
         { "NA", "FLTS72", "FLTS72", "" }
     };
 
+    // Takes in family instances and Id's of target FamilySymbols they should be changed to
+    // Returns a list of (ElementId, string) with status messages
+    private static List<Tuple<ElementId, string>> ChangeFamilyInstanceTypes(
+        Document doc,
+        List<Tuple<EagleCaseworkFamilyInstance, ElementId>> pairs)
+    {
+        var results = new List<Tuple<ElementId, string>>();
+
+        foreach (var pair in pairs)
+        {
+            var familyInstance = pair.Item1;
+            var familySymbolId = pair.Item2;
+
+            try
+            {
+                FamilySymbol targetFamilySymbol = doc.GetElement(familySymbolId) as FamilySymbol;
+
+                if (targetFamilySymbol == null)
+                {
+                    results.Add(Tuple.Create(familyInstance.FamilyInstance.Id,
+                        $"Error: Target FamilySymbol with Id {familySymbolId.IntegerValue} not found."));
+                    continue;
+                }
+
+                // Ensure that the target family symbol is active
+                if (!targetFamilySymbol.IsActive)
+                {
+                    targetFamilySymbol.Activate();
+                    doc.Regenerate(); // Make sure activation takes effect
+                }
+
+                // Change the family type for the family instance
+                familyInstance.FamilyInstance.Symbol = targetFamilySymbol;
+
+                // Success message
+                results.Add(Tuple.Create(familyInstance.FamilyInstance.Id,
+                    $"Changed FamilyInstance {familyInstance.FamilyInstance.Id.IntegerValue} to FamilySymbol {targetFamilySymbol.Name}"));
+            }
+            catch (Exception ex)
+            {
+                results.Add(Tuple.Create(familyInstance.FamilyInstance.Id,
+                    $"Error changing FamilyInstance {familyInstance.FamilyInstance.Id.IntegerValue}: {ex.Message}"));
+            }
+        }
+
+        return results;
+    }
+
+
+    public static Tuple<ElementId, string> FindTargetFamilySymbolBrandType(
+    Document doc,
+    string currentBrandName,
+    string currentBrandType,
+    string targetBrandName)
+    {
+        // LOGIC: - the column no. to look for is the current brand
+        //        - target column no. is the target brand
+        //        - find an entry in this column that is equal to current sku, and the target sku from target column
+
+        // Get column indices for current and target brands
+        int currentBrandColumn = brandIndex[currentBrandName];
+        int targetBrandColumn = brandIndex[targetBrandName];
+
+        // Search each row for a match in current brand type
+        for (int row = 0; row < matrix.GetLength(0); row++)
+        {
+            if (matrix[row, currentBrandColumn] == currentBrandType)
+            {
+                string targetSku = matrix[row, targetBrandColumn];
+
+                // Handle "NA" or "Modification" placeholders
+                if (string.IsNullOrWhiteSpace(targetSku) ||
+                    targetSku == "NA" ||
+                    targetSku == "Modification")
+                {
+                    return Tuple.Create((ElementId)null, (string)null);
+                }
+
+                // Now lookup the FamilySymbol with this targetSku
+                FilteredElementCollector collector = new FilteredElementCollector(doc)
+                    .OfClass(typeof(FamilySymbol));
+
+                FamilySymbol symbol = collector
+                    .Cast<FamilySymbol>()
+                    .FirstOrDefault(s => s.Name.Equals(targetSku, StringComparison.OrdinalIgnoreCase));
+
+                // Return both the ElementId and the target SKU string
+                return Tuple.Create(symbol?.Id ?? (ElementId)null, targetSku);
+            }
+        }
+
+        // If no match was found
+        return Tuple.Create((ElementId)null, (string)null);
+    }
+
 
     public static string FindTargetBrandType(string currentBrandName, string currentBrandType, string targetBrandName)
     {
@@ -160,9 +261,9 @@ public class BrandMapper
     }
 
     // Utility method to extract FamilyInstanceInfo from FamilyInstance objects
-    public static List<CabinetFamilyInstance> ConvertFamilyInstaceIntoCabinetFamilyInstance(List<FamilyInstance> familyInstances)
+    public static List<EagleCaseworkFamilyInstance> ConvertFamilyInstaceToEagleCaseworkFamilyInstance(List<FamilyInstance> familyInstances)
     {
-        List<CabinetFamilyInstance> familyInstanceInfos = new List<CabinetFamilyInstance>();
+        var eagleCaseWorkInstances = new List<EagleCaseworkFamilyInstance>();
 
         foreach (FamilyInstance familyInstance in familyInstances)
         {
@@ -172,14 +273,14 @@ public class BrandMapper
             // Extract type name (SKU)
             string typeName = familyInstance.Symbol?.Name ?? "Unknown Type";
 
-            // Create a new FamilyInstanceInfo object
-            CabinetFamilyInstance cabinetFamilyInstance = new CabinetFamilyInstance(familyInstance, brandName, typeName);
+            // Create the EagleCaseworkFamilyInstance object
+            var eagleCaseworkFamilyInstance = new EagleCaseworkFamilyInstance(familyInstance, brandName, typeName);
 
             // Add it to the list
-            familyInstanceInfos.Add(cabinetFamilyInstance);
+            eagleCaseWorkInstances.Add(eagleCaseworkFamilyInstance);
         }
 
-        return familyInstanceInfos;
+        return eagleCaseWorkInstances;
     }
 
     // Helper method to get the value of a type parameter from FamilyInstance

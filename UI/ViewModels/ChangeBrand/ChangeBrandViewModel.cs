@@ -125,10 +125,10 @@ public class ChangeBrandViewModel : INotifyPropertyChanged
         collector.OfClass(typeof(FamilyInstance));
         collector.OfCategory(BuiltInCategory.OST_Casework);
 
-        List<FamilyInstance> cabinets = FilterAllCabinets.FilterProjectForEagleCabinets(_doc);
+        List<FamilyInstance> cabinets = FilterEagleCabinetry.FilterProjectForEagleCabinets(_doc);
 
         // Convert the FamilyInstance list into a list of FamilyInstanceInfo objects using the utility
-        List<CabinetFamilyInstance> cabinetFaimlyInstances = BrandMapper.ConvertFamilyInstaceIntoCabinetFamilyInstance(cabinets);
+        List<EagleCaseworkFamilyInstance> cabinetFaimlyInstances = BrandMapper.ConvertFamilyInstaceToEagleCaseworkFamilyInstance(cabinets);
 
         // Create a StringBuilder to store the information to be displayed
         StringBuilder resultMessage = new StringBuilder();
@@ -166,7 +166,7 @@ public class ChangeBrandViewModel : INotifyPropertyChanged
 
         // TODO 1:
         // Map all current family-types to valid new valid-family types
-        var cabinetInstancesWithTargetFamilyType = new List<Tuple<CabinetFamilyInstance, string, string>>();
+        var cabinetInstancesWithTargetFamilyType = new List<Tuple<EagleCaseworkFamilyInstance, string, string>>();
 
         // Mapping of brand names to their respective brand codes
         Dictionary<string, string> brandCodeMapping = new Dictionary<string, string>
@@ -210,7 +210,7 @@ public class ChangeBrandViewModel : INotifyPropertyChanged
 
 
                 // Add the pair (CabinetFamilyInstance, new family name, new type name) to the list
-                cabinetInstancesWithTargetFamilyType.Add(new Tuple<CabinetFamilyInstance, string, string>(
+                cabinetInstancesWithTargetFamilyType.Add(new Tuple<EagleCaseworkFamilyInstance, string, string>(
                     cabinetFamilyInstance,
                     targetFamilyName,   // New brand name
                     mappedSKU               // Mapped SKU/type name for the new brand
@@ -226,7 +226,7 @@ public class ChangeBrandViewModel : INotifyPropertyChanged
 
     // This is given a list of pairs. 1st item in pair is a cabinet family instances that have the revit element id,
     // and the 2nd item in the pair is the target family&type to change to
-    private void ChangeFamilyTypes(List<Tuple<CabinetFamilyInstance, string, string>> cabinetInstancesWithTargetFamilyType)
+    private void ChangeFamilyTypes(List<Tuple<EagleCaseworkFamilyInstance, string, string>> cabinetInstancesWithTargetFamilyType)
     {
         // StringBuilder to collect error messages
         StringBuilder errorMessages = new StringBuilder();
@@ -234,7 +234,7 @@ public class ChangeBrandViewModel : INotifyPropertyChanged
         // Loop through the list of cabinet instances and target family/type pairs
         foreach (var item in cabinetInstancesWithTargetFamilyType)
         {
-            CabinetFamilyInstance currentInstance = item.Item1;
+            EagleCaseworkFamilyInstance currentInstance = item.Item1;
             string targetFamilyName = item.Item2;
             string targetTypeName = item.Item3;
 

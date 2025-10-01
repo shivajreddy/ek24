@@ -44,8 +44,9 @@ public class EKFamilySymbol
 public class EK_SKU
 {
     public FamilySymbol RevitFamilySymbol { get; set; }  // Actual Revit FamilySymbol
-    public string TypeName { get; set; }    // Revit's Type of a family
-    public string VendorNotes { get; set; }    // "Vendor_Notes" param's value
+    public string TypeName { get; set; }        // Revit's Type of a family
+    public string VendorNotes { get; set; }     // "Vendor_Notes" param's value
+    public string VendorSKU { get; set; }       // "Vendor_SKU" param's value
 
     public override string ToString()
     {
@@ -56,11 +57,12 @@ public class EK_SKU
         return $"{TypeName} - {VendorNotes}";
     }
 
-    public EK_SKU(string typeName, string vendorNotes, FamilySymbol revitFamilySymbol)
+    public EK_SKU(string typeName, string vendorNotes, FamilySymbol revitFamilySymbol, string vendorSKU)
     {
         TypeName = typeName;
         VendorNotes = vendorNotes;
         RevitFamilySymbol = revitFamilySymbol;
+        VendorSKU = vendorSKU;
     }
 }
 

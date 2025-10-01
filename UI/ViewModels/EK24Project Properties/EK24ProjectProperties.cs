@@ -362,7 +362,7 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
     {
         Update_ProjectKitchenBrand_Utility.target_project_kitchenBrand = SelectedBrand;
 
-        Debug.WriteLine("UPDATE Instance Param Value");
+        Debug.WriteLine("UPDATE KITCHEN BRAND");
         APP.RequestHandler.RequestType = RequestType.ProjectProperties_UpdateKitchenBrand;
         APP.ExternalEvent?.Raise();
 
@@ -421,38 +421,45 @@ public static class Update_ProjectKitchenBrand_Utility
 
     public static void change_ekKitchenBrand(UIApplication app)
     {
-        if (target_project_kitchenBrand == APP.Global_State.Current_Project_State.EKProjectKitchenBrand) return;
+        //if (target_project_kitchenBrand == APP.Global_State.Current_Project_State.EKProjectKitchenBrand) return;
 
-        var current_project_state = APP.Global_State.Current_Project_State;
-        var current_project_kitchenBrand = APP.Global_State.Current_Project_State.EKProjectKitchenBrand;
-
+        //var current_project_state = APP.Global_State.Current_Project_State;
+        //var current_project_kitchenBrand = APP.Global_State.Current_Project_State.EKProjectKitchenBrand;
         Document doc = app.ActiveUIDocument.Document;
-
-        // Call the function that changes the project parameter
 
         // Get the Project Information element
         ProjectInfo projectInfo = doc.ProjectInformation;
         Parameter kitchenBrandParam = projectInfo.LookupParameter("KitchenBrand");
+        if (kitchenBrandParam == null) return;
+        var current_project_kitchenBrand = kitchenBrandParam.AsValueString();
+        if (current_project_kitchenBrand == "" || current_project_kitchenBrand == target_project_kitchenBrand) return;
 
         using (Transaction t = new Transaction(doc, "Change Kitchen Brand"))
         {
             try
             {
                 t.Start();
-                // 1. Update ProjectInformation parameter
-                kitchenBrandParam.Set(target_project_kitchenBrand);
 
                 // 2. Update the Cabinet Families
-                update_cabinets(doc, current_project_kitchenBrand, target_project_kitchenBrand);
+                //update_cabinets(doc, current_project_kitchenBrand, target_project_kitchenBrand);
+                // 3. Update the Casework Families
+                update_casework_instances(doc, current_project_kitchenBrand, target_project_kitchenBrand);
 
-                // 3. Updat view filter
+                // 1. Update ProjectInformation parameter
+                // ideally would do this after changing the instances, but have to rework on the below
+                // cabinet&casework changing functions to not use the current project kitchenbrand and use 
+                // the name from memory. so this is a todo.
+                kitchenBrandParam.Set(target_project_kitchenBrand); // update in revit doc
+                APP.Global_State.Current_Project_State.EKProjectKitchenBrand = target_project_kitchenBrand; // update in ek24 app's state
+
+                // 4. Updat view filter
                 update_value_of_view_kitchenbrand_viewfilter(doc, target_project_kitchenBrand);
 
                 t.Commit();
             }
             catch (Exception ex)
             {
-                TaskDialog.Show("ERROR", $"Failed to change Kitchen Brand {ex.Message}");
+                TaskDialog.Show("ERROR", $"Failed to change Kitchen Brand\n Detial:{ex.Message}");
                 t.RollBack();
                 return;
             }
@@ -499,6 +506,114 @@ public static class Update_ProjectKitchenBrand_Utility
         paramFilter.SetElementFilter(parameterFilter);
     }
 
+    private static void update_casework_instances(Document doc, string current_kitchen_brand_name, string new_Kitchten_brand_name)
+    {
+        // Get all the cabinets in the project
+        FilteredElementCollector collector = new FilteredElementCollector(doc);
+        collector.OfClass(typeof(FamilyInstance));
+        collector.OfCategory(BuiltInCategory.OST_Casework);
+
+        /// Filter for all the eagle cabinetry instances, and only the casework of current kitchen brand
+        /// DESCRIPTION: say if current brand is YTC, and there are casework instances of Aristokraft, when user is changing the brand to 
+        /// either Aristocraft of YTH, so the user wouldn't expect the Aristokraft instances also to change to the new brand
+        //List<FamilyInstance> eagle_casework = FilterEagleCabinetry.FilterProjectForEagleCasework(doc); // this would get all casework
+        List<FamilyInstance> eagle_casework = FilterEagleCabinetry.FilterProjectForEagleCasework(doc, current_kitchen_brand_name);
+
+        // All Eagle Kitchen cabinetry Family symbols in this doc
+        var eagle_casework_symbols = APP.Global_State.Current_Project_State.EKCaseworkSymbols;
+
+        // Convert the FamilyInstance list into a list of FamilyInstanceInfo objects using the utility
+        List<EagleCaseworkFamilyInstance> eagleCaseworkInstances = BrandMapper.ConvertFamilyInstaceToEagleCaseworkFamilyInstance(eagle_casework);
+
+        // Create a StringBuilder to display the matching results
+        StringBuilder resultMessage = new StringBuilder();
+        int match_found_count = 0, match_not_found_count = 0;
+        resultMessage.Append($"Total Casework Instances in Project: {eagle_casework.Count()}\n");
+        //resultMessage.Append($"Match Found:{match_found_count}   Match NOT-Found: {match_not_found_count}");
+        StringBuilder result_Success_Message = new StringBuilder();
+        StringBuilder result_Failed_Message = new StringBuilder();
+
+        // Create an instance of BrandMapper
+        BrandMapper mapper = new BrandMapper();
+
+        Debug.WriteLine("Going to check all the cabinetFamilyInstances");
+
+        // Map all current family-types to valid new valid-family types
+        var cabinetInstancesWithTargetFamilyType = new List<Tuple<EagleCaseworkFamilyInstance, ElementId>>();
+
+        // MATCH CRITERIA 1: Find the target SKU in the matrix
+        // MATCH CRITERIA 2: Find a type with same 'Vendor_SKU' value as current symbol
+        foreach (var eagleCaseworkInst in eagleCaseworkInstances)
+        {
+            bool found_criteria_1 = false;
+            // MATHC CRITERIA 1
+            {
+                var res = BrandMapper.FindTargetFamilySymbolBrandType(doc, eagleCaseworkInst.BrandName, eagleCaseworkInst.TypeName, new_Kitchten_brand_name);
+                ElementId familySymbolId = res.Item1;
+                string mappedSKU = res.Item2;
+                if (familySymbolId != null)
+                {
+                    cabinetInstancesWithTargetFamilyType.Add(new Tuple<EagleCaseworkFamilyInstance, ElementId>(
+                        eagleCaseworkInst,
+                        familySymbolId
+                        ));
+
+                    match_found_count += 1;
+                    // Append the mapping information to the StringBuilder
+                    result_Success_Message.AppendLine($"{eagleCaseworkInst.BrandName}-{eagleCaseworkInst.TypeName} => {new_Kitchten_brand_name}-{mappedSKU}");
+                    found_criteria_1 = true; // mark this as true
+                }
+            }
+            // MATHC CRITERIA 2
+            bool found_creitier_2 = false;
+            if (!found_criteria_1)
+            {
+                // Get the Vendor_SKU for the current eagleCaseworkInst item, skip if there is no param-value.
+                // and find a FamilySymbol of targetbrand and same param-value
+                var vendor_sku_param = eagleCaseworkInst.FamilyInstance.Symbol?.LookupParameter("Vendor_SKU");
+                string vendor_sku_param_val = vendor_sku_param?.HasValue == true ? vendor_sku_param.AsString() ?? vendor_sku_param.AsValueString() ?? string.Empty : string.Empty;
+                if (vendor_sku_param_val == "" || vendor_sku_param_val == string.Empty) continue;
+                foreach (var eagle_casework_symbol in eagle_casework_symbols)
+                {
+                    if (eagle_casework_symbol.EKBrand == target_project_kitchenBrand && eagle_casework_symbol.EKSKU.VendorSKU == vendor_sku_param_val)
+                    {
+                        cabinetInstancesWithTargetFamilyType.Add(new Tuple<EagleCaseworkFamilyInstance, ElementId>(
+                            eagleCaseworkInst,
+                            eagle_casework_symbol.RevitFamilySymbolId
+                            ));
+
+                        match_found_count += 1;
+                        // Append the mapping information to the StringBuilder
+                        result_Success_Message.AppendLine($"{eagleCaseworkInst.BrandName}-{eagleCaseworkInst.TypeName} => {new_Kitchten_brand_name}-{vendor_sku_param_val}");
+
+                        found_creitier_2 = true;
+                    }
+                }
+            }
+            if (!found_criteria_1 & !found_creitier_2)
+            {
+                match_not_found_count += 1;
+                // If no mapping found, add a message
+                result_Failed_Message.AppendLine($"{eagleCaseworkInst.BrandName}-{eagleCaseworkInst.TypeName} => XXX ");
+            }
+        }
+
+        /// SHOW THE RESULTS TO THE USER BEFORE PERFORMING THE ACTUAL CHANGE SYMBOL OPERATION
+        // Insert the totals at the top of the StringBuilder
+        //resultMessage.Insert(1, $"Total Matches Found: {match_found_count}\nTotal Matches NOT-Found: {match_not_found_count}\n");
+        resultMessage.Append($"Total Matches Found: {match_found_count}\nTotal Matches NOT-Found: {match_not_found_count}\n");
+        resultMessage.Append(result_Success_Message);
+        resultMessage.Append(result_Failed_Message);
+        // Display the information using TaskDialog
+        TaskDialog.Show("SKU MAPPING RESULTS", resultMessage.ToString());
+
+        /// PERFORM THE FAMILY SYMBOL CONVERTION
+        // Call the Helper function that changes the family symbols for instances
+        Debug.WriteLine("Call the Helper function that changes the family symbols for instances");
+        ChangeFamilyInstanceTypes(doc, cabinetInstancesWithTargetFamilyType);
+        //ChangeFamilyTypes(doc, cabinetInstancesWithTargetFamilyType);
+    }
+
     private static void update_cabinets(Document doc, string current_kitchen_brand_name, string new_Kitchten_brand_name)
     {
         // Get all the cabinets in the project
@@ -506,17 +621,18 @@ public static class Update_ProjectKitchenBrand_Utility
         collector.OfClass(typeof(FamilyInstance));
         collector.OfCategory(BuiltInCategory.OST_Casework);
 
-        List<FamilyInstance> cabinets = FilterAllCabinets.FilterProjectForEagleCabinets(doc);
+        List<FamilyInstance> eagle_cabinets = FilterEagleCabinetry.FilterProjectForEagleCabinets(doc);
 
-        var x = APP.Global_State.Current_Project_State.EKCaseworkSymbols;
+        // All Eagle Kitchen cabinetry Family symbols in this doc
+        var eagle_casework_symbols = APP.Global_State.Current_Project_State.EKCaseworkSymbols;
 
         // Convert the FamilyInstance list into a list of FamilyInstanceInfo objects using the utility
-        List<CabinetFamilyInstance> cabinetFaimlyInstances = BrandMapper.ConvertFamilyInstaceIntoCabinetFamilyInstance(cabinets);
+        List<EagleCaseworkFamilyInstance> cabinetFaimlyInstances = BrandMapper.ConvertFamilyInstaceToEagleCaseworkFamilyInstance(eagle_cabinets);
 
         // Create a StringBuilder to store the information to be displayed
         StringBuilder resultMessage = new StringBuilder();
         int match_found_count = 0, match_not_found_count = 0;
-        resultMessage.Append($"Total Cabinet Instances in Project: {cabinets.Count()}\n");
+        resultMessage.Append($"Total Cabinet Instances in Project: {eagle_cabinets.Count()}\n");
         //resultMessage.Append($"Match Found:{match_found_count}   Match NOT-Found: {match_not_found_count}");
 
         StringBuilder result_Success_Message = new StringBuilder();
@@ -560,7 +676,7 @@ public static class Update_ProjectKitchenBrand_Utility
 
         // TODO 1:
         // Map all current family-types to valid new valid-family types
-        var cabinetInstancesWithTargetFamilyType = new List<Tuple<CabinetFamilyInstance, string, string>>();
+        var cabinetInstancesWithTargetFamilyType = new List<Tuple<EagleCaseworkFamilyInstance, string, string>>();
 
         // Mapping of brand names to their respective brand codes
         Dictionary<string, string> brandCodeMapping = new Dictionary<string, string>
@@ -604,7 +720,7 @@ public static class Update_ProjectKitchenBrand_Utility
 
 
                 // Add the pair (CabinetFamilyInstance, new family name, new type name) to the list
-                cabinetInstancesWithTargetFamilyType.Add(new Tuple<CabinetFamilyInstance, string, string>(
+                cabinetInstancesWithTargetFamilyType.Add(new Tuple<EagleCaseworkFamilyInstance, string, string>(
                     cabinetFamilyInstance,
                     targetFamilyName,   // New brand name
                     mappedSKU               // Mapped SKU/type name for the new brand
@@ -618,7 +734,7 @@ public static class Update_ProjectKitchenBrand_Utility
         ChangeFamilyTypes(doc, cabinetInstancesWithTargetFamilyType);
     }
 
-    private static void ChangeFamilyTypes(Document doc, List<Tuple<CabinetFamilyInstance, string, string>> cabinetInstancesWithTargetFamilyType)
+    private static void ChangeFamilyTypes(Document doc, List<Tuple<EagleCaseworkFamilyInstance, string, string>> cabinetInstancesWithTargetFamilyType)
     {
         // StringBuilder to collect error messages
         StringBuilder errorMessages = new StringBuilder();
@@ -626,7 +742,7 @@ public static class Update_ProjectKitchenBrand_Utility
         // Loop through the list of cabinet instances and target family/type pairs
         foreach (var item in cabinetInstancesWithTargetFamilyType)
         {
-            CabinetFamilyInstance currentInstance = item.Item1;
+            EagleCaseworkFamilyInstance currentInstance = item.Item1;
             string targetFamilyName = item.Item2;
             string targetTypeName = item.Item3;
 
@@ -659,6 +775,47 @@ public static class Update_ProjectKitchenBrand_Utility
         {
             TaskDialog.Show("Errors", errorMessages.ToString());
         }
+    }
+
+    // Takes in family instances, and Id's of target FamilySymbols that each family instance should be changed to
+    private static void ChangeFamilyInstanceTypes(Document doc, List<Tuple<EagleCaseworkFamilyInstance, ElementId>> pairs)
+    {
+        // StringBuilder to collect error messages
+        StringBuilder errorMessages = new StringBuilder();
+
+        foreach (var pair in pairs)
+        {
+            try
+            {
+                var familyInstance = pair.Item1;    // change this family instance
+                var familySymbolId = pair.Item2;
+                FamilySymbol targetFamilySymbol = doc.GetElement(familySymbolId) as FamilySymbol; // into this family symbol
+
+                if (targetFamilySymbol == null)
+                {
+                    errorMessages.AppendLine($"Could not find FamilySymbol with Id {familySymbolId}.");
+                    continue;
+                }
+
+                // Ensure that the target family symbol is loaded and active in the project
+                if (!targetFamilySymbol.IsActive)
+                {
+                    targetFamilySymbol.Activate();
+                    doc.Regenerate(); // safer than using familyInstance.FamilyInstance.Document
+                }
+
+                // Change the family type for the family instance
+                familyInstance.FamilyInstance.Symbol = targetFamilySymbol;
+            }
+            catch (Exception ex)
+            {
+                // Collect detailed error info
+                errorMessages.AppendLine($"Error changing type for instance {pair.Item1?.FamilyInstance?.Id}: {ex.Message}");
+            }
+        }
+
+        // Show the task dialog with all error messages if there are any
+        if (errorMessages.Length > 0) TaskDialog.Show("Errors", errorMessages.ToString());
     }
 
     // Helper method to find the family symbol (family type) by family name and type name
@@ -698,7 +855,7 @@ public static class Update_Project_Style_Finish_Utility
         Document doc = app.ActiveUIDocument.Document;
 
         // Get all cabinet instances
-        List<FamilyInstance> cabinet_instances = FilterAllCabinets.FilterProjectForEagleCabinets(doc);
+        List<FamilyInstance> cabinet_instances = FilterEagleCabinetry.FilterProjectForEagleCabinets(doc);
 
         //Vendor_Style_With_Id chosen_vendor_style = EK24ProjectProperties_ViewModel.ChosenVendorStyle;
         string chosen_vendor_style = EK24ProjectProperties_ViewModel.ChosenVendorStyle;

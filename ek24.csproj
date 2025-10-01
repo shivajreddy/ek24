@@ -113,7 +113,7 @@
     <Compile Include="Commands\ShowDockCommand.cs" />
     <Compile Include="Commands\TestCommand.cs" />
     <Compile Include="Commands\UpdateViewFilter.cs" />
-    <Compile Include="Commands\Utils\FilterAllCabinets.cs" />
+    <Compile Include="Commands\Utils\FilterEagleCabinetry.cs" />
     <Compile Include="APP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Commands\RelayCommand.cs" />
@@ -132,7 +132,7 @@
     <Compile Include="UI\Models\Revit\Brand.cs" />
     <Compile Include="UI\Services\SelectionService.cs" />
     <Compile Include="UI\ViewModels\ChangeBrand\ChangeBrandViewModel.cs" />
-    <Compile Include="UI\ViewModels\ChangeBrand\CabinetFamilyInstance.cs" />
+    <Compile Include="UI\ViewModels\ChangeBrand\EagleCaseworkFamilyInstance.cs" />
     <Compile Include="UI\ViewModels\EK24Modify\EK24Modify.cs" />
     <Compile Include="UI\ViewModels\EK24Project Properties\ExportToExcel.cs" />
     <Compile Include="UI\ViewModels\MainViewModel.cs" />
@@ -204,6 +204,7 @@
     <None Include="HowToUpdate.md" />
     <None Include="Out\ek24.addin" />
     <None Include="packages.config" />
+    <None Include="Resources\Excel\Cabinet Manufacturer Matrix.xlsx" />
     <None Include="Resources\CSV\Aristokraft-Base.csv" />
     <None Include="Resources\CSV\Aristokraft-Crownmoulding.csv" />
     <None Include="Resources\CSV\Aristokraft-Tall.csv" />

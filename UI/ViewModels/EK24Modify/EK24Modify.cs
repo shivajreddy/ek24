@@ -647,7 +647,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         FamilyInstance familyInstance = document.GetElement(selection.GetElementIds().First()) as FamilyInstance;
 
         // Check if the singly selected family instance is a eagle cabinet
-        if (!FilterAllCabinets.IsInstanceAEagleCasework(familyInstance))
+        if (!FilterEagleCabinetry.IsInstanceAEagleCasework(familyInstance))
         {
             AvailableModifications?.Clear();
             VendorStylesFilteredByBrand?.Clear();
@@ -878,7 +878,7 @@ public class EK24Modify_ViewModel : INotifyPropertyChanged
         FamilyInstance familyInstance = document.GetElement(selection.GetElementIds().First()) as FamilyInstance;
 
         // Validate that the selected family instance is an Eagle cabinet.
-        if (!FilterAllCabinets.IsInstanceAEagleCasework(familyInstance))
+        if (!FilterEagleCabinetry.IsInstanceAEagleCasework(familyInstance))
         {
             // If the selected instance is not an Eagle cabinet, reset the Style and Finish properties and disable the Style dropdown.
             SelectedVendorStyle = null;

@@ -76,15 +76,16 @@ public class EKEventsUtility
             var ekCategoryParam = familySymbol.LookupParameter("EKCategory");
             var ekCategoryValue = ekCategoryParam == null ? "" : ekCategoryParam.AsValueString();
 
-            var vendorSKUParam = familySymbol.LookupParameter("Vendor_SKU");
+            var typeName = familySymbol.Name;
+
             // ONCE THE FAMILIES ARE UPDATED USE 'Vendor_SKU' param instead of the literal type name
-            //var vendorSKUValue = vendorSKUParam == null ? "" : vendorSKUParam.AsValueString();
-            var vendorSKUValue = familySymbol.Name;
+            var vendorSKUParam = familySymbol.LookupParameter("Vendor_SKU");
+            string vendorSKUValue = vendorSKUParam?.HasValue == true ? vendorSKUParam.AsString() ?? vendorSKUParam.AsValueString() ?? string.Empty : string.Empty;
 
             var notesParam = familySymbol.LookupParameter("Vendor_Notes");
             var notesValue = notesParam == null ? "" : notesParam.AsValueString();
 
-            var ek_sku = new EK_SKU(vendorSKUValue, notesValue, familySymbol);
+            var ek_sku = new EK_SKU(typeName, notesValue, familySymbol, vendorSKUValue);
 
             var ekFamilySymbol = new EKFamilySymbol(
                 //revitFamilySymbol: familySymbol,
