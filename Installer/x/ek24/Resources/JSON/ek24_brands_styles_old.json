@@ -1,0 +1,364 @@
+{
+  "Brands": [
+    {
+      "BrandName": "Aristokraft",
+      "Styles": [
+        {
+          "StyleName": "Sinclair",
+          "Properties": [
+            "partial overlay",
+            "flat panel",
+            "furniture board boxes",
+            "stapled butt joint drawers",
+            "3/4 extension drawers",
+            "standard drawer glides",
+            "standard hinges"
+          ],
+          "SpeciesVariants": [
+            {
+              "Species": "birch",
+              "Finishes": [
+                "Arid",
+                "Flagstone",
+                "Natural",
+                "Quill",
+                "Saddle",
+                "Umber"
+              ]
+            }
+          ]
+        },
+        {
+          "StyleName": "Benton",
+          "Properties": [
+            "partial overlay",
+            "flat panel",
+            "furniture board boxes",
+            "stapled butt joint drawers",
+            "3/4 extension drawers",
+            "standard drawer glides",
+            "standard hinges"
+          ],
+          "SpeciesVariants": [
+            {
+              "Species": "birch",
+              "Finishes": [
+                "Arid",
+                "Flagstone",
+                "Natural",
+                "Quill",
+                "Saddle",
+                "Umber"
+              ]
+            }
+          ]
+        },
+        {
+          "StyleName": "Brellin",
+          "Properties": [
+            "full overlay",
+            "flat panel",
+            "furniture board boxes",
+            "stapled butt joint drawers",
+            "3/4 extension drawers",
+            "standard drawer glides",
+            "standard hinges"
+          ],
+          "SpeciesVariants": [
+            {
+              "Species": "Purestyle",
+              "Finishes": [ "Colada", "Frost", "Stone Gray", "White" ]
+            }
+          ]
+        },
+        {
+          "StyleName": "Winstead",
+          "Properties": [
+            "full overlay",
+            "flat panel",
+            "furniture board boxes",
+            "stapled butt joint drawers",
+            "3/4 extension drawers",
+            "standard drawer glides",
+            "standard hinges"
+          ],
+          "SpeciesVariants": [
+            {
+              "Species": "birch",
+              "Finishes": [
+                "Arid",
+                "Flagstone",
+                "Natural",
+                "Quill",
+                "Saddle",
+                "Umber"
+              ]
+            },
+            {
+              "Species": "neutral paint",
+              "Finishes": [ "Colada", "Frost", "Stone Gray", "White" ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "BrandName": "Yorktowne Classic",
+      "Styles": [
+        {
+          "StyleName": "Henning",
+          "Properties": [
+            "full overlay",
+            "flat panel",
+            "dovetail drawers",
+            "soft close doors + drawers",
+            "full extension undermount glides",
+            "metal shelf supports",
+            "veneer center panel"
+          ],
+          "SpeciesVariants": [
+            {
+              "Species": "maple",
+              "Finishes": [
+                "Amaretto",
+                "Biscotti",
+                "Eagle Rock",
+                "Espresso",
+                "Ginger Snap",
+                "Onyx",
+                "neutral paint",
+                "Chai Latte",
+                "Gray Owl",
+                "Irish Crème",
+                "Macchiato",
+                "Sea Salt",
+                "rich paint",
+                "Carriage Black",
+                "Celeste",
+                "Earl Gray",
+                "Eucalyptus",
+                "Frappe",
+                "Gale"
+              ]
+            }
+          ]
+        },
+        {
+          "StyleName": "Stillwater",
+          "Properties": [
+            "full overlay",
+            "flat panel",
+            "dovetail drawers",
+            "soft close doors + drawers",
+            "full extension undermount glides",
+            "metal shelf supports",
+            "veneer center panel"
+          ],
+          "SpeciesVariants": [
+            {
+              "Species": "maple",
+              "Finishes": [
+                "Amaretto",
+                "Biscotti",
+                "Eagle Rock",
+                "Espresso",
+                "Ginger Snap",
+                "Onyx",
+                "neutral paint",
+                "Chai Latte",
+                "Gray Owl",
+                "Irish Crème",
+                "Macchiato",
+                "Sea Salt",
+                "rich paint",
+                "Carriage Black",
+                "Celeste",
+                "Earl Gray",
+                "Eucalyptus",
+                "Frappe",
+                "Gale"
+              ]
+            }
+          ]
+        },
+        {
+          "StyleName": "Fillmore",
+          "Properties": [
+            "full overlay",
+            "raised panel",
+            "dovetail drawers",
+            "soft close doors + drawers",
+            "full extension undermount glides",
+            "metal shelf supports",
+            "veneer center panel"
+          ],
+          "SpeciesVariants": [
+            {
+              "Species": "maple",
+              "Finishes": [
+                "Biscotti",
+                "Eagle Rock",
+                "Espresso",
+                "Ginger Snap",
+                "Onyx",
+                "neutral paint",
+                "Chai Latte",
+                "Gray Owl",
+                "Irish Crème",
+                "Macchiato",
+                "Sea Salt",
+                "rich paint",
+                "Carriage Black",
+                "Celeste",
+                "Earl Gray",
+                "Eucalyptus",
+                "Frappe",
+                "Gale"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "BrandName": "Eclipse by Shiloh",
+      "Styles": [
+        {
+          "StyleName": "Metropolitan",
+          "Properties": [],
+          "SpeciesVariants": [
+            {
+              "Species": "high gloss acrylic",
+              "Finishes": [ "Bianco", "Bigio", "Cubanite", "Gabbiano" ]
+            },
+            {
+              "Species": "matte acrylic",
+              "Finishes": [
+                "Ash Velvet",
+                "Carbon Velvet",
+                "Charcoal Velvet",
+                "White Velvet"
+              ]
+            },
+            {
+              "Species": "thermally fused laminates",
+              "Finishes": [
+                "Kirsche",
+                "Morning Fog",
+                "Natural Elm",
+                "Takase Teak"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "BrandName": "Yorktowne Historic",
+      "Styles": [
+        {
+          "StyleName": "Corsica",
+          "Properties": [
+            "inset (beaded or flush)",
+            "flat panel",
+            "dovetail drawers",
+            "soft close doors + drawers",
+            "5-piece drawer fronts",
+            "concealed hinges",
+            "reversed raised panel doors",
+            "plywood box",
+            "wall cabinets 13\" deep"
+          ],
+          "SpeciesVariants": [
+            {
+              "Species": "maple",
+              "Finishes": [
+                "Amaretto",
+                "Biscotti",
+                "Eagle Rock",
+                "Espresso",
+                "Ginger Snap",
+                "Onyx"
+              ]
+            },
+            {
+              "Species": "neutral paint",
+              "Finishes": [
+                "Chai Latte",
+                "Irish Crème",
+                "Gray Owl",
+                "Macchiato",
+                "Sea Salt"
+              ]
+            },
+            {
+              "Species": "rich paint",
+              "Finishes": [
+                "Bay Leaf",
+                "Carriage Black",
+                "Celeste",
+                "Coffee Break",
+                "Earl Gray",
+                "Eucalyptus",
+                "Frappe",
+                "Gale",
+                "Tidal"
+              ]
+            }
+          ]
+        },
+        {
+          "StyleName": "Langdon",
+          "Properties": [
+            "inset (beaded or flush)",
+            "flat panel",
+            "dovetail drawers",
+            "soft close doors + drawers",
+            "5-piece drawer fronts",
+            "concealed hinges",
+            "reversed raised panel doors",
+            "plywood box",
+            "wall cabinets 13\" deep"
+          ],
+          "SpeciesVariants": [
+            {
+              "Species": "maple",
+              "Finishes": [
+                "Amaretto",
+                "Biscotti",
+                "Eagle Rock",
+                "Espresso",
+                "Ginger Snap",
+                "Onyx"
+              ]
+            },
+            {
+              "Species": "neutral paint",
+              "Finishes": [
+                "Chai Latte",
+                "Irish Crème",
+                "Gray Owl",
+                "Macchiato",
+                "Sea Salt"
+              ]
+            },
+            {
+              "Species": "rich paint",
+              "Finishes": [
+                "Bay Leaf",
+                "Carriage Black",
+                "Celeste",
+                "Coffee Break",
+                "Earl Gray",
+                "Eucalyptus",
+                "Frappe",
+                "Gale",
+                "Tidal"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -16,6 +16,8 @@ public static class EKBrands
 
 public class EKFamilySymbol
 {
+    public string FamilyName { get; set; }
+    public string TypeName { get; set; }
     public string EKBrand { get; set; } // ["Yorktowne Classic", "Yorktowne Historic", "Aristokraft", "Eclipse"];
     public string EKType { get; set; } // Configuration
     public string EKCategory { get; set; }
@@ -24,6 +26,8 @@ public class EKFamilySymbol
 
     // Constructor to enforce initialization
     public EKFamilySymbol(
+        string familyName,
+        string typeName,
         //FamilySymbol revitFamilySymbol,
         string ekBrand,
         string ekType,
@@ -32,6 +36,8 @@ public class EKFamilySymbol
         ElementId revitFamilySymbolId
         )
     {
+        FamilyName = familyName;
+        TypeName = typeName;
         //RevitFamilySymbol = revitFamilySymbol;
         EKBrand = ekBrand;
         EKType = ekType;

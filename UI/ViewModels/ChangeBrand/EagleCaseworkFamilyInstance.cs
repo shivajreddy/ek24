@@ -1,7 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ek24.UI.ViewModels.ChangeBrand;
 
@@ -12,14 +11,23 @@ public class EagleCaseworkFamilyInstance
     public FamilyInstance FamilyInstance { get; }
     public string BrandName { get; }
     public string TypeName { get; }
+    public string FamilyName { get; }
+    public string EKCategory { get; }
+    public string EKType { get; }
+    public string VendorSKU { get; }
 
     // Constructor for FamilyInstanceInfo
-    public EagleCaseworkFamilyInstance(FamilyInstance familyInstance, string brandName, string typeName)
+    public EagleCaseworkFamilyInstance(FamilyInstance familyInstance, string brandName, string typeName,
+        string familyName, string ekCategory, string ekType, string vendorSKU)
     {
         ElementId = familyInstance.Id;
         FamilyInstance = familyInstance;
         BrandName = brandName;
         TypeName = typeName;
+        FamilyName = familyName;
+        EKCategory = ekCategory;
+        EKType = ekType;
+        VendorSKU = vendorSKU;
     }
 
     // Optional: Override ToString() for easy printing/debugging
@@ -180,10 +188,10 @@ public class BrandMapper
     }
 
 
-    public static Tuple<ElementId, string> FindTargetFamilySymbolBrandType(
+    public static string FindTargetFamilySymbolBrandType(
     Document doc,
     string currentBrandName,
-    string currentBrandType,
+    string sku_val,
     string targetBrandName)
     {
         // LOGIC: - the column no. to look for is the current brand
@@ -197,7 +205,7 @@ public class BrandMapper
         // Search each row for a match in current brand type
         for (int row = 0; row < matrix.GetLength(0); row++)
         {
-            if (matrix[row, currentBrandColumn] == currentBrandType)
+            if (matrix[row, currentBrandColumn] == sku_val)
             {
                 string targetSku = matrix[row, targetBrandColumn];
 
@@ -206,24 +214,26 @@ public class BrandMapper
                     targetSku == "NA" ||
                     targetSku == "Modification")
                 {
-                    return Tuple.Create((ElementId)null, (string)null);
+                    return (string)null;
                 }
+                return targetSku;
 
-                // Now lookup the FamilySymbol with this targetSku
-                FilteredElementCollector collector = new FilteredElementCollector(doc)
-                    .OfClass(typeof(FamilySymbol));
+                //// Now lookup the FamilySymbol with this targetSku
+                //FilteredElementCollector collector = new FilteredElementCollector(doc)
+                //    .OfClass(typeof(FamilySymbol));
 
-                FamilySymbol symbol = collector
-                    .Cast<FamilySymbol>()
-                    .FirstOrDefault(s => s.Name.Equals(targetSku, StringComparison.OrdinalIgnoreCase));
+                //FamilySymbol symbol = collector
+                //    .Cast<FamilySymbol>()
+                //    .FirstOrDefault(s => s.Name.Equals(targetSku, StringComparison.OrdinalIgnoreCase));
 
                 // Return both the ElementId and the target SKU string
-                return Tuple.Create(symbol?.Id ?? (ElementId)null, targetSku);
+                //return Tuple.Create(symbol?.Id ?? (ElementId)null, targetSku);
             }
         }
 
         // If no match was found
-        return Tuple.Create((ElementId)null, (string)null);
+        //return Tuple.Create((ElementId)null, (string)null);
+        return (string)null;
     }
 
 
@@ -273,8 +283,14 @@ public class BrandMapper
             // Extract type name (SKU)
             string typeName = familyInstance.Symbol?.Name ?? "Unknown Type";
 
+            string familyName = familyInstance.Symbol?.FamilyName;
+            string ekCategory = familyInstance.Symbol.LookupParameter("EKCategory").AsValueString();
+            string ekType = familyInstance.Symbol.LookupParameter("EKType").AsValueString();
+            string vendorSKU = familyInstance.Symbol.LookupParameter("Vendor_SKU").AsValueString();
+
             // Create the EagleCaseworkFamilyInstance object
-            var eagleCaseworkFamilyInstance = new EagleCaseworkFamilyInstance(familyInstance, brandName, typeName);
+            var eagleCaseworkFamilyInstance = new EagleCaseworkFamilyInstance(familyInstance, brandName, typeName,
+                familyName, ekCategory, ekType, vendorSKU);
 
             // Add it to the list
             eagleCaseWorkInstances.Add(eagleCaseworkFamilyInstance);

@@ -7,6 +7,7 @@ using ek24.UI.Commands;
 using ek24.UI.Models.Revit;
 using ek24.UI.ViewModels.ChangeBrand;
 using ek24.UI.ViewModels.Manage;
+using ek24.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,7 +38,7 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
     #region Properties to bind to UI
     // BRAND SECTION RELATED
     public List<string> BrandItems { get; } = EKBrands.all_brand_names;
-    public bool canUpdateKitchenBrandButton => EKProjectKitchenBrand != "" && SelectedBrand != "" && SelectedBrand != EKProjectKitchenBrand;
+    //public bool canUpdateKitchenBrandButton => EKProjectKitchenBrand != "" && SelectedBrand != "" && SelectedBrand != EKProjectKitchenBrand;
 
     private Brand _chosenBrandFromDropdown;
     public Brand ChosenBrandFromDropdown
@@ -317,7 +318,7 @@ public class EK24ProjectProperties_ViewModel : INotifyPropertyChanged
             if (_selectedBrand == value) return;
             _selectedBrand = value;
             OnPropertyChanged(nameof(SelectedBrand));
-            OnPropertyChanged(nameof(canUpdateKitchenBrandButton));
+            //OnPropertyChanged(nameof(canUpdateKitchenBrandButton));
         }
     }
     #endregion
@@ -475,10 +476,18 @@ public static class Update_ProjectKitchenBrand_Utility
         string filterName = "Vendor Name Filter";
 
         // Get Active View
-        Autodesk.Revit.DB.View view = doc.ActiveView;
+        // The view is always a fixed view : 'Working 3D - Exterior'
+        string target_view_name = "Working 3D - Exterior";
+        //Autodesk.Revit.DB.View view = doc.ActiveView;
+        View view = new FilteredElementCollector(doc).OfClass(typeof(View)).Cast<View>().FirstOrDefault(v => v.Name == target_view_name);
+        if (view == null) return;
 
         // Create a list of categories that will be used for the filter
-        IList<ElementId> categories = new List<ElementId> { new ElementId(BuiltInCategory.OST_Casework) };
+        //IList<ElementId> categories = new List<ElementId> { new ElementId(BuiltInCategory.OST_Casework) };
+        IList<ElementId> categories = new List<ElementId> {
+            new ElementId(BuiltInCategory.OST_Casework),
+            new ElementId(BuiltInCategory.OST_GenericModel),
+        };
 
         // Get the ElementId for the "Manufacturer" built-in parameter
         ElementId manufacturerParamId = new ElementId(BuiltInParameter.ALL_MODEL_MANUFACTURER);
@@ -486,9 +495,13 @@ public static class Update_ProjectKitchenBrand_Utility
         // Create the filter based on the 
         // Create a filter rule where "Manufacturer" equals "MY VALUE" (case-insensitive)
         FilterRule manufacturerRule = ParameterFilterRuleFactory.CreateNotEqualsRule(manufacturerParamId, brandName);
+        FilterRule manufacturerRule2 = ParameterFilterRuleFactory.CreateNotEqualsRule(manufacturerParamId, "");// basically not empty
 
         // Create an ElementParameterFilter with the rule
-        ElementParameterFilter parameterFilter = new ElementParameterFilter(manufacturerRule);
+        ElementParameterFilter filter1 = new ElementParameterFilter(manufacturerRule);
+        ElementParameterFilter filter2 = new ElementParameterFilter(manufacturerRule2);
+
+        var combinedFilter = new LogicalAndFilter(filter1, filter2);
 
         // Attempt to find an existing filter with the same name
         ParameterFilterElement paramFilter = new FilteredElementCollector(doc)
@@ -503,15 +516,19 @@ public static class Update_ProjectKitchenBrand_Utility
         }
 
         // Update the existing filter's element filter
-        paramFilter.SetElementFilter(parameterFilter);
+        //paramFilter.SetElementFilter(filter1);
+        paramFilter.SetCategories(categories);
+        paramFilter.SetElementFilter(combinedFilter);
     }
+
+
 
     private static void update_casework_instances(Document doc, string current_kitchen_brand_name, string new_Kitchten_brand_name)
     {
-        // Get all the cabinets in the project
-        FilteredElementCollector collector = new FilteredElementCollector(doc);
-        collector.OfClass(typeof(FamilyInstance));
-        collector.OfCategory(BuiltInCategory.OST_Casework);
+        //// Get all the cabinets in the project
+        //FilteredElementCollector collector = new FilteredElementCollector(doc);
+        //collector.OfClass(typeof(FamilyInstance));
+        //collector.OfCategory(BuiltInCategory.OST_Casework);
 
         /// Filter for all the eagle cabinetry instances, and only the casework of current kitchen brand
         /// DESCRIPTION: say if current brand is YTC, and there are casework instances of Aristokraft, when user is changing the brand to 
@@ -519,16 +536,13 @@ public static class Update_ProjectKitchenBrand_Utility
         //List<FamilyInstance> eagle_casework = FilterEagleCabinetry.FilterProjectForEagleCasework(doc); // this would get all casework
         List<FamilyInstance> eagle_casework = FilterEagleCabinetry.FilterProjectForEagleCasework(doc, current_kitchen_brand_name);
 
-        // All Eagle Kitchen cabinetry Family symbols in this doc
-        var eagle_casework_symbols = APP.Global_State.Current_Project_State.EKCaseworkSymbols;
-
         // Convert the FamilyInstance list into a list of FamilyInstanceInfo objects using the utility
         List<EagleCaseworkFamilyInstance> eagleCaseworkInstances = BrandMapper.ConvertFamilyInstaceToEagleCaseworkFamilyInstance(eagle_casework);
 
         // Create a StringBuilder to display the matching results
         StringBuilder resultMessage = new StringBuilder();
         int match_found_count = 0, match_not_found_count = 0;
-        resultMessage.Append($"Total Casework Instances in Project: {eagle_casework.Count()}\n");
+        resultMessage.Append($"Total Casework Instances in Project: {eagleCaseworkInstances.Count()}\n");
         //resultMessage.Append($"Match Found:{match_found_count}   Match NOT-Found: {match_not_found_count}");
         StringBuilder result_Success_Message = new StringBuilder();
         StringBuilder result_Failed_Message = new StringBuilder();
@@ -543,69 +557,143 @@ public static class Update_ProjectKitchenBrand_Utility
 
         // MATCH CRITERIA 1: Find the target SKU in the matrix
         // MATCH CRITERIA 2: Find a type with same 'Vendor_SKU' value as current symbol
-        foreach (var eagleCaseworkInst in eagleCaseworkInstances)
+        foreach (var (eagleCaseworkInst, idx) in eagleCaseworkInstances.Select((item, index) => (item, index)))
+        //foreach (var eagleCaseworkInst in eagleCaseworkInstances)
         {
-            bool found_criteria_1 = false;
-            // MATHC CRITERIA 1
-            {
-                var res = BrandMapper.FindTargetFamilySymbolBrandType(doc, eagleCaseworkInst.BrandName, eagleCaseworkInst.TypeName, new_Kitchten_brand_name);
-                ElementId familySymbolId = res.Item1;
-                string mappedSKU = res.Item2;
-                if (familySymbolId != null)
-                {
-                    cabinetInstancesWithTargetFamilyType.Add(new Tuple<EagleCaseworkFamilyInstance, ElementId>(
-                        eagleCaseworkInst,
-                        familySymbolId
-                        ));
+            // MATCH CRITERIA 1 : Find the target SKU from matrix
+            var target_sku_val = BrandMapper.FindTargetFamilySymbolBrandType(doc, eagleCaseworkInst.BrandName, eagleCaseworkInst.VendorSKU, new_Kitchten_brand_name);
+            //ElementId familySymbolId = res.Item1;
+            //string mappedSKU = res.Item2;
+            //string target_sku_val = res.Item2;
 
-                    match_found_count += 1;
-                    // Append the mapping information to the StringBuilder
-                    result_Success_Message.AppendLine($"{eagleCaseworkInst.BrandName}-{eagleCaseworkInst.TypeName} => {new_Kitchten_brand_name}-{mappedSKU}");
-                    found_criteria_1 = true; // mark this as true
-                }
-            }
-            // MATHC CRITERIA 2
-            bool found_creitier_2 = false;
-            if (!found_criteria_1)
+            // MATCH CRITERIA 2: Look for Target SKU same as the family instance's SKU
+            if (target_sku_val == null || target_sku_val == "") // There is no entry in the matrix (Designers should add an entry in the excel file)
             {
                 // Get the Vendor_SKU for the current eagleCaseworkInst item, skip if there is no param-value.
                 // and find a FamilySymbol of targetbrand and same param-value
                 var vendor_sku_param = eagleCaseworkInst.FamilyInstance.Symbol?.LookupParameter("Vendor_SKU");
                 string vendor_sku_param_val = vendor_sku_param?.HasValue == true ? vendor_sku_param.AsString() ?? vendor_sku_param.AsValueString() ?? string.Empty : string.Empty;
                 if (vendor_sku_param_val == "" || vendor_sku_param_val == string.Empty) continue;
-                foreach (var eagle_casework_symbol in eagle_casework_symbols)
+
+                target_sku_val = vendor_sku_param_val;
+            }
+
+            // ::::::::: Start with the 3 stages of filtering ::::::::::::::
+            {
+                // All Eagle Kitchen cabinetry Family symbols in this doc
+                var all_eagle_casework_symbols_in_doc = APP.Global_State.Current_Project_State.EKCaseworkSymbols;
+
+                all_eagle_casework_symbols_in_doc = all_eagle_casework_symbols_in_doc.Where(s => s.EKBrand == target_project_kitchenBrand).ToList();
+
+                // go through stages
+                /// Stage 1:: SKU match
+                var stage1_symbols = all_eagle_casework_symbols_in_doc.Where(s => s.EKBrand == target_project_kitchenBrand && s.EKSKU.VendorSKU == target_sku_val).ToList();
+
+                if (stage1_symbols.Count == 0)
                 {
-                    if (eagle_casework_symbol.EKBrand == target_project_kitchenBrand && eagle_casework_symbol.EKSKU.VendorSKU == vendor_sku_param_val)
+                    // this casework-instance's familyname & typename are same, AND there is no casework in the project that has it's SKU
+                    if (eagleCaseworkInst.VendorSKU == eagleCaseworkInst.TypeName)
                     {
-                        cabinetInstancesWithTargetFamilyType.Add(new Tuple<EagleCaseworkFamilyInstance, ElementId>(
-                            eagleCaseworkInst,
-                            eagle_casework_symbol.RevitFamilySymbolId
-                            ));
-
-                        match_found_count += 1;
-                        // Append the mapping information to the StringBuilder
-                        result_Success_Message.AppendLine($"{eagleCaseworkInst.BrandName}-{eagleCaseworkInst.TypeName} => {new_Kitchten_brand_name}-{vendor_sku_param_val}");
-
-                        found_creitier_2 = true;
+                        match_not_found_count += 1;
+                        result_Failed_Message.AppendLine($"{idx} : STAGE1 : [{eagleCaseworkInst.BrandName}][{eagleCaseworkInst.EKType}][{eagleCaseworkInst.EKCategory}][{eagleCaseworkInst.VendorSKU}][{eagleCaseworkInst.FamilyName}][{eagleCaseworkInst.TypeName}] => XXX ");
+                        continue;   // move on to the next instance, there is not a single symbol with the same SKU value
+                    }
+                    else // find all the casework symbols that have the same typename as casework's
+                    {
+                        stage1_symbols = all_eagle_casework_symbols_in_doc.Where(s => s.EKBrand == target_project_kitchenBrand && s.TypeName == eagleCaseworkInst.TypeName).ToList();
                     }
                 }
-            }
-            if (!found_criteria_1 & !found_creitier_2)
-            {
+                if (stage1_symbols.Count == 1)
+                {
+                    cabinetInstancesWithTargetFamilyType.Add(new Tuple<EagleCaseworkFamilyInstance, ElementId>(
+                    eagleCaseworkInst,
+                    stage1_symbols.First().RevitFamilySymbolId));
+
+                    match_found_count += 1;
+                    var new_symbol = stage1_symbols.First();
+                    result_Success_Message.AppendLine($"{idx} : STAGE1 : [{eagleCaseworkInst.BrandName}][{eagleCaseworkInst.EKType}][{eagleCaseworkInst.EKCategory}][{eagleCaseworkInst.VendorSKU}][{eagleCaseworkInst.FamilyName}][{eagleCaseworkInst.TypeName}]  => " +
+                        $"[{new_symbol.EKBrand}]-[{new_symbol.EKType}][{new_symbol.EKCategory}][{target_sku_val}][{new_symbol.FamilyName}][{new_symbol.TypeName}]");
+                    continue;
+                }
+
+                /// Stage 2:: SKU Match(multiple), FamilyName suffix Match
+                string GetSuffix(string name)   // Helper function
+                {
+                    if (string.IsNullOrEmpty(name))
+                        return string.Empty;
+                    int lastDash = name.LastIndexOf('-');
+                    int lastUnderscore = name.LastIndexOf('_');
+                    int splitIndex = Math.Max(lastDash, lastUnderscore);
+                    return splitIndex >= 0 ? name.Substring(splitIndex + 1) : name;
+                }
+                string target_suffix = GetSuffix(eagleCaseworkInst.FamilyName);
+
+                List<EKFamilySymbol> stage2_symbols = stage1_symbols.Where(s => GetSuffix(s.FamilyName).Equals(target_suffix, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                // failed stage 2
+                if (stage2_symbols.Count == 0)
+                {
+                    match_not_found_count += 1;
+                    result_Failed_Message.AppendLine($"{idx} : STAGE2 :[{eagleCaseworkInst.BrandName}][{eagleCaseworkInst.EKType}][{eagleCaseworkInst.EKCategory}][{eagleCaseworkInst.VendorSKU}][{eagleCaseworkInst.FamilyName}][{eagleCaseworkInst.TypeName}] => XXX ");
+                    continue;   // move on to the next instance, there is not a single symbol with the same SKU value
+                }
+                if (stage2_symbols.Count == 1)
+                {
+                    cabinetInstancesWithTargetFamilyType.Add(new Tuple<EagleCaseworkFamilyInstance, ElementId>(
+                    eagleCaseworkInst,
+                    stage2_symbols.First().RevitFamilySymbolId));
+                    match_found_count += 1;
+                    //result_Success_Message.AppendLine($"[{eagleCaseworkInst.BrandName}][{eagleCaseworkInst.EKType}][{eagleCaseworkInst.EKCategory}][{eagleCaseworkInst.VendorSKU}][{eagleCaseworkInst.FamilyName}][{eagleCaseworkInst.TypeName}]  => {new_Kitchten_brand_name}-{target_sku_val}");
+                    var new_symbol = stage2_symbols.First();
+                    result_Success_Message.AppendLine($"{idx} : STAGE2 : [{eagleCaseworkInst.BrandName}][{eagleCaseworkInst.EKType}][{eagleCaseworkInst.EKCategory}][{eagleCaseworkInst.VendorSKU}][{eagleCaseworkInst.FamilyName}][{eagleCaseworkInst.TypeName}]  => " +
+                        $"[{new_symbol.EKBrand}]-[{new_symbol.EKType}][{new_symbol.EKCategory}][{new_symbol.FamilyName}][{target_sku_val}][{new_symbol.TypeName}]");
+                    continue;
+                }
+
+                /// Stage 3: SKU match(multiple), FamilySuffix Match(multiple), TypeName Match
+                List<EKFamilySymbol> stage3_symbols = stage2_symbols.Where(s => s.TypeName == eagleCaseworkInst.TypeName).ToList();
+
+                // failed stage 3
+                if (stage3_symbols.Count == 0)
+                {
+                    match_not_found_count += 1;
+                    result_Failed_Message.AppendLine($"{idx} : STAGE3 : [{eagleCaseworkInst.BrandName}][{eagleCaseworkInst.EKType}][{eagleCaseworkInst.EKCategory}][{eagleCaseworkInst.VendorSKU}][{eagleCaseworkInst.FamilyName}][{eagleCaseworkInst.TypeName}] => XXX ");
+                    continue;   // move on to the next instance, there is not a single symbol with the same SKU value
+                }
+                if (stage3_symbols.Count == 1)
+                {
+                    cabinetInstancesWithTargetFamilyType.Add(new Tuple<EagleCaseworkFamilyInstance, ElementId>(
+                    eagleCaseworkInst,
+                    stage3_symbols.First().RevitFamilySymbolId));
+
+                    match_found_count += 1;
+                    //result_Success_Message.AppendLine($"[{eagleCaseworkInst.BrandName}][{eagleCaseworkInst.EKType}][{eagleCaseworkInst.EKCategory}][{eagleCaseworkInst.VendorSKU}][{eagleCaseworkInst.FamilyName}][{eagleCaseworkInst.TypeName}]  => {new_Kitchten_brand_name}-{target_sku_val}");
+                    var new_symbol = stage3_symbols.First();
+                    result_Success_Message.AppendLine($"{idx} : STAGE3 : [{eagleCaseworkInst.BrandName}][{eagleCaseworkInst.EKType}][{eagleCaseworkInst.EKCategory}][{eagleCaseworkInst.VendorSKU}][{eagleCaseworkInst.FamilyName}][{eagleCaseworkInst.TypeName}]  => " +
+                        $"[{new_symbol.EKBrand}]-[{new_symbol.EKType}][{new_symbol.EKCategory}][{target_sku_val}][{new_symbol.FamilyName}][{new_symbol.TypeName}]");
+                    continue;
+                }
+                /// Multiple matches after stage 3, as of current logic, we skip these items
                 match_not_found_count += 1;
-                // If no mapping found, add a message
-                result_Failed_Message.AppendLine($"{eagleCaseworkInst.BrandName}-{eagleCaseworkInst.TypeName} => XXX ");
+                string line = $"{idx} : STAGE4 : [{eagleCaseworkInst.BrandName}][{eagleCaseworkInst.EKType}][{eagleCaseworkInst.EKCategory}][{eagleCaseworkInst.VendorSKU}][{eagleCaseworkInst.FamilyName}][{eagleCaseworkInst.TypeName}] => XXX ";
+                result_Failed_Message.AppendLine(line);
+                continue;   // move on to the next instance, there is not a single symbol with the same SKU value
             }
         }
 
         /// SHOW THE RESULTS TO THE USER BEFORE PERFORMING THE ACTUAL CHANGE SYMBOL OPERATION
         // Insert the totals at the top of the StringBuilder
         //resultMessage.Insert(1, $"Total Matches Found: {match_found_count}\nTotal Matches NOT-Found: {match_not_found_count}\n");
-        resultMessage.Append($"Total Matches Found: {match_found_count}\nTotal Matches NOT-Found: {match_not_found_count}\n");
-        resultMessage.Append(result_Success_Message);
+        resultMessage.Append($"Total Matches Found: {match_found_count}\nTotal Matches NOT-Found: {match_not_found_count}\n\n");
+
+        result_Success_Message.AppendLine("[BrandName][EKType][EKCategory][VendorSKU][FamilyName][TypeName]" + "\n");
+        resultMessage.Append(result_Success_Message + "\n");
+        result_Success_Message.AppendLine("[BrandName][EKType][EKCategory][VendorSKU][FamilyName][TypeName]");
         resultMessage.Append(result_Failed_Message);
         // Display the information using TaskDialog
-        TaskDialog.Show("SKU MAPPING RESULTS", resultMessage.ToString());
+        //TaskDialog.Show("SKU MAPPING RESULTS", resultMessage.ToString());
+        CustomDialogBox customDialogBox = new CustomDialogBox();
+        customDialogBox.ShowWideDialog("Title", resultMessage.ToString());
 
         /// PERFORM THE FAMILY SYMBOL CONVERTION
         // Call the Helper function that changes the family symbols for instances

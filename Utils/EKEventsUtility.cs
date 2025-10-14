@@ -88,6 +88,8 @@ public class EKEventsUtility
             var ek_sku = new EK_SKU(typeName, notesValue, familySymbol, vendorSKUValue);
 
             var ekFamilySymbol = new EKFamilySymbol(
+                familyName: familySymbol.FamilyName,
+                typeName: familySymbol.Name,
                 //revitFamilySymbol: familySymbol,
                 ekBrand: brandValue,
                 ekType: ekTypeValue,
@@ -118,7 +120,8 @@ public class EKEventsUtility
         Parameter kitchenFinishParam = projectInfo.LookupParameter("KitchenFinish");
         string currentProject_kitchenfinish = kitchenFinishParam != null ? kitchenFinishParam.AsValueString() : "";
 
-        set_project_view_filter(doc);
+        //set_project_view_filter(doc);
+        Update_ProjectKitchenBrand_Utility.update_value_of_view_kitchenbrand_viewfilter(doc, kitchenBrandParam?.AsValueString());
         APP.Global_State.Current_Project_State.EKProjectKitchenBrand = currentProject_projectBrand;
 
         APP.Global_State.Current_Project_State.EKProjectKitchenStyle = currentProject_kitchenstyle;

@@ -191,6 +191,7 @@
       <DependentUpon>TypeParamsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Models\Revit\CabinetsExportDataModel.cs" />
+    <Compile Include="Utils\CustomDialogBox.cs" />
     <Compile Include="Utils\EKEventsUtility.cs" />
     <Compile Include="Utils\ExcelExporter.cs" />
     <Compile Include="Utils\ImageUtils.cs" />
@@ -201,8 +202,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="ek24.addin" />
     <None Include="HowToUpdate.md" />
-    <None Include="Out\ek24.addin" />
     <None Include="packages.config" />
     <None Include="Resources\Excel\Cabinet Manufacturer Matrix.xlsx" />
     <None Include="Resources\CSV\Aristokraft-Base.csv" />
@@ -525,24 +526,47 @@
   <PropertyGroup>
     <PostBuildEvent>echo Configuration: $(Configuration)
 
+rem === Create Addin Folder in AppData ===
 if not exist "%25APPDATA%25\Autodesk\Revit\Addins\2024\ek24" mkdir "%25APPDATA%25\Autodesk\Revit\Addins\2024\ek24"
 
-echo "Projectdir = $(ProjectDir)"
-echo 'Targetdir = $(TargetDir)"
+echo "ProjectDir = $(ProjectDir)"
+echo "TargetDir = $(TargetDir)"
 
-echo "Copying the Addin in file"
-Xcopy /y "$(ProjectDir)Out\ek24.addin" "%25APPDATA%25\Autodesk\Revit\Addins\2024\"
+rem === Copy to Revit Addins Folder ===
+echo "Copying .addin file..."
+xcopy /y "$(ProjectDir)ek24.addin" "%25APPDATA%25\Autodesk\Revit\Addins\2024\"
 
-echo "Copying the Resource folder"
-Xcopy /y "$(ProjectDir)Resources" "%25APPDATA%25\Autodesk\Revit\Addins\2024\ek24"
-
-echo "Copying the Resource folder"
+echo "Copying Resources..."
 xcopy /y /e "$(ProjectDir)Resources" "%25APPDATA%25\Autodesk\Revit\Addins\2024\ek24\Resources\"
 
+echo "Copying DLLs..."
+xcopy /y "$(TargetDir)*.dll" "%25APPDATA%25\Autodesk\Revit\Addins\2024\ek24\"
 
-echo "Copying all the .dll files"
-Xcopy /y "$(TargetDir)*.dll" "%25APPDATA%25\Autodesk\Revit\Addins\2024\ek24"
 
+rem === Prepare Installer Dist Folder ===
+set INSTALLER_DIST=C:\Users\sreddy\dev\ek24\Installer\dist
+
+if exist "%25INSTALLER_DIST%25" (
+    echo "Deleting old installer dist folder..."
+    rmdir /s /q "%25INSTALLER_DIST%25"
+)
+
+echo "Creating installer dist folder..."
+mkdir "%25INSTALLER_DIST%25"
+mkdir "%25INSTALLER_DIST%25\ek24"
+
+
+rem === Copy to Installer Dist Folder ===
+echo "Copying .addin file to Installer/dist..."
+xcopy /y "$(ProjectDir)ek24.addin" "C:\Users\sreddy\dev\ek24\Installer\dist\"
+
+echo "Copying Resources to Installer/dist/ek24/Resources..."
+xcopy /y /e "$(ProjectDir)Resources" "C:\Users\sreddy\dev\ek24\Installer\dist\ek24\Resources\"
+
+echo "Copying DLLs to Installer/dist/ek24..."
+xcopy /y "$(TargetDir)*.dll" "C:\Users\sreddy\dev\ek24\Installer\dist\ek24\"
+
+echo "Post-build copy complete!"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
