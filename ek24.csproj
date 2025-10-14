@@ -191,6 +191,7 @@
       <DependentUpon>TypeParamsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Models\Revit\CabinetsExportDataModel.cs" />
+    <Compile Include="Utils\About.cs" />
     <Compile Include="Utils\CustomDialogBox.cs" />
     <Compile Include="Utils\EKEventsUtility.cs" />
     <Compile Include="Utils\ExcelExporter.cs" />
@@ -239,8 +240,9 @@
     <EmbeddedResource Include="Resources\images\icons\ek24_icon_old.png" />
     <Content Include="Resources\images\handlesets\traditionalknob.png" />
     <Content Include="Resources\images\handlesets\transitional.png" />
-    <EmbeddedResource Include="Resources\images\icons\change_brand.png" />
     <EmbeddedResource Include="Resources\images\icons\view_filter.png" />
+    <EmbeddedResource Include="Resources\images\icons\about.png" />
+    <EmbeddedResource Include="Resources\images\icons\change_brand.png" />
     <Content Include="Resources\images\materials\cherry.png" />
     <Content Include="Resources\images\materials\hickory.png" />
     <Content Include="Resources\images\materials\maple.png" />

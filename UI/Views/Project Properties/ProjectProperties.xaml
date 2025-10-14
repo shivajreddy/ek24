@@ -21,8 +21,7 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</UserControl.Resources>
-
-
+	<ScrollViewer>
 	<StackPanel Background="White" VerticalAlignment="Center" MinHeight="600">
 
 		<Border Width="430" Padding="30 0" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" Margin="0 10">
@@ -111,6 +110,7 @@
 -->
 
 	</StackPanel>
+	</ScrollViewer>
 </UserControl>
 
 

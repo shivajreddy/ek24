@@ -60,6 +60,7 @@ public static class PluginUtils
         ribbonPanel.AddItem(pushButtonData);
     }
 
+    // Button that creates PO
     public static void CreateButton2AndAddToPanel(RibbonPanel ribbonPanel)
     {
         var declaringType = MethodBase.GetCurrentMethod()?.DeclaringType;
@@ -77,6 +78,39 @@ public static class PluginUtils
         var pushButtonData = new PushButtonData(
             //name: pushButtonName,
             name: "CREATE P.O.",
+            text: pushButtonTextName,
+            assemblyName: assemblyLocation,
+            className: fullClassName
+        )
+        {
+            ToolTip = toolTipInfo,
+            Image = ImageUtilities.LoadImage(assembly, iconName),
+            LargeImage = ImageUtilities.LoadImage(assembly, iconName),
+            ToolTipImage = ImageUtilities.LoadImage(assembly, iconName)
+        };
+        ribbonPanel.AddItem(pushButtonData);
+    }
+
+    // About Button that shows the version number
+    public static void CreateButton3AndAddToPanel(RibbonPanel ribbonPanel)
+    {
+        const string VERSION_NUMBER = EK_Global_State.VERSION_NUMBER;
+        var declaringType = MethodBase.GetCurrentMethod()?.DeclaringType;
+        if (declaringType == null) return;
+        var pushButtonName = declaringType?.Name;
+        const string pushButtonTextName = VERSION_NUMBER;   // VERSION NUMBER OF THE PLUGIN
+        var assembly = Assembly.GetExecutingAssembly();
+        var assemblyLocation = assembly.Location;
+        const string iconName = "about.png";
+        const string toolTipInfo = "About EK24";
+
+        /// Class that handles showing the UI
+        const string fullClassName = "ek24.Utils.ShowAbout";
+        //const string fullClassName = "ek24.Utils.About.ShowAbout";
+
+        var pushButtonData = new PushButtonData(
+            //name: pushButtonName,
+            name: VERSION_NUMBER,
             text: pushButtonTextName,
             assemblyName: assemblyLocation,
             className: fullClassName

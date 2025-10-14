@@ -38,7 +38,8 @@ public class ExportToExcel : IExternalCommand
     // TEMPLATE FILE LOCATION
     //public static string TemplateFolder = "T:\\50_DESIGN DATA\\TRAINING\\EK24 Addin\\";
     //public static string TemplatePath = TemplateFolder + "EK24_PO_TEMPLATE_V1.xlsx";
-    public static string TemplateFolder = "\\\\tecserver01\\TECdata\\TECData\\50_DESIGN DATA\\TRAINING\\EK24 Addin\\";
+    //public static string TemplateFolder = "\\\\tecserver01\\TECdata\\TECData\\50_DESIGN DATA\\TRAINING\\EK24 Addin\\";
+    public static string TemplateFolder = @"T:\50_DESIGN DATA\Software\";
     public static string TemplatePath = TemplateFolder + "EK24_PO_TEMPLATE_V1.xlsx";
     //public static string TemplatePath = "\\\\tecserver01\\TECdata\\TECData\\50_DESIGN DATA\\TRAINING\\EK24 Addin\\EK24_PO_TEMPLATE_V1.xlsx";
 
@@ -56,7 +57,8 @@ public class ExportToExcel : IExternalCommand
 
         // 1. Setup the Excel File
         AskUserToChooseDesignOption(doc);
-        SetUpExcelFile(doc.PathName);
+        bool res = SetUpExcelFile(doc.PathName);
+        if (!res) return;
 
         // 2. Handle All worksheets (collect+transform data, then push to excel)
         CollectTranformData_And_PushToExcel_cabinets();
@@ -488,7 +490,7 @@ public class ExportToExcel : IExternalCommand
     }
 
     // Creates the Excel File, using the template file
-    public void SetUpExcelFile(string revit_project_path)
+    public bool SetUpExcelFile(string revit_project_path)
     {
         try
         {
@@ -507,6 +509,11 @@ public class ExportToExcel : IExternalCommand
             }
 
             // Define destination path
+            if (revit_project_path == "")
+            {
+                TaskDialog.Show("ERROR", "Current Project is not saved anywhere. Save it and run again");
+                return false;
+            }
             string newpath = CreateFilePath(revit_project_path);
 
             // Ensure destination directory exists
@@ -520,6 +527,8 @@ public class ExportToExcel : IExternalCommand
 
             // Create a new excel file using the template path
             File.Copy(TemplatePath, FilePath, false);
+
+            return true;
         }
         catch (DirectoryNotFoundException ex)
         {

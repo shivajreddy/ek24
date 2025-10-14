@@ -1,8 +1,8 @@
 ; EK24_Installer.iss
-
 #define SoftwareName "EK24"
 #define RevitVersion "2024"
-#define SoftwareVersion "1.0.0"
+#define SoftwareVersion "14.0.0"
+#define BackupOutputDir "T:\50_DESIGN DATA\Software"
 
 [Setup]
 AppName={#SoftwareName}
@@ -10,14 +10,13 @@ AppVersion={#SoftwareVersion}
 DefaultDirName={userappdata}\Autodesk\Revit\Addins\{#RevitVersion}
 DisableDirPage=yes
 OutputDir=.
-OutputBaseFilename={#SoftwareName}_Installer
+OutputBaseFilename={#SoftwareName}_Installer_{#SoftwareVersion}
 Compression=lzma
 SolidCompression=yes
 Uninstallable=no
 CreateUninstallRegKey=no
 DisableProgramGroupPage=yes
-SetupIconFile=icon.ico
-; SilentInstall=Yes
+SetupIconFile=icons\icon.ico
 WizardStyle=modern
 
 [Files]
@@ -36,10 +35,8 @@ begin
   AddinsPath := ExpandConstant('{userappdata}\Autodesk\Revit\Addins\{#RevitVersion}');
   AddinFile := AddinsPath + '\ek24.addin';
   PluginFolder := AddinsPath + '\ek24';
-
   if FileExists(AddinFile) then
     DeleteFile(AddinFile);
-
   if DirExists(PluginFolder) then
     DelTree(PluginFolder, True, True, True);
 end;
@@ -49,4 +46,3 @@ begin
   DeleteOldFiles();
   Result := True;
 end;
-

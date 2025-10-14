@@ -17,6 +17,9 @@ namespace ek24;
 /// </summary>
 public class EK_Global_State : INotifyPropertyChanged
 {
+    // THIS IS THE MAIN PLACE TO SET THE APP's VERSION
+    public const string VERSION_NUMBER = "14.0.0";
+
     #region INotifyPropertyChanged implementation
     public event PropertyChangedEventHandler PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName)
@@ -228,6 +231,8 @@ public class APP : IExternalApplication
         PluginUtils.CreatePushButtonAndAddToPanel(_ribbonPanel);
 
         PluginUtils.CreateButton2AndAddToPanel(_ribbonPanel);
+
+        PluginUtils.CreateButton3AndAddToPanel(_ribbonPanel);
 
         //PluginUtils.CreateButton3AndAddToPanel(_ribbonPanel);
         //PluginUtils.CreateButton4AndAddToPanel(_ribbonPanel);

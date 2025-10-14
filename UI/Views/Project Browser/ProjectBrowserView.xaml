@@ -15,6 +15,7 @@
 			<!--<views:EmptyListToVisibilityConverter x:Key="EmptyListToVisibilityConverter"/>-->
 		</ResourceDictionary>
 	</UserControl.Resources>
+	<ScrollViewer>
 	<Grid Margin="10">
 		<Grid.RowDefinitions>
 			<!-- 1st row takes 50% of the remaining height -->
@@ -89,5 +90,6 @@
 			</Border>
 		</DockPanel>
 	</Grid>
+	</ScrollViewer>
 </UserControl>
 
