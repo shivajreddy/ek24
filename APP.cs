@@ -18,7 +18,8 @@ namespace ek24;
 public class EK_Global_State : INotifyPropertyChanged
 {
     // THIS IS THE MAIN PLACE TO SET THE APP's VERSION
-    public const string VERSION_NUMBER = "14.0.0";
+    // Change the value here, and change in ./Installer/src/Install-EK24.ps1
+    public const string VERSION_NUMBER = "14.0.1";
 
     #region INotifyPropertyChanged implementation
     public event PropertyChangedEventHandler PropertyChanged;

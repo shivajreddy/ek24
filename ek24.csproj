@@ -205,6 +205,30 @@
     <None Include=".editorconfig" />
     <None Include="ek24.addin" />
     <None Include="HowToUpdate.md" />
+    <None Include="Installer\copy_src_bat_to_tecdrive.ps1" />
+    <None Include="Installer\Install-EK24.bat" />
+    <None Include="Installer\src\archive\build_and_copy.bat" />
+    <None Include="Installer\src\dist\ek24.addin" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\Aristokraft-Base.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\Aristokraft-Crownmoulding.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\Aristokraft-Tall.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\Aristokraft-Wall.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\Eclipse-Base.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\Eclipse-Tall.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\Eclipse-Wall.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\YorktowneClassic-Base.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\YorktowneClassic-Tall.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\YorktowneClassic-Wall.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\YorktowneHistoric-Base.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\YorktowneHistoric-Crownmoulding.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\YorktowneHistoric-Tall.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\CSV\YorktowneHistoric-Wall.csv" />
+    <None Include="Installer\src\dist\ek24\Resources\Excel\Cabinet Manufacturer Matrix.xlsx" />
+    <None Include="Installer\src\dist\ek24\Resources\JSON\ek24_brands_styles.json" />
+    <None Include="Installer\src\dist\ek24\Resources\JSON\ek24_brands_styles_old.json" />
+    <None Include="Installer\src\dist\ek24\Resources\Revit\Eagle Kitchen Inventory.xlsx" />
+    <None Include="Installer\src\Install-EK24.ps1" />
+    <None Include="Installer\src\README.md" />
     <None Include="packages.config" />
     <None Include="Resources\Excel\Cabinet Manufacturer Matrix.xlsx" />
     <None Include="Resources\CSV\Aristokraft-Base.csv" />
@@ -238,6 +262,232 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\images\icons\ek24_icon_old.png" />
+    <Content Include="Installer\src\archive\EK24_Installer.iss" />
+    <Content Include="Installer\src\archive\EK24_Installer_14.0.0.exe" />
+    <Content Include="Installer\src\dist\ek24\ek24.dll" />
+    <Content Include="Installer\src\dist\ek24\EPPlus.dll" />
+    <Content Include="Installer\src\dist\ek24\EPPlus.Interfaces.dll" />
+    <Content Include="Installer\src\dist\ek24\EPPlus.System.Drawing.dll" />
+    <Content Include="Installer\src\dist\ek24\Microsoft.IO.RecyclableMemoryStream.dll" />
+    <Content Include="Installer\src\dist\ek24\Newtonsoft.Json.dll" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\handlesets\traditionalknob.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\handlesets\transitional.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\icons\about.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\icons\change_brand.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\icons\ek24_icon.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\icons\ek24_icon_old.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\icons\view_filter.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\materials\cherry.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\materials\hickory.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\materials\maple.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\materials\oak.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\materials\rusticmaple.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\materials\SGCherryjpeg.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Benton\benton--birch-Flagstone.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Benton\benton--birch-Natural.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Benton\benton-birch-Arid.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Benton\benton-birch-Quil.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Benton\benton-birch-Saddle.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Benton\benton-birch-Umber.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Brelin\brelin-purestyle-colada.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Brelin\brelin-purestyle-frost.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Brelin\brelin-purestyle-stonegray.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Brelin\brelin-purestyle-white.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Sinclair\sinclair-birch-Arid.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Sinclair\sinclair-birch-Flagstone.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Sinclair\sinclair-birch-Natural.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Sinclair\sinclair-birch-Quil.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Sinclair\sinclair-birch-Saddle.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Sinclair\sinclair-birch-Umber.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Winstead\winstead-birch-arid.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Winstead\winstead-birch-flagstone.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Winstead\winstead-birch-natural.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Winstead\winstead-birch-quill.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Winstead\winstead-birch-saddle.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Winstead\winstead-birch-umber.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Winstead\winstead-neautralpaint-colada.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Winstead\winstead-neautralpaint-frost.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Winstead\winstead-neautralpaint-stonegray.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\Aristokraft\Winstead\winstead-neautralpaint-white.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat1 - Copy.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat1.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat10.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat11.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat12.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat13.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat14.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat15.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat16.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat17.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat18.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat19.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat2 - Copy.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat2.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat3 - Copy.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat3.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat4 - Copy.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat4.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat5 - Copy.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat5.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat6 - Copy %282%29.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat6 - Copy.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat6.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat7.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat8.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes - Copy\mat9.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Benton_birch_Arid.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Benton_birch_Flagstone.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Benton_birch_Natural.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Benton_birch_Quill.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Benton_birch_Saddle.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Benton_birch_Umber.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Brellin_Purestyle_Colada.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Brellin_Purestyle_Frost.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Brellin_Purestyle_Stone Gray.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Brellin_Purestyle_White.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_maple_Amaretto.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_maple_Biscotti.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_maple_Eagle Rock.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_maple_Espresso.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_maple_Ginger Snap.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_maple_Onyx.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_neutral paint_Chai Latte.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_neutral paint_Gray Owl.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_neutral paint_Irish Crème.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_neutral paint_Macchiato.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_neutral paint_Sea Salt.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_rich paint_Bay Leaf.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_rich paint_Carriage Black.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_rich paint_Celeste.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_rich paint_Coffee Break.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_rich paint_Earl Gray.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_rich paint_Eucalyptus.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_rich paint_Frappe.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_rich paint_Gale.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Corsica_rich paint_Tidal.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Biscotti.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Carriage Black.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Celeste.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Chai Latte.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Eagle Rock.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Earl Gray.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Espresso.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Eucalyptus.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Frappe.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Gale.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Ginger Snap.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Gray Owl.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Irish Crème.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Macchiato.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_neutral paint.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Onyx.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_rich paint.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Fillmore_maple_Sea Salt.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Amaretto.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Biscotti.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Carriage Black.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Celeste.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Chai Latte.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Eagle Rock.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Earl Gray.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Espresso.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Eucalyptus.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Frappe.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Gale.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Ginger Snap.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Gray Owl.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Irish Crème.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Macchiato.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_neutral paint.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Onyx.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_rich paint.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Henning_maple_Sea Salt.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_maple_Amaretto.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_maple_Biscotti.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_maple_Eagle Rock.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_maple_Espresso.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_maple_Ginger Snap.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_maple_Onyx.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_neutral paint_Chai Latte.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_neutral paint_Gray Owl.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_neutral paint_Irish Crème.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_neutral paint_Macchiato.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_neutral paint_Sea Salt.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_rich paint_Bay Leaf.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_rich paint_Carriage Black.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_rich paint_Celeste.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_rich paint_Coffee Break.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_rich paint_Earl Gray.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_rich paint_Eucalyptus.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_rich paint_Frappe.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_rich paint_Gale.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Langdon_rich paint_Tidal.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_high gloss acrylic_Bianco.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_high gloss acrylic_Bigio.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_high gloss acrylic_Cubanite.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_high gloss acrylic_Gabbiano.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_matte acrylic_Ash Velvet.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_matte acrylic_Carbon Velvet.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_matte acrylic_Charcoal Velvet.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_matte acrylic_White Velvet.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_thermally fused laminates_Kirsche.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_thermally fused laminates_Morning Fog.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_thermally fused laminates_Natural Elm.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Metropolitan_thermally fused laminates_Takase Teak.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Sinclair_birch_Arid.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Sinclair_birch_Flagstone.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Sinclair_birch_Natural.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Sinclair_birch_Quill.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Sinclair_birch_Saddle.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Sinclair_birch_Umber.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Amaretto.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Biscotti.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Carriage Black.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Celeste.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Chai Latte.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Eagle Rock.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Earl Gray.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Espresso.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Eucalyptus.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Frappe.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Gale.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Ginger Snap.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Gray Owl.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Irish Crème.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Macchiato.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_neutral paint.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Onyx.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_rich paint.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Stillwater_maple_Sea Salt.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Winstead_birch_Arid.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Winstead_birch_Flagstone.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Winstead_birch_Natural.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Winstead_birch_Quill.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Winstead_birch_Saddle.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Winstead_birch_Umber.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Winstead_neutral paint_Colada.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Winstead_neutral paint_Frost.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Winstead_neutral paint_Stone Gray.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_finishes\Winstead_neutral paint_White.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_styles\benton-birch-Arid.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_styles\brelin-purestyle-frost.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_styles\eclipse-metropolitan.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_styles\sinclair-birch-Natural.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_styles\winstead-birch-flagstone.jpg" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_styles\ytc-fillmore.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_styles\ytc-Henning.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_styles\ytc-stillwater.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_styles\yth-corsica.png" />
+    <Content Include="Installer\src\dist\ek24\Resources\images\styles\ek_styles\yth-langdon.png" />
+    <Content Include="Installer\src\dist\ek24\System.Buffers.dll" />
+    <Content Include="Installer\src\dist\ek24\System.ComponentModel.Annotations.dll" />
+    <Content Include="Installer\src\dist\ek24\System.Drawing.Common.dll" />
+    <Content Include="Installer\src\dist\ek24\System.Memory.dll" />
+    <Content Include="Installer\src\dist\ek24\System.Numerics.Vectors.dll" />
+    <Content Include="Installer\src\dist\ek24\System.Runtime.CompilerServices.Unsafe.dll" />
+    <Content Include="Installer\src\icons\icon.ico" />
+    <Content Include="Installer\src\icons\wizard.bmp" />
+    <Content Include="Installer\src\icons\wizard_small.bmp" />
     <Content Include="Resources\images\handlesets\traditionalknob.png" />
     <Content Include="Resources\images\handlesets\transitional.png" />
     <EmbeddedResource Include="Resources\images\icons\view_filter.png" />
@@ -546,7 +796,7 @@ xcopy /y "$(TargetDir)*.dll" "%25APPDATA%25\Autodesk\Revit\Addins\2024\ek24\"
 
 
 rem === Prepare Installer Dist Folder ===
-set INSTALLER_DIST=C:\Users\sreddy\dev\ek24\Installer\dist
+set INSTALLER_DIST=C:\Users\sreddy\dev\ek24\Installer\src\dist
 
 if exist "%25INSTALLER_DIST%25" (
     echo "Deleting old installer dist folder..."
@@ -559,14 +809,14 @@ mkdir "%25INSTALLER_DIST%25\ek24"
 
 
 rem === Copy to Installer Dist Folder ===
-echo "Copying .addin file to Installer/dist..."
-xcopy /y "$(ProjectDir)ek24.addin" "C:\Users\sreddy\dev\ek24\Installer\dist\"
+echo "Copying .addin file to Installer/src/dist..."
+xcopy /y "$(ProjectDir)ek24.addin" "C:\Users\sreddy\dev\ek24\Installer\src\dist\"
 
 echo "Copying Resources to Installer/dist/ek24/Resources..."
-xcopy /y /e "$(ProjectDir)Resources" "C:\Users\sreddy\dev\ek24\Installer\dist\ek24\Resources\"
+xcopy /y /e "$(ProjectDir)Resources" "C:\Users\sreddy\dev\ek24\Installer\src\dist\ek24\Resources\"
 
 echo "Copying DLLs to Installer/dist/ek24..."
-xcopy /y "$(TargetDir)*.dll" "C:\Users\sreddy\dev\ek24\Installer\dist\ek24\"
+xcopy /y "$(TargetDir)*.dll" "C:\Users\sreddy\dev\ek24\Installer\src\dist\ek24\"
 
 echo "Post-build copy complete!"
 </PostBuildEvent>
